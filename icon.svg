@@ -1,0 +1,34 @@
+<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="30%" r="90%">
+      <stop offset="0%" stop-color="#33241a"/>
+      <stop offset="100%" stop-color="#14100c"/>
+    </radialGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f0c25e"/>
+      <stop offset="100%" stop-color="#b8852a"/>
+    </linearGradient>
+  </defs>
+  <rect width="1024" height="1024" fill="url(#bg)"/>
+  <!-- ahşap panel çizgileri -->
+  <g stroke="#3d2c1c" stroke-width="10" opacity="0.5">
+    <line x1="128" y1="0" x2="128" y2="1024"/>
+    <line x1="896" y1="0" x2="896" y2="1024"/>
+  </g>
+  <!-- terazi -->
+  <g stroke="#d9a845" fill="none" stroke-linecap="round">
+    <line x1="512" y1="230" x2="512" y2="700" stroke-width="34"/>
+    <line x1="272" y1="330" x2="752" y2="330" stroke-width="30"/>
+    <circle cx="512" cy="210" r="34" fill="url(#gold)" stroke="none"/>
+    <!-- sol kefe -->
+    <path d="M272 330 L192 470 M272 330 L352 470" stroke-width="16"/>
+    <path d="M172 470 Q272 570 372 470 Z" fill="url(#gold)" stroke="none"/>
+    <!-- sağ kefe -->
+    <path d="M752 330 L672 470 M752 330 L832 470" stroke-width="16"/>
+    <path d="M652 470 Q752 570 852 470 Z" fill="url(#gold)" stroke="none"/>
+    <!-- taban -->
+    <line x1="380" y1="708" x2="644" y2="708" stroke-width="34"/>
+    <path d="M330 790 L694 790" stroke-width="44"/>
+  </g>
+  <text x="512" y="935" font-family="Avenir Next, Helvetica, sans-serif" font-size="104" font-weight="800" fill="url(#gold)" text-anchor="middle" letter-spacing="6">ADALET</text>
+</svg>

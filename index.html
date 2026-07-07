@@ -1,0 +1,1092 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Adalet Peşinde — Avukat Oyunu</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#171110">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Adalet Peşinde">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<style>
+  :root{
+    --bg:#171110;
+    --card:#261c15;
+    --card2:#31241a;
+    --line:#43301f;
+    --gold:#e0b04f;
+    --gold-dark:#bd8f2e;
+    --text:#f3ead9;
+    --muted:#b3a189;
+    --green:#5ec97b;
+    --red:#e06666;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    background:
+      radial-gradient(ellipse at 50% -10%, rgba(224,176,79,.07), transparent 55%),
+      repeating-linear-gradient(90deg, rgba(255,235,200,.014) 0 2px, transparent 2px 52px),
+      linear-gradient(#1b1310,#120d0b);
+    background-attachment:fixed;
+    color:var(--text);
+    display:flex;justify-content:center;
+    overflow-x:hidden;
+  }
+  #app{width:100%;max-width:480px;min-height:100dvh;display:flex;flex-direction:column;position:relative}
+  .screen{display:none;flex-direction:column;flex:1;padding:calc(14px + env(safe-area-inset-top)) 16px calc(30px + env(safe-area-inset-bottom));animation:fadeIn .3s ease}
+  .screen.active{display:flex}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  .mute-btn{
+    position:absolute;top:calc(12px + env(safe-area-inset-top));right:14px;z-index:40;
+    background:var(--card);border:1px solid var(--line);color:var(--text);
+    border-radius:12px;font-size:17px;padding:7px 10px;cursor:pointer;
+  }
+
+  /* ---------- SAHNE ---------- */
+  .scene-banner{
+    border:1px solid var(--line);border-radius:16px;overflow:hidden;
+    box-shadow:0 10px 26px rgba(0,0,0,.45);
+    transition:box-shadow .3s ease;
+  }
+  .scene-banner svg{display:block;width:100%}
+  .scene-banner.good{box-shadow:0 0 0 2px var(--green),0 10px 26px rgba(94,201,123,.25)}
+  .scene-banner.bad{box-shadow:0 0 0 2px var(--red),0 10px 26px rgba(224,102,102,.25)}
+
+  /* ---------- AVATAR ---------- */
+  .avatar-circle{
+    border-radius:50%;overflow:hidden;flex-shrink:0;
+    border:2px solid rgba(224,176,79,.45);
+    box-shadow:0 4px 10px rgba(0,0,0,.4);
+  }
+  .avatar-circle svg{display:block;width:100%;height:100%}
+
+  /* ---------- ANA EKRAN ---------- */
+  .home-header{text-align:center;margin:34px 0 8px}
+  .home-header h1{font-size:30px;color:var(--gold);letter-spacing:.5px;margin-top:12px;text-shadow:0 3px 10px rgba(0,0,0,.5)}
+  .home-header p{color:var(--muted);font-size:14px;margin-top:4px}
+
+  .profile{
+    background:var(--card);border-radius:16px;padding:14px 16px;margin:16px 0 8px;
+    display:flex;align-items:center;gap:12px;border:1px solid var(--line);
+  }
+  .profile .avatar{width:48px;height:48px}
+  .profile .info{flex:1}
+  .profile .rank{font-weight:700;font-size:16px;color:var(--gold)}
+  .profile .xp-label{font-size:12px;color:var(--muted);margin-top:2px}
+  .bar{background:#100b08;border-radius:99px;height:10px;overflow:hidden;margin-top:6px}
+  .bar > div{height:100%;background:linear-gradient(90deg,var(--gold-dark),var(--gold));border-radius:99px;transition:width .6s ease}
+
+  .section-title{font-size:14px;color:var(--muted);letter-spacing:1.5px;margin:14px 4px 10px}
+
+  .case-card{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:12px 14px;margin-bottom:10px;display:flex;align-items:center;gap:13px;
+    cursor:pointer;transition:transform .1s ease;
+  }
+  .case-card:active{transform:scale(.98)}
+  .case-card .c-av{width:46px;height:46px}
+  .case-card .icon{font-size:30px;width:46px;text-align:center}
+  .case-card .c-info{flex:1;min-width:0}
+  .case-card .c-title{font-weight:700;font-size:16px}
+  .case-card .c-sub{font-size:13px;color:var(--muted);margin-top:2px}
+  .case-card .c-stars{font-size:13px;letter-spacing:1px}
+  .case-card.locked{opacity:.45;filter:grayscale(.6)}
+  .case-card .go{color:var(--gold);font-size:20px;font-weight:700}
+
+  /* ---------- DAVA ÖZETİ ---------- */
+  .topbar{display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-right:48px}
+  .back-btn{
+    background:var(--card);border:1px solid var(--line);color:var(--text);
+    border-radius:12px;padding:8px 14px;font-size:15px;cursor:pointer;
+  }
+  .topbar h2{font-size:19px;flex:1}
+
+  .brief-box{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:15px;margin-bottom:11px}
+  .brief-box h3{font-size:13px;color:var(--gold);letter-spacing:1px;margin-bottom:8px}
+  .brief-box p{font-size:15px;line-height:1.55}
+  .brief-box ul{list-style:none}
+  .brief-box li{font-size:15px;line-height:1.6;padding-left:4px}
+  .client-line{display:flex;align-items:center;gap:14px}
+  .client-line .face{width:66px;height:66px}
+
+  .big-btn{
+    margin-top:auto;background:linear-gradient(180deg,var(--gold),var(--gold-dark));
+    color:#241c08;font-weight:800;font-size:18px;border:none;border-radius:16px;
+    padding:16px;cursor:pointer;width:100%;letter-spacing:.5px;
+    box-shadow:0 4px 14px rgba(224,176,79,.25);
+  }
+  .big-btn:active{transform:scale(.98)}
+  .big-btn.secondary{background:var(--card);color:var(--text);border:1px solid var(--line);box-shadow:none;margin-top:10px}
+
+  /* ---------- DURUŞMA ---------- */
+  .trial-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding-right:56px}
+  .trial-head .round{font-size:13px;color:var(--muted)}
+  .meter-wrap{margin:12px 0 14px}
+  .meter-label{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:5px}
+  .meter{background:#100b08;border-radius:99px;height:14px;overflow:hidden;border:1px solid var(--line)}
+  .meter > div{height:100%;background:linear-gradient(90deg,#8a5a2a,var(--gold),var(--green));transition:width .7s ease;border-radius:99px}
+
+  .bubble{
+    background:var(--card2);border-radius:16px;padding:13px 14px;margin-bottom:13px;
+    border:1px solid #4d3823;display:flex;gap:12px;align-items:flex-start;
+  }
+  .bubble .b-av{width:44px;height:44px;border-color:rgba(224,102,102,.5)}
+  .bubble .b-body{flex:1}
+  .bubble .who{font-size:12px;font-weight:700;color:var(--red);letter-spacing:1px;margin-bottom:5px}
+  .bubble p{font-size:15.5px;line-height:1.5}
+
+  .choose-label{font-size:13px;color:var(--gold);font-weight:700;margin:2px 4px 10px;letter-spacing:.5px}
+  .opt{
+    display:block;width:100%;text-align:left;background:var(--card);color:var(--text);
+    border:1px solid var(--line);border-radius:14px;padding:13px 15px;font-size:15px;
+    line-height:1.45;margin-bottom:9px;cursor:pointer;transition:all .15s;
+  }
+  .opt:active{transform:scale(.98)}
+  .opt.good{border-color:var(--green);background:rgba(94,201,123,.12)}
+  .opt.mid{border-color:var(--gold);background:rgba(224,176,79,.10)}
+  .opt.bad{border-color:var(--red);background:rgba(224,102,102,.12)}
+  .opt:disabled{cursor:default}
+
+  .feedback{
+    border-radius:14px;padding:12px 15px;font-size:15px;line-height:1.5;
+    margin-bottom:12px;display:none;animation:fadeIn .3s ease;
+  }
+  .feedback.show{display:block}
+  .feedback.good{background:rgba(94,201,123,.14);border:1px solid var(--green)}
+  .feedback.mid{background:rgba(224,176,79,.12);border:1px solid var(--gold)}
+  .feedback.bad{background:rgba(224,102,102,.14);border:1px solid var(--red)}
+
+  /* ---------- KARAR ---------- */
+  .verdict-box{text-align:center;margin-top:26px}
+  .verdict-box .gavel-wrap{display:inline-block;animation:bang .55s ease}
+  @keyframes bang{0%{transform:rotate(-40deg) translateY(-30px)}60%{transform:rotate(10deg)}100%{transform:none}}
+  .verdict-box h2{font-size:32px;margin:12px 0 6px}
+  .verdict-box h2.win{color:var(--green)}
+  .verdict-box h2.lose{color:var(--red)}
+  .verdict-box .stars{font-size:34px;letter-spacing:6px;margin:8px 0}
+  .verdict-box .v-text{color:var(--muted);font-size:15px;line-height:1.5;padding:0 10px}
+  .xp-gain{
+    display:inline-block;background:var(--card);border:1px solid var(--gold);
+    color:var(--gold);font-weight:800;border-radius:99px;padding:10px 22px;
+    font-size:18px;margin:16px 0 4px;
+  }
+  .levelup{
+    background:linear-gradient(135deg,#4a3417,#6b4d1e);border:1px solid var(--gold);
+    border-radius:16px;padding:14px;margin:14px 0;font-size:16px;font-weight:700;
+    animation:fadeIn .5s ease;
+  }
+  .spacer{flex:1}
+</style>
+
+<div id="app">
+  <button class="mute-btn" id="mute-btn" onclick="toggleMute()">🔊</button>
+
+  <!-- ANA EKRAN -->
+  <div class="screen active" id="scr-home">
+    <div class="home-header">
+      <div class="scene-banner" id="home-scene"></div>
+      <h1>⚖️ Adalet Peşinde</h1>
+      <p>Müvekkillerini savun, davaları kazan, seviye atla!</p>
+    </div>
+    <div class="profile">
+      <div class="avatar avatar-circle" id="me-avatar"></div>
+      <div class="info">
+        <div class="rank" id="rank-name">Stajyer Avukat</div>
+        <div class="xp-label" id="xp-label">0 / 120 TP</div>
+        <div class="bar"><div id="xp-bar" style="width:0%"></div></div>
+      </div>
+    </div>
+    <div class="section-title">DAVALAR</div>
+    <div id="case-list"></div>
+  </div>
+
+  <!-- DAVA ÖZETİ -->
+  <div class="screen" id="scr-brief">
+    <div class="topbar">
+      <button class="back-btn" onclick="SND.click();show('scr-home')">‹ Geri</button>
+      <h2 id="brief-title"></h2>
+    </div>
+    <div class="brief-box">
+      <h3>MÜVEKKİLİN</h3>
+      <div class="client-line">
+        <div class="face avatar-circle" id="brief-face"></div>
+        <p id="brief-client"></p>
+      </div>
+    </div>
+    <div class="brief-box">
+      <h3>SUÇLAMA / KONU</h3>
+      <p id="brief-charge"></p>
+    </div>
+    <div class="brief-box">
+      <h3>ELİNDEKİ KANITLAR</h3>
+      <ul id="brief-evidence"></ul>
+    </div>
+    <div class="spacer"></div>
+    <button class="big-btn" onclick="startTrial()">🏛️ Duruşmaya Başla</button>
+  </div>
+
+  <!-- DURUŞMA -->
+  <div class="screen" id="scr-trial">
+    <div class="trial-head">
+      <strong id="trial-title"></strong>
+      <span class="round" id="trial-round"></span>
+    </div>
+    <div class="scene-banner" id="trial-scene"></div>
+    <div class="meter-wrap">
+      <div class="meter-label"><span>Hâkimi İkna Etme</span><span id="meter-val">0%</span></div>
+      <div class="meter"><div id="meter-bar" style="width:0%"></div></div>
+    </div>
+    <div class="bubble">
+      <div class="b-av avatar-circle" id="opp-avatar"></div>
+      <div class="b-body">
+        <div class="who">KARŞI TARAF</div>
+        <p id="claim-text"></p>
+      </div>
+    </div>
+    <div class="feedback" id="feedback"></div>
+    <div id="options-wrap">
+      <div class="choose-label">👉 Savunmanı seç:</div>
+      <div id="options"></div>
+    </div>
+    <button class="big-btn" id="next-btn" style="display:none" onclick="nextRound()">Devam ›</button>
+  </div>
+
+  <!-- KARAR -->
+  <div class="screen" id="scr-verdict">
+    <div class="verdict-box">
+      <div class="gavel-wrap" id="verdict-gavel"></div>
+      <h2 id="verdict-title"></h2>
+      <div class="stars" id="verdict-stars"></div>
+      <p class="v-text" id="verdict-text"></p>
+      <div class="xp-gain" id="verdict-xp"></div>
+      <div class="levelup" id="levelup-box" style="display:none"></div>
+    </div>
+    <div class="spacer"></div>
+    <button class="big-btn" onclick="SND.click();show('scr-home');renderHome()">📋 Davalara Dön</button>
+    <button class="big-btn secondary" onclick="openBrief(currentCase)">↻ Tekrar Dene</button>
+  </div>
+
+</div>
+
+<script>
+/* ================= ÇİZİMLER (SVG) ================= */
+
+// Mahkeme salonu sahnesi. prefix: hâkim yüz ifadesi id'leri için.
+function courtScene(prefix) {
+  return `<svg viewBox="0 0 360 190" xmlns="http://www.w3.org/2000/svg">
+    <rect width="360" height="190" fill="#2f2216"/>
+    <rect x="0" y="0" width="360" height="8" fill="#1d140d"/>
+    <rect x="0" y="8" width="360" height="3" fill="#4a3624"/>
+    <!-- duvar panelleri -->
+    <rect x="12" y="20" width="72" height="88" rx="4" fill="none" stroke="#3d2c1c" stroke-width="3"/>
+    <rect x="276" y="20" width="72" height="88" rx="4" fill="none" stroke="#3d2c1c" stroke-width="3"/>
+    <!-- duvardaki portreler -->
+    <rect x="27" y="32" width="42" height="56" fill="#1c130c" stroke="#8a6a3a" stroke-width="3"/>
+    <circle cx="48" cy="52" r="9" fill="#43301f"/>
+    <path d="M34 80 Q48 62 62 80 Z" fill="#43301f"/>
+    <rect x="291" y="32" width="42" height="56" fill="#1c130c" stroke="#8a6a3a" stroke-width="3"/>
+    <circle cx="312" cy="52" r="9" fill="#43301f"/>
+    <path d="M298 80 Q312 62 326 80 Z" fill="#43301f"/>
+    <!-- terazi amblemi -->
+    <circle cx="180" cy="32" r="18" fill="#1c130c" stroke="#c9a24b" stroke-width="2"/>
+    <line x1="180" y1="21" x2="180" y2="42" stroke="#c9a24b" stroke-width="2"/>
+    <line x1="167" y1="25" x2="193" y2="25" stroke="#c9a24b" stroke-width="2"/>
+    <path d="M167 25 L162 34 M167 25 L172 34" stroke="#c9a24b" stroke-width="1.4"/>
+    <ellipse cx="167" cy="35" rx="5.5" ry="2" fill="none" stroke="#c9a24b" stroke-width="1.4"/>
+    <path d="M193 25 L188 34 M193 25 L198 34" stroke="#c9a24b" stroke-width="1.4"/>
+    <ellipse cx="193" cy="35" rx="5.5" ry="2" fill="none" stroke="#c9a24b" stroke-width="1.4"/>
+    <path d="M174 42 L186 42" stroke="#c9a24b" stroke-width="3"/>
+    <!-- hâkim -->
+    <path d="M150 110 C152 90 208 90 210 110 L210 116 L150 116 Z" fill="#16131c"/>
+    <path d="M176 93 L180 104 L184 93 Z" fill="#ece5d4"/>
+    <circle cx="165" cy="78" r="3" fill="#e6b488"/>
+    <circle cx="195" cy="78" r="3" fill="#e6b488"/>
+    <circle cx="180" cy="77" r="15" fill="#e6b488"/>
+    <path d="M165 73 Q166 59 180 59 Q194 59 195 73 Q193 63 180 63 Q167 63 165 73 Z" fill="#b6ada2"/>
+    <circle cx="174" cy="77" r="1.9" fill="#2a1d12"/>
+    <circle cx="186" cy="77" r="1.9" fill="#2a1d12"/>
+    <path id="${prefix}-browL" d="M170 72 L178 72" stroke="#7c6a58" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path id="${prefix}-browR" d="M182 72 L190 72" stroke="#7c6a58" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M180 79 l-1.5 4 h3" fill="none" stroke="#c98f63" stroke-width="1.2"/>
+    <path id="${prefix}-mouth" d="M174 89 Q180 90 186 89" stroke="#8a5f49" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <!-- kürsü -->
+    <rect x="54" y="104" width="252" height="11" rx="3" fill="#6d4f30"/>
+    <rect x="62" y="115" width="236" height="75" fill="#533d27"/>
+    <rect x="78" y="130" width="58" height="42" rx="4" fill="#47331f" stroke="#5f4629"/>
+    <rect x="151" y="130" width="58" height="42" rx="4" fill="#47331f" stroke="#5f4629"/>
+    <rect x="224" y="130" width="58" height="42" rx="4" fill="#47331f" stroke="#5f4629"/>
+    <rect x="150" y="124" width="60" height="17" rx="3" fill="#1c130c" stroke="#c9a24b" stroke-width="1"/>
+    <text x="180" y="136.5" fill="#c9a24b" font-size="9" letter-spacing="3" text-anchor="middle" font-family="sans-serif" font-weight="bold">HÂKİM</text>
+    <!-- tokmak -->
+    <rect x="234" y="100" width="15" height="4" rx="2" fill="#6d4f30"/>
+    <line x1="238" y1="100" x2="252" y2="92" stroke="#8a6a3a" stroke-width="3" stroke-linecap="round"/>
+    <rect x="247" y="85" width="13" height="9" rx="3" fill="#a9803f" transform="rotate(-25 253 90)"/>
+    <!-- savunma masası (sol: müvekkil) -->
+    <path d="M12 150 Q13 136 32 136 Q51 136 52 150 Q48 141 32 141 Q16 141 12 150 Z" fill="#3b2a1a"/>
+    <circle cx="32" cy="152" r="11" fill="#d9a877"/>
+    <path d="M14 176 Q32 158 50 176 Z" fill="#2c3a55"/>
+    <rect x="0" y="172" width="78" height="5" fill="#6d4f30"/>
+    <rect x="0" y="177" width="78" height="13" fill="#503a26"/>
+    <!-- karşı taraf masası (sağ) -->
+    <circle cx="328" cy="152" r="11" fill="#e0af80"/>
+    <path d="M319 150 q0 6 3 8 M337 150 q0 6 -3 8" stroke="#5a4634" stroke-width="3" fill="none"/>
+    <path d="M322 158 Q328 163 334 158 Q328 166 322 158 Z" fill="#4a3624"/>
+    <path d="M310 176 Q328 158 346 176 Z" fill="#4a2f2f"/>
+    <rect x="282" y="172" width="78" height="5" fill="#6d4f30"/>
+    <rect x="282" y="177" width="78" height="13" fill="#503a26"/>
+  </svg>`;
+}
+
+// Hâkimin yüz ifadesi: neutral / happy / angry
+function judgeMood(prefix, mood) {
+  const bl = document.getElementById(prefix + "-browL");
+  const br = document.getElementById(prefix + "-browR");
+  const m  = document.getElementById(prefix + "-mouth");
+  if (!bl) return;
+  if (mood === "happy") {
+    bl.setAttribute("d", "M170 71 Q174 69 178 71");
+    br.setAttribute("d", "M182 71 Q186 69 190 71");
+    m.setAttribute("d", "M174 87 Q180 93 186 87");
+  } else if (mood === "angry") {
+    bl.setAttribute("d", "M170 70 L178 74");
+    br.setAttribute("d", "M190 70 L182 74");
+    m.setAttribute("d", "M174 91 Q180 86 186 91");
+  } else {
+    bl.setAttribute("d", "M170 72 L178 72");
+    br.setAttribute("d", "M182 72 L190 72");
+    m.setAttribute("d", "M174 89 Q180 90 186 89");
+  }
+}
+
+// Karakter portresi üretici
+function avatarSVG(a) {
+  const hc = a.hc || "#3b2a1a";
+  const fc = a.fc || hc;
+  let back = "", front = "";
+  switch (a.hair) {
+    case "short":
+      front = `<path d="M30 44 Q29 20 50 20 Q71 20 70 44 Q67 30 57 30 Q52 26 45 31 Q34 32 30 44 Z" fill="${hc}"/>`;
+      break;
+    case "long":
+      back = `<path d="M27 42 Q27 14 50 14 Q73 14 73 42 L73 88 Q50 98 27 88 Z" fill="${hc}"/>`;
+      front = `<path d="M31 42 Q31 22 50 22 Q69 22 69 42 Q64 30 50 31 Q36 30 31 42 Z" fill="${hc}"/>`;
+      break;
+    case "bun":
+      front = `<circle cx="50" cy="16" r="9" fill="${hc}"/><path d="M30 44 Q29 20 50 20 Q71 20 70 44 Q67 30 57 30 Q52 26 45 31 Q34 32 30 44 Z" fill="${hc}"/>`;
+      break;
+    case "bald":
+      front = `<path d="M30 46 q-2 9 3 13" stroke="${hc}" stroke-width="5" fill="none" stroke-linecap="round"/>
+               <path d="M70 46 q2 9 -3 13" stroke="${hc}" stroke-width="5" fill="none" stroke-linecap="round"/>`;
+      break;
+    case "scarf":
+      back = `<path d="M24 54 Q20 10 50 10 Q80 10 76 54 L76 70 Q50 62 24 70 Z" fill="${hc}"/>`;
+      front = `<path d="M28 46 Q28 18 50 18 Q72 18 72 46 Q66 27 50 27 Q34 27 28 46 Z" fill="${hc}"/>
+               <path d="M40 72 Q50 80 60 72 L65 86 Q50 95 35 86 Z" fill="${hc}"/>`;
+      break;
+    case "cap":
+      front = `<path d="M30 42 Q30 20 50 20 Q70 20 70 42 Z" fill="${hc}"/><rect x="26" y="38" width="48" height="7" rx="3.5" fill="${hc}"/>`;
+      break;
+  }
+  const glasses = a.glasses
+    ? `<circle cx="42" cy="47" r="6.5" fill="none" stroke="#2b2620" stroke-width="2"/>
+       <circle cx="58" cy="47" r="6.5" fill="none" stroke="#2b2620" stroke-width="2"/>
+       <path d="M48.5 47 h3 M35.5 46 l-4 -2 M64.5 46 l4 -2" stroke="#2b2620" stroke-width="2"/>`
+    : "";
+  const beard = a.facial === "beard"
+    ? `<path d="M32 50 Q32 78 50 78 Q68 78 68 50 Q68 68 50 68 Q32 68 32 50 Z" fill="${fc}"/>` : "";
+  const mustache = (a.facial === "mustache" || a.facial === "beard")
+    ? `<path d="M41 56.5 Q50 62 59 56.5 Q50 67 41 56.5 Z" fill="${fc}"/>` : "";
+  const mouth = a.facial ? "" : `<path d="M43 59 Q50 65 57 59" stroke="#8a4a3a" stroke-width="2" fill="none" stroke-linecap="round"/>`;
+  return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <rect width="100" height="100" fill="${a.bg || "#3a2c1e"}"/>
+    <path d="M12 98 Q50 64 88 98 L88 100 L12 100 Z" fill="${a.shirt || "#3a4a63"}"/>
+    ${back}
+    <rect x="43" y="60" width="14" height="14" fill="${a.skin}"/>
+    <circle cx="30" cy="49" r="4.5" fill="${a.skin}"/>
+    <circle cx="70" cy="49" r="4.5" fill="${a.skin}"/>
+    <ellipse cx="50" cy="47" rx="19.5" ry="22" fill="${a.skin}"/>
+    <path d="M36 39 Q42 36 47 39 M53 39 Q58 36 64 39" stroke="#4a3624" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <circle cx="42" cy="46" r="2.2" fill="#2a1d12"/>
+    <circle cx="58" cy="46" r="2.2" fill="#2a1d12"/>
+    <path d="M50 48 q-3 6 1 7" stroke="#c98f63" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+    ${beard}${mouth}${mustache}${front}${glasses}
+  </svg>`;
+}
+
+// Karar ekranı tokmağı
+const GAVEL_SVG = `<svg viewBox="0 0 120 120" width="110" height="110" xmlns="http://www.w3.org/2000/svg">
+  <ellipse cx="60" cy="108" rx="36" ry="7" fill="#6d4f30"/>
+  <rect x="30" y="100" width="60" height="8" rx="4" fill="#8a6a3a"/>
+  <g transform="rotate(-28 60 55)">
+    <rect x="54" y="48" width="10" height="48" rx="4" fill="#8a6a3a"/>
+    <rect x="30" y="22" width="58" height="30" rx="10" fill="#a9803f" stroke="#8a6a3a" stroke-width="2"/>
+    <rect x="34" y="22" width="7" height="30" fill="#c9a24b"/>
+    <rect x="77" y="22" width="7" height="30" fill="#c9a24b"/>
+  </g>
+</svg>`;
+
+/* ================= SES EFEKTLERİ ================= */
+const SND = (() => {
+  let ctx = null;
+  function ac() {
+    if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+    if (ctx.state === "suspended") ctx.resume();
+    return ctx;
+  }
+  function tone(freq, t0, dur, type, vol, slideTo) {
+    if (save.muted) return;
+    try {
+      const c = ac(), o = c.createOscillator(), g = c.createGain();
+      o.type = type || "triangle";
+      o.frequency.setValueAtTime(freq, c.currentTime + t0);
+      if (slideTo) o.frequency.exponentialRampToValueAtTime(slideTo, c.currentTime + t0 + dur);
+      g.gain.setValueAtTime(vol || 0.12, c.currentTime + t0);
+      g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + t0 + dur);
+      o.connect(g).connect(c.destination);
+      o.start(c.currentTime + t0);
+      o.stop(c.currentTime + t0 + dur + 0.05);
+    } catch (e) {}
+  }
+  function knock(t0) {
+    if (save.muted) return;
+    try {
+      const c = ac(), dur = 0.09;
+      const buf = c.createBuffer(1, c.sampleRate * dur, c.sampleRate);
+      const d = buf.getChannelData(0);
+      for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 2);
+      const s = c.createBufferSource(); s.buffer = buf;
+      const f = c.createBiquadFilter(); f.type = "lowpass"; f.frequency.value = 900;
+      const g = c.createGain(); g.gain.setValueAtTime(0.5, c.currentTime + t0);
+      s.connect(f); f.connect(g); g.connect(c.destination);
+      s.start(c.currentTime + t0);
+      tone(150, t0, 0.12, "sine", 0.3, 70);
+    } catch (e) {}
+  }
+  return {
+    click() { tone(660, 0, 0.05, "triangle", 0.05); },
+    gavel() { knock(0); knock(0.18); },
+    good()  { tone(523, 0, 0.12, "triangle", 0.12); tone(784, 0.12, 0.2, "triangle", 0.12); },
+    mid()   { tone(440, 0, 0.18, "triangle", 0.1); },
+    bad()   { tone(220, 0, 0.3, "sawtooth", 0.07, 110); },
+    win()   { knock(0); tone(523, 0.3, 0.15, "triangle", 0.14); tone(659, 0.45, 0.15, "triangle", 0.14); tone(784, 0.6, 0.15, "triangle", 0.14); tone(1047, 0.75, 0.35, "triangle", 0.16); },
+    lose()  { knock(0); tone(392, 0.3, 0.25, "triangle", 0.12); tone(311, 0.55, 0.25, "triangle", 0.12); tone(233, 0.8, 0.4, "triangle", 0.12); },
+  };
+})();
+
+function toggleMute() {
+  save.muted = !save.muted;
+  persist();
+  document.getElementById("mute-btn").textContent = save.muted ? "🔇" : "🔊";
+  if (!save.muted) SND.click();
+}
+
+/* ================= OYUN VERİSİ ================= */
+
+const RANKS = [
+  { xp: 0,    name: "Stajyer Avukat" },
+  { xp: 120,  name: "Genç Avukat" },
+  { xp: 300,  name: "Avukat" },
+  { xp: 550,  name: "Uzman Avukat" },
+  { xp: 850,  name: "Kıdemli Avukat" },
+  { xp: 1200, name: "Usta Savunucu" },
+  { xp: 1650, name: "Adalet Efsanesi" },
+];
+
+// Her seçenek: t = metin, p = puan (25 iyi / 12 orta / 0 kötü), f = geri bildirim
+const CASES = [
+  {
+    id: "bisiklet", icon: "🚲", title: "Kayıp Bisiklet",
+    av: { skin: "#eab887", hair: "short", hc: "#2e1f12", shirt: "#3a5a8c" },
+    client: "Ali, 16 yaşında bir öğrenci. Komşusunun bisikletini çalmakla suçlanıyor ama suçsuz olduğunu söylüyor.",
+    charge: "Komşu Hasan Bey, bisikletinin salı günü saat 15.00'te çalındığını ve Ali'yi sokakta gördüğünü iddia ediyor.",
+    evidence: ["🧾 Market fişi (salı, saat 15.05)", "📹 Bulanık kamera görüntüsü", "🗣️ Tanık: mahallenin fırıncısı"],
+    rounds: [
+      {
+        claim: "Ali, bisikletin çalındığı saatte tam da o sokaktaydı! Bunu herkes gördü.",
+        opts: [
+          { t: "Sayın Hâkim, işte market fişi: Ali saat 15.05'te iki sokak ötedeki markette alışveriş yapıyordu.", p: 25, f: "Hâkim fişi inceledi. Ali'nin başka yerde olduğu kanıtlandı! 🎯" },
+          { t: "Ali asla hırsızlık yapmaz, çok iyi bir çocuktur.", p: 12, f: "Güzel sözler ama hâkim kanıt istiyor. 😐" },
+          { t: "Belki de bisiklet hiç çalınmadı, Hasan Bey unutmuştur!", p: 0, f: "Dayanaksız iddia hâkimi kızdırdı. 😠" },
+        ],
+      },
+      {
+        claim: "Kamera görüntüsünde bisikleti alan kişi Ali'ye çok benziyor!",
+        opts: [
+          { t: "Görüntü çok bulanık. Görünen kişi kırmızı montlu; Ali'nin ise kırmızı montu hiç olmadı.", p: 25, f: "Hâkim görüntüye baktı: gerçekten de kişi belli olmuyor. 🎯" },
+          { t: "Uzaktan herkes birbirine benzeyebilir.", p: 12, f: "Mantıklı ama biraz zayıf bir savunma. 😐" },
+          { t: "Kameralar her zaman yalan söyler!", p: 0, f: "Hâkim kaşlarını çattı. Bu bir savunma değil. 😠" },
+        ],
+      },
+      {
+        claim: "Ama bisiklet Ali'nin evinin hemen yakınında bulundu. Bu tesadüf olamaz!",
+        opts: [
+          { t: "Tanığımız fırıncı Osman Usta, bisikleti oraya kırmızı montlu birinin bıraktığını görmüş. Kendisini dinleyelim.", p: 25, f: "Tanık her şeyi anlattı. Gerçek hırsız başkasıymış! 🎯" },
+          { t: "Bisikletin yakında bulunması Ali'nin aldığını göstermez.", p: 12, f: "Doğru bir nokta ama tanığı dinletmek daha güçlü olurdu. 😐" },
+          { t: "Bisiklet oraya kendi kendine gelmiş olabilir.", p: 0, f: "Salonda gülüşmeler... Hâkim hiç eğlenmiyor. 😠" },
+        ],
+      },
+    ],
+  },
+  {
+    id: "kedi", icon: "🐱", title: "Yaramaz Kedi",
+    av: { skin: "#e8c49a", hair: "scarf", hc: "#a8b8d0", glasses: true, shirt: "#7a5a7a" },
+    client: "Ayşe Teyze'nin kedisi Pamuk, komşunun 10 saksısını kırmakla suçlanıyor. Komşu 5.000 lira istiyor.",
+    charge: "Komşu Nuri Bey: \"Pamuk her gece bahçeme giriyor, bütün saksılarımı o kırdı!\" diyor ve tazminat istiyor.",
+    evidence: ["📷 Bahçe fotoğrafları", "🐾 Kırıkların yanındaki büyük pati izleri", "🩺 Veteriner raporu: Pamuk 2 haftadır evde tedavide"],
+    rounds: [
+      {
+        claim: "Bu kedi tam bir baş belası! Saksılarımı kıran o, bunu herkes bilir.",
+        opts: [
+          { t: "Veteriner raporuna göre Pamuk son 2 haftadır evde tedavi görüyor, dışarı hiç çıkmadı.", p: 25, f: "Rapor kesin konuşuyor: Pamuk o gece dışarıda değildi! 🎯" },
+          { t: "Pamuk çok uslu bir kedidir, saksı kırmaz.", p: 12, f: "Sevimli bir savunma ama kanıt değil. 😐" },
+          { t: "Saksılar zaten çirkindi, kırılması iyi olmuş.", p: 0, f: "Nuri Bey ayağa fırladı, hâkim tokmağa sarıldı! 😠" },
+        ],
+      },
+      {
+        claim: "Bahçemde pati izleri var! İşte fotoğraflar. Kedi izi bunlar!",
+        opts: [
+          { t: "Fotoğraftaki izler kocaman. Bunlar minik bir kedinin değil, büyük bir köpeğin izleri.", p: 25, f: "Hâkim fotoğrafa dikkatle baktı: izler gerçekten çok büyük! 🎯" },
+          { t: "Her pati izi Pamuk'a ait olmak zorunda değil.", p: 12, f: "Doğru ama izlerin boyutuna dikkat çekmek daha etkili olurdu. 😐" },
+          { t: "İzleri Nuri Bey kendisi çizmiş olabilir!", p: 0, f: "Kanıtsız suçlama! Hâkim sizi uyardı. 😠" },
+        ],
+      },
+      {
+        claim: "O zaman saksılarımı kim kırdı? Birinin ödemesi lazım!",
+        opts: [
+          { t: "Mahalledeki başıboş köpek o gece birçok bahçeye girmiş; diğer komşular da şikâyetçi. Sorumlu Pamuk değil.", p: 25, f: "Diğer komşuların şikâyetleri de dosyaya girdi. Dava çözüldü! 🎯" },
+          { t: "Üzgünüz ama bu Pamuk'un suçu değil.", p: 12, f: "Kısa ve net, ama asıl sorumluyu göstermek daha iyiydi. 😐" },
+          { t: "Saksı dediğin kırılır, olur böyle şeyler.", p: 0, f: "Bu bir savunma değil, hâkim not aldı. 😠" },
+        ],
+      },
+    ],
+  },
+  {
+    id: "mesai", icon: "🕐", title: "Ödenmeyen Mesai",
+    av: { skin: "#d9a877", hair: "cap", hc: "#4a5a3a", facial: "mustache", fc: "#4a3624", shirt: "#5a4632" },
+    client: "Kemal Usta, 6 ay boyunca fazla mesai yaptı ama patronu bu ücreti hiç ödemedi. Hakkını arıyor.",
+    charge: "Patron: \"Kemal fazla mesai falan yapmadı, akşamları oturup çay içiyordu\" diyor ve ödeme yapmayı reddediyor.",
+    evidence: ["🪪 Giriş-çıkış kart kayıtları", "💬 Patronun 'mesaileri sonra öderim' mesajı", "🗣️ Tanık: iş arkadaşı Hüseyin"],
+    rounds: [
+      {
+        claim: "Kemal mesaiye kalmadı ki! Akşam 6'da herkes gibi evine gitti.",
+        opts: [
+          { t: "Kart kayıtları burada: Kemal 6 ay boyunca neredeyse her gün akşam 21.00'de çıkış yapmış.", p: 25, f: "Kayıtlar tek tek okundu. Hâkim ikna oldu! 🎯" },
+          { t: "Kemal Usta çalışkan biridir, boşuna kalmaz.", p: 12, f: "Hoş ama kayıtları göstermek varken zayıf kaldı. 😐" },
+          { t: "Patron zaten hep yalan söyler!", p: 0, f: "Hakaret savunma değildir. Hâkim uyardı. 😠" },
+        ],
+      },
+      {
+        claim: "Kalıyorduysa da kendi keyfinden kalıyordu. Ben mesai istemedim!",
+        opts: [
+          { t: "İşte patronun kendi mesajı: 'Bu ay da mesailere kal, hepsini sonra öderim.' Talep bizzat kendisinden gelmiş.", p: 25, f: "Mesaj ekranda! Patronun yüzü kızardı. 🎯" },
+          { t: "Kimse keyfinden 6 ay geç saate kalmaz.", p: 12, f: "Mantıklı ama mesajı göstermek çok daha güçlüydü. 😐" },
+          { t: "Keyfinden kalsa ne olur, yine de ödeyin!", p: 0, f: "Bu cümle davayı zayıflattı. 😠" },
+        ],
+      },
+      {
+        claim: "Bu kayıtlar ve mesajlar uydurma olabilir. Kanıtınız sadece kağıt parçası!",
+        opts: [
+          { t: "Tanığımız Hüseyin Bey, Kemal ile aynı vardiyada aylarca birlikte mesaiye kaldı. Kendisi burada, dinleyelim.", p: 25, f: "Tanık her akşamı tek tek anlattı. Dava netleşti! 🎯" },
+          { t: "Resmî kart kayıtları uydurulamaz.", p: 12, f: "Doğru ama canlı tanık daha etkileyiciydi. 😐" },
+          { t: "Asıl sizin söyledikleriniz uydurma!", p: 0, f: "Karşılıklı atışma hâkimi yordu. 😠" },
+        ],
+      },
+    ],
+  },
+  {
+    id: "kasa", icon: "🛒", title: "Kasadaki Eksik Para",
+    av: { skin: "#f0c9a0", hair: "long", hc: "#4a2f1c", shirt: "#7a3a4a" },
+    client: "Kasiyer Selin, market kasasından 2.000 lira eksik çıkınca işten atıldı ve hırsızlıkla suçlandı.",
+    charge: "Market sahibi: \"O gün kasada sadece Selin vardı, parayı o aldı\" diyor.",
+    evidence: ["📹 Depo kamerası kaydı", "🧾 Kasa raporu: sayım hatası geçmişi", "🔑 Yedek kasa anahtarının listesi"],
+    rounds: [
+      {
+        claim: "O gün kasada tek görevli Selin'di. Para kaybolduysa alan da odur!",
+        opts: [
+          { t: "Yedek anahtar listesine göre kasayı açabilen 4 kişi daha var; üstelik o gün ikisi markette çalışıyordu.", p: 25, f: "Hâkim listeyi inceledi: Selin tek değilmiş! 🎯" },
+          { t: "Selin yıllardır bu markette dürüstçe çalışıyor.", p: 12, f: "İyi bir başlangıç ama kanıt daha güçlü olurdu. 😐" },
+          { t: "Belki para hiç yoktu!", p: 0, f: "Kasa raporu ortada. Bu itiraz boşa düştü. 😠" },
+        ],
+      },
+      {
+        claim: "Selin öğle molasında çantasıyla depoya girdi. Neden çantayla?!",
+        opts: [
+          { t: "Depo kamerası kaydı burada: Selin çantasından sadece ilaç kutusunu alıp geri çıkıyor.", p: 25, f: "Görüntü izlendi, çantada para yok, ilaç var. 🎯" },
+          { t: "Çantayla depoya girmek suç değildir.", p: 12, f: "Doğru ama görüntüyü göstermek şüpheyi tamamen dağıtırdı. 😐" },
+          { t: "Siz de her gün çantayla geziyorsunuz!", p: 0, f: "Hâkim 'Konuya dönün lütfen' dedi. 😠" },
+        ],
+      },
+      {
+        claim: "Kayıtlar ne derse desin, para eksik ve suçlu Selin!",
+        opts: [
+          { t: "Kasa raporlarına göre bu markette son 1 yılda 5 kez sayım hatası yapılmış ve hepsi sonradan düzeltilmiş. Yeniden sayım istiyoruz.", p: 25, f: "Yeniden sayım yapıldı: para yanlış rafa konmuş, kayıp yokmuş! 🎯" },
+          { t: "Suçlamak için kanıt gerekir, elinizde kanıt yok.", p: 12, f: "Haklısınız ama yeniden sayım talebi davayı bitirirdi. 😐" },
+          { t: "Parayı belki de siz aldınız!", p: 0, f: "Kanıtsız suçlama! Hâkim çok kızdı. 😠" },
+        ],
+      },
+    ],
+  },
+  {
+    id: "gurultu", icon: "🥁", title: "Gürültücü Komşu",
+    av: { skin: "#e6b488", hair: "bun", hc: "#1f1f1f", shirt: "#333333" },
+    client: "Davulcu Deniz, apartmanı her gece gürültüyle inletmekle suçlanıyor. Oysa artık stüdyoda çalışıyor.",
+    charge: "Alt kat komşusu: \"Her gece 23.00'te davul sesi! Uyuyamıyoruz, bu adam cezalandırılsın\" diyor.",
+    evidence: ["🎟️ Stüdyo giriş kayıtları", "🔇 Evdeki davulun 3 ay önce satıldığına dair fatura", "🗣️ Tanık: yan komşu Fatma Hanım"],
+    rounds: [
+      {
+        claim: "Her gece davul sesi geliyor! Bu binada davulu olan tek kişi Deniz!",
+        opts: [
+          { t: "İşte satış faturası: Deniz davulunu 3 ay önce sattı. Evinde artık davul yok.", p: 25, f: "Fatura kesin: evde davul kalmamış! 🎯" },
+          { t: "Deniz artık evde çalışmıyor.", p: 12, f: "Söylediniz ama belgeyle desteklemek daha iyiydi. 😐" },
+          { t: "Biraz müzik kimseyi öldürmez!", p: 0, f: "Komşular homurdandı, hâkim başını salladı. 😠" },
+        ],
+      },
+      {
+        claim: "Peki geceleri duyduğum o sesler ne? Kulaklarım beni yanıltmaz!",
+        opts: [
+          { t: "Deniz her akşam 20.00-24.00 arası stüdyoda; işte 3 aylık giriş-çıkış kayıtları. Evde bile değil.", p: 25, f: "Kayıtlar gecelerin tamamını kapsıyor. Hâkim not aldı. 🎯" },
+          { t: "Ses başka bir daireden geliyor olabilir.", p: 12, f: "Olabilir ama kanıt göstermek daha güçlüydü. 😐" },
+          { t: "Kulaklarınızı bir doktora gösterin bence.", p: 0, f: "Salon buz kesti. Hâkim sizi uyardı. 😠" },
+        ],
+      },
+      {
+        claim: "O zaman bu sesin kaynağını siz açıklayın!",
+        opts: [
+          { t: "Tanığımız Fatma Hanım, seslerin üst kattaki boş dairede yapılan gece tadilatından geldiğini görmüş. Ustalar gece çalışıyormuş.", p: 25, f: "Gerçek ortaya çıktı: ses tadilattan geliyormuş! 🎯" },
+          { t: "Sesin kaynağını bulmak bizim işimiz değil ama Deniz olmadığı kesin.", p: 12, f: "Teknik olarak doğru ama tanık dinletmek davayı bitirirdi. 😐" },
+          { t: "Belki rüya görüyorsunuzdur.", p: 0, f: "Komşu çok sinirlendi, hâkim de öyle. 😠" },
+        ],
+      },
+    ],
+  },
+  {
+    id: "zemin", icon: "🧹", title: "Islak Zemin Davası",
+    av: { skin: "#d9a877", hair: "scarf", hc: "#d8b84a", shirt: "#6a4a3a" },
+    client: "Temizlik görevlisi Şerife Hanım, markette bir müşteri düşünce 'uyarı levhası koymadı' diye suçlanıyor. İşinden olmak üzere.",
+    charge: "Düşen müşteri: \"Yer sırılsıklamdı, hiçbir uyarı yoktu! Tazminat istiyorum\" diyor.",
+    evidence: ["📹 Olay anı market kamerası", "🪧 Uyarı levhası zimmet tutanağı", "🗣️ Tanık: kasiyer"],
+    rounds: [
+      {
+        claim: "Yerde koca bir su birikintisi vardı ama hiçbir uyarı levhası yoktu!",
+        opts: [
+          { t: "Kamera kaydında sarı uyarı levhası açıkça görünüyor; müşteri levhanın hemen yanından geçiyor.", p: 25, f: "Görüntü ekrana geldi: levha tam oradaymış! 🎯" },
+          { t: "Şerife Hanım çok titizdir, her zaman levha koyar.", p: 12, f: "Güzel ama kamera kaydı varken sözde kaldı. 😐" },
+          { t: "Islak zemin görülür, önünüze baksaydınız!", p: 0, f: "Hâkim bu üsluptan hiç hoşlanmadı. 😠" },
+        ],
+      },
+      {
+        claim: "O levha sonradan konuldu! Ben düştükten sonra getirdiler!",
+        opts: [
+          { t: "Kayıttaki saat damgası ortada: levha, düşme anından tam 20 dakika önce konulmuş.", p: 25, f: "Saat damgası her şeyi anlattı. İddia çöktü! 🎯" },
+          { t: "Levhayı sonradan koymak için kimsenin bir sebebi yok.", p: 12, f: "Mantıklı ama saat damgası kesin kanıttı. 😐" },
+          { t: "Sonradan konsa ne olur ki?", p: 0, f: "Bu cevap savunmayı zora soktu. 😠" },
+        ],
+      },
+      {
+        claim: "Yine de düştüm ve kolum ağrıyor. Birinin suçlu olması lazım!",
+        opts: [
+          { t: "Tanığımız kasiyer, müşterinin telefonuna bakarak yürüdüğünü görmüş; kamera kaydı da bunu doğruluyor.", p: 25, f: "Tanık ve kamera aynı şeyi söyledi: dikkatsizlik müşterideymiş. 🎯" },
+          { t: "Geçmiş olsun diyoruz ama kusur Şerife Hanım'da değil.", p: 12, f: "Nazik ve doğru, ama tanık ifadesi daha güçlüydü. 😐" },
+          { t: "Kolunuz ağrıyorsa doktora gidin, mahkemeye değil.", p: 0, f: "Salonda uğultu... Hâkim tokmağı vurdu. 😠" },
+        ],
+      },
+    ],
+  },
+  {
+    id: "kolye", icon: "💍", title: "Kayıp Kolye",
+    av: { skin: "#eab887", hair: "short", hc: "#1f150c", shirt: "#4a6a5a" },
+    client: "Kuyumcu çırağı Emre, vitrindeki altın kolye kaybolunca hırsızlıkla suçlanıyor. Daha ilk yılında işini kaybetmek üzere.",
+    charge: "Kuyumcu sahibi: \"Vitrinin anahtarı Emre'deydi, kolyeyi o aldı\" diyor.",
+    evidence: ["🧾 Tamirci makbuzu", "📹 Dükkân kamerası", "📒 Vitrin sayım defteri"],
+    rounds: [
+      {
+        claim: "Vitrin anahtarı sadece Emre'de! Kolye kaybolduysa sorumlusu odur!",
+        opts: [
+          { t: "İşte makbuz: kolye kaybolmadı, kilidi bozulduğu için tamirci Rıza Usta'ya gönderildi. Gönderen de bizzat dükkân sahibi.", p: 25, f: "Makbuz okundu: kolye tamirdeymiş! 🎯" },
+          { t: "Emre bir yıldır tek kuruşa bile dokunmadı.", p: 12, f: "Doğru olabilir ama makbuz kesin konuşuyordu. 😐" },
+          { t: "Anahtar sizde de var, o zaman siz de şüphelisiniz!", p: 0, f: "Suçlamayla savunma olmaz. Hâkim uyardı. 😠" },
+        ],
+      },
+      {
+        claim: "Ben mi göndermişim? Hiç hatırlamıyorum, bu makbuz sahte olabilir!",
+        opts: [
+          { t: "Dükkân kamerasında kendisi kolyeyi paketleyip kuryeye veriyor. Görüntüyü izleyelim.", p: 25, f: "Görüntüde her şey apaçık. Salonda gülüşmeler! 🎯" },
+          { t: "Makbuzun altında kendi imzanız var.", p: 12, f: "İyi bir nokta ama görüntü daha çarpıcıydı. 😐" },
+          { t: "Hafızanız bu kadar zayıfsa dükkânı Emre'ye devredin!", p: 0, f: "Hâkim 'Bir daha olmasın' dedi. 😠" },
+        ],
+      },
+      {
+        claim: "Peki sayım defterinde kolye neden 'eksik' görünüyor?",
+        opts: [
+          { t: "Defterde kolye 'eksik' değil 'tamirde' sütununa yazılmış; yanlış okunmuş. Defteri mahkemeye sunuyoruz.", p: 25, f: "Defter incelendi: her şey kayıt altındaymış. Emre aklandı! 🎯" },
+          { t: "Defter dikkatle okununca ortada sorun kalmıyor.", p: 12, f: "Doğru ama defteri sunmak daha etkiliydi. 😐" },
+          { t: "Biz defterden mefterden anlamayız!", p: 0, f: "Avukatın böyle demesi... Hâkim şaşkın. 😠" },
+        ],
+      },
+    ],
+  },
+  {
+    id: "tarif", icon: "🍲", title: "Gizli Tarif",
+    av: { skin: "#f0c9a0", hair: "bun", hc: "#5a3a20", shirt: "#8a4a3a" },
+    client: "Aşçı Cemile Hanım, komşu lokantanın 'meşhur köfte tarifini çaldığı' iddiasıyla dava edildi.",
+    charge: "Komşu lokantacı: \"Bu tarif dedemin sırrıydı, Cemile çaldı!\" diyor ve lokantanın kapatılmasını istiyor.",
+    evidence: ["📖 1985 tarihli el yazması aile defteri", "👩‍🍳 Bilirkişi tadım raporu", "🔬 Kâğıt ve mürekkep incelemesi"],
+    rounds: [
+      {
+        claim: "Bu köfte birebir bizim köfte! Tarifi mutfağımdan çaldı!",
+        opts: [
+          { t: "Cemile Hanım'ın babaannesinin 1985 tarihli el yazması defteri burada; bu tarif kırk yıldır ailede.", p: 25, f: "Sararmış sayfalar salonu ikna etti. 🎯" },
+          { t: "Köfteyi herkes yapar, tarif kimsenin tekelinde değildir.", p: 12, f: "Doğru bir söz ama aile defteri daha güçlüydü. 😐" },
+          { t: "Sizin köfteniz zaten yenmiyor ki!", p: 0, f: "Lokantacı küplere bindi, hâkim de memnun değil. 😠" },
+        ],
+      },
+      {
+        claim: "O defter uydurma! Dün yazıp çayla eskitmişlerdir!",
+        opts: [
+          { t: "Bilirkişi incelemesi, mürekkebin ve kâğıdın en az 30 yıllık olduğunu doğruladı. Rapor dosyada.", p: 25, f: "Bilimsel rapor karşısında söylenecek söz kalmadı. 🎯" },
+          { t: "Bu defter bir aile hatırası, ortada uydurma yok.", p: 12, f: "Samimi ama raporu öne sürmek kesin çözümdü. 😐" },
+          { t: "Asıl sizin dedenizin tarifi uydurma!", p: 0, f: "Karşılıklı suçlama hâkimi bezdirdi. 😠" },
+        ],
+      },
+      {
+        claim: "İki köfte de aynı tat! Bu nasıl tesadüf olabilir?",
+        opts: [
+          { t: "Bilirkişi tadım raporu açık: baharatlar da pişirme şekli de farklı. 'Aynı tat' iddiası dayanaksız.", p: 25, f: "Rapor okununca dava lezzetli bir şekilde kapandı! 🎯" },
+          { t: "Benzer tat, tarifin çalındığını kanıtlamaz.", p: 12, f: "Mantıklı ama rapor varken eksik kaldı. 😐" },
+          { t: "Demek ki damak tadınız yok.", p: 0, f: "Hâkim 'Bu ne üslup!' dedi. 😠" },
+        ],
+      },
+    ],
+  },
+  {
+    id: "fatura", icon: "📱", title: "Dev Telefon Faturası",
+    av: { skin: "#dcb28a", hair: "short", hc: "#cfc8bf", facial: "mustache", fc: "#b6ada2", glasses: true, shirt: "#4a4a55" },
+    client: "Hüsnü Amca'ya bir ayda 45.000 liralık telefon faturası geldi. Operatör \"kullandın, ödeyeceksin\" diyor.",
+    charge: "Operatör şirketi: \"Kayıtlar ortada, bu hattan saatlerce yurt dışı araması yapılmış\" diyor.",
+    evidence: ["📟 Hüsnü Amca'nın 20 yıllık tuşlu telefonu", "📡 Baz istasyonu kayıtları", "🧾 Son 5 yılın faturaları (hepsi ~200 TL)"],
+    rounds: [
+      {
+        claim: "Kayıtlarımıza göre bu hattan İtalya'ya 40 saat görüntülü arama yapılmış!",
+        opts: [
+          { t: "Hüsnü Amca'nın telefonu internete bile giremeyen 20 yıllık tuşlu telefon. İşte cihaz, buyurun deneyin.", p: 25, f: "Tuşlu telefon salonda elden ele dolaştı. 🎯" },
+          { t: "Hüsnü Amca İtalya'da kimseyi tanımıyor.", p: 12, f: "İlginç ama telefonun kendisi en büyük kanıttı. 😐" },
+          { t: "Bu yaşta 40 saat konuşacak nefes mi var!", p: 0, f: "Gülüşmeler oldu ama savunmaya katkısı sıfır. 😠" },
+        ],
+      },
+      {
+        claim: "Cihaz fark etmez! SIM kart onun, kullanan da odur!",
+        opts: [
+          { t: "Baz istasyonu kayıtlarına göre aramalar İstanbul'dan yapılmış; Hüsnü Amca o hafta köyünden hiç ayrılmamış. Kart kopyalanmış.", p: 25, f: "Kayıtlar iki farklı şehri gösteriyor: kart kopyalanmış! 🎯" },
+          { t: "SIM kart kopyalama bilinen bir dolandırıcılık yöntemidir.", p: 12, f: "Doğru ama baz kayıtları kesin kanıttı. 😐" },
+          { t: "Amca SIM'in açılımını bile bilmez!", p: 0, f: "Sevimli ama mahkeme ciddiyet ister. 😠" },
+        ],
+      },
+      {
+        claim: "Madem sorun vardı, neden hemen bize şikâyet etmedi?",
+        opts: [
+          { t: "Etti: işte 3 ayrı şikâyet numarası ve çağrı kayıtları. Cevap veren olmamış.", p: 25, f: "Şikâyet kayıtları şirketi köşeye sıkıştırdı. 🎯" },
+          { t: "5 yıllık faturaları hep 200 lira; bu fatura bariz bir hata.", p: 12, f: "Güçlü bir nokta ama şikâyet kayıtları daha keskindi. 😐" },
+          { t: "Çağrı merkezinizi aramak başlı başına işkence!", p: 0, f: "Herkes içinden hak verdi ama hâkim veremedi. 😠" },
+        ],
+      },
+    ],
+  },
+  {
+    id: "ceviz", icon: "🌳", title: "Ceviz Ağacı Kavgası",
+    av: { skin: "#e8c49a", hair: "scarf", hc: "#7a9a6a", glasses: true, shirt: "#5a6a4a" },
+    client: "Ratibe Hanım, kendi bahçesindeki ceviz ağacının cevizlerini topladığı için komşusu tarafından 'hırsızlıkla' suçlanıyor.",
+    charge: "Komşu: \"Ağacın dalları benim tarafa uzanıyor, cevizler benimdir! Üstelik bahçeme izinsiz girdi\" diyor.",
+    evidence: ["🗺️ Tapu ve sınır krokisi", "📷 Toplama günü fotoğrafları", "🗣️ Tanık: mahalle muhtarı"],
+    rounds: [
+      {
+        claim: "Ağaç sınırda! Dallar benim bahçemde, o zaman cevizler de benim!",
+        opts: [
+          { t: "Tapu krokisine göre ağacın gövdesi tamamen Ratibe Hanım'ın arsasında; ağaç kimin, meyvesi de onundur.", p: 25, f: "Kroki masaya serildi: gövde net şekilde içeride! 🎯" },
+          { t: "Dalların uzanması ağacı sizin yapmaz.", p: 12, f: "Doğru ama krokiyle desteklemek daha iyiydi. 😐" },
+          { t: "Cevizi bu kadar seviyorsanız kendiniz ağaç dikin!", p: 0, f: "Komşu daha da sinirlendi. 😠" },
+        ],
+      },
+      {
+        claim: "Ama o gün bahçeme izinsiz girdi, kendi gözümle gördüm!",
+        opts: [
+          { t: "Fotoğraflar ortada: Ratibe Hanım cevizleri kendi tarafından uzun sırıkla toplamış, komşu bahçeye adım atmamış.", p: 25, f: "Fotoğraflardaki sırık her şeyi anlattı! 🎯" },
+          { t: "Bu iddiayı doğrulayan tek bir tanık bile yok.", p: 12, f: "Doğru ama fotoğraflar kesin kanıttı. 😐" },
+          { t: "Bahçenizde girilecek ne var ki?", p: 0, f: "Hâkim 'Sadede gelin' dedi. 😠" },
+        ],
+      },
+      {
+        claim: "Benim tarafıma düşen cevizleri de topladı, onlar benimdi!",
+        opts: [
+          { t: "Tanığımız muhtar, yere düşen cevizleri komşunun kendisinin poşetleyip evine taşıdığını görmüş.", p: 25, f: "Muhtarın ifadesiyle dava tatlıya bağlandı! 🎯" },
+          { t: "Kendi tarafınıza düşenleri zaten aldınız, kimse karışmadı.", p: 12, f: "Sakin ve doğru ama muhtarın ifadesi daha güçlüydü. 😐" },
+          { t: "Üç ceviz için mahkeme mi olur?", p: 0, f: "Olur. Olduğu için buradasınız zaten. 😠" },
+        ],
+      },
+    ],
+  },
+  {
+    id: "album", icon: "📸", title: "Düğün Albümü",
+    av: { skin: "#e6b488", hair: "short", hc: "#2a2016", facial: "beard", fc: "#241b12", shirt: "#2f2f38" },
+    client: "Fotoğrafçı Baran, \"düğün fotoğraflarımızı teslim etmedi\" diyen bir çift tarafından dava edildi. Oysa albüm çoktan teslim edildi.",
+    charge: "Çift: \"Düğünümüzün üzerinden 6 ay geçti, tek fotoğraf alamadık; paramızı ve tazminat istiyoruz\" diyor.",
+    evidence: ["📦 Kargo teslim tutanağı", "💬 Gelinle mesajlaşma kayıtları", "📑 Sözleşme ve teslim listesi"],
+    rounds: [
+      {
+        claim: "6 aydır bekliyoruz! Fotoğraflarımız ortada yok!",
+        opts: [
+          { t: "Kargo tutanağı burada: albüm 4 ay önce adrese teslim edilmiş. Teslim alan: gelinin annesi, imzası da mevcut.", p: 25, f: "Tutanaktaki imza herkesi şaşırttı! 🎯" },
+          { t: "Baran 10 yıldır tek bir albümü bile geciktirmedi.", p: 12, f: "Güzel bir sicil ama tutanak kesin kanıttı. 😐" },
+          { t: "Belki de aramayı akıl edemediniz!", p: 0, f: "Hâkim kaşlarını kaldırdı. 😠" },
+        ],
+      },
+      {
+        claim: "Annem mi almış? O imza sahte olabilir!",
+        opts: [
+          { t: "Mesaj kayıtlarında gelin: 'Albüm annemde, bu hafta alacağız, çok güzel olmuş' yazmış. Ekrana yansıtalım.", p: 25, f: "Mesaj ekrana gelince salonda derin bir sessizlik oldu. 🎯" },
+          { t: "Kargo şirketi teslimatı kimlik kontrolüyle yapar.", p: 12, f: "Doğru ama mesaj her şeyi bitirdi. 😐" },
+          { t: "Aile içi haberleşme sorununuza Baran ne yapsın?", p: 0, f: "Haklı olsa da üslup yanlış. Hâkim uyardı. 😠" },
+        ],
+      },
+      {
+        claim: "Ama dijital fotoğrafların hepsi gelmedi, eksik var!",
+        opts: [
+          { t: "Sözleşmede 300 fotoğraf yazıyor; teslim listesine göre USB'de 412 fotoğraf verilmiş. İki belge de burada.", p: 25, f: "300 sözleşme, 412 teslim: fazlasıyla tamamlanmış! 🎯" },
+          { t: "Eksik olduğuna dair tek bir liste bile sunulmadı.", p: 12, f: "Doğru ama belgeleri göstermek daha güçlüydü. 😐" },
+          { t: "Kim kötü çıktıysa fotoğraflarda, ondan bilin!", p: 0, f: "Salonda kıkırdamalar... Hâkim hiç gülmedi. 😠" },
+        ],
+      },
+    ],
+  },
+  {
+    id: "miras", icon: "📜", title: "Büyük Miras Davası",
+    av: { skin: "#dcb28a", hair: "bald", hc: "#b6ada2", facial: "mustache", fc: "#9a9088", glasses: true, shirt: "#55606e" },
+    client: "Osman Amca'nın kardeşleri, babalarının vasiyetindeki imzanın sahte olduğunu ve evin Osman Amca'ya kalamayacağını söylüyor.",
+    charge: "Kardeşler: \"Babamız bu vasiyeti imzalamadı, imza sahte! Ev hepimizin\" diyerek dava açtı.",
+    evidence: ["🖋️ İmza uzmanı raporu", "🎥 Vasiyetin imzalandığı günün noter kamera kaydı", "🗣️ Tanık: baba dostu emekli öğretmen"],
+    rounds: [
+      {
+        claim: "Bu imza babamızın imzasına hiç benzemiyor! Kesinlikle sahte!",
+        opts: [
+          { t: "İmza uzmanının raporu burada: imza, babanın son 10 yıldaki tüm resmî imzalarıyla birebir uyumlu.", p: 25, f: "Bilimsel rapor tartışmayı bitirdi. 🎯" },
+          { t: "İnsanın imzası yaşlanınca biraz değişebilir.", p: 12, f: "Doğru bir bilgi ama uzman raporu daha güçlüydü. 😐" },
+          { t: "Siz imzadan ne anlarsınız ki!", p: 0, f: "Hâkim 'Son uyarım' dedi. 😠" },
+        ],
+      },
+      {
+        claim: "Babamız o gün hastaydı, notere gitmiş olamaz!",
+        opts: [
+          { t: "Noterin kamera kaydında baba, o gün kendi yürüyerek gelip gülümseyerek imza atıyor. İzleyelim.", p: 25, f: "Kayıt izlendi: baba gayet sağlıklı ve mutlu. 🎯" },
+          { t: "Hasta olmak imza atmaya engel değildir.", p: 12, f: "Doğru ama görüntü her şeyi anlatıyordu. 😐" },
+          { t: "Hastaydıysa bile size ne!", p: 0, f: "Bu üslup davaya zarar veriyor. 😠" },
+        ],
+      },
+      {
+        claim: "Babamız evi asla tek kardeşe bırakmazdı. Bizi çok severdi!",
+        opts: [
+          { t: "Baba dostu emekli öğretmen tanığımız: baba, yıllarca kendisine bakan Osman'a evi bırakacağını herkese söylüyormuş.", p: 25, f: "Tanığın sözleri salonu duygulandırdı. Vasiyet geçerli! 🎯" },
+          { t: "Vasiyet babanın son isteğidir, saygı duymak gerekir.", p: 12, f: "Güzel söz ama tanık ifadesi daha belirleyiciydi. 😐" },
+          { t: "Sevseydi size de bir şey bırakırdı!", p: 0, f: "Salon karıştı! Hâkim tokmağı vurdu. 😠" },
+        ],
+      },
+    ],
+  },
+];
+
+/* ================= KAYIT ================= */
+const SAVE_KEY = "adalet_pesinde_save";
+let save = { xp: 0, unlocked: 1, stars: {}, muted: false };
+try {
+  const s = JSON.parse(localStorage.getItem(SAVE_KEY));
+  if (s && typeof s.xp === "number") save = Object.assign({ muted: false }, s);
+} catch (e) {}
+function persist() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch (e) {} }
+
+/* ================= YARDIMCILAR ================= */
+function show(id) {
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  window.scrollTo(0, 0);
+}
+function rankInfo(xp) {
+  let cur = RANKS[0], next = null;
+  for (let i = 0; i < RANKS.length; i++) {
+    if (xp >= RANKS[i].xp) cur = RANKS[i];
+    else { next = RANKS[i]; break; }
+  }
+  return { cur, next };
+}
+
+/* ================= ANA EKRAN ================= */
+function renderHome() {
+  const { cur, next } = rankInfo(save.xp);
+  document.getElementById("rank-name").textContent = cur.name;
+  if (next) {
+    const span = next.xp - cur.xp;
+    const into = save.xp - cur.xp;
+    document.getElementById("xp-label").textContent = `${save.xp} / ${next.xp} TP — sıradaki: ${next.name}`;
+    document.getElementById("xp-bar").style.width = Math.round(into / span * 100) + "%";
+  } else {
+    document.getElementById("xp-label").textContent = `${save.xp} TP — en yüksek seviyedesin! 🏆`;
+    document.getElementById("xp-bar").style.width = "100%";
+  }
+
+  const list = document.getElementById("case-list");
+  list.innerHTML = "";
+  CASES.forEach((c, i) => {
+    const locked = i >= save.unlocked;
+    const stars = save.stars[c.id] || 0;
+    const div = document.createElement("div");
+    div.className = "case-card" + (locked ? " locked" : "");
+    div.innerHTML = `
+      ${locked ? '<div class="icon">🔒</div>' : `<div class="c-av avatar-circle">${avatarSVG(c.av)}</div>`}
+      <div class="c-info">
+        <div class="c-title">${c.icon} ${c.title}</div>
+        <div class="c-sub">${locked ? "Önceki davayı kazanınca açılır" : "Dava " + (i + 1) + " · ~2 dakika"}</div>
+        ${stars ? `<div class="c-stars">${"⭐".repeat(stars)}</div>` : ""}
+      </div>
+      ${locked ? "" : '<div class="go">›</div>'}`;
+    if (!locked) div.onclick = () => { SND.click(); openBrief(i); };
+    list.appendChild(div);
+  });
+}
+
+/* ================= DAVA ================= */
+let currentCase = 0, round = 0, score = 0;
+
+function openBrief(i) {
+  currentCase = i;
+  const c = CASES[i];
+  document.getElementById("brief-title").textContent = c.icon + " " + c.title;
+  document.getElementById("brief-face").innerHTML = avatarSVG(c.av);
+  document.getElementById("brief-client").textContent = c.client;
+  document.getElementById("brief-charge").textContent = c.charge;
+  document.getElementById("brief-evidence").innerHTML = c.evidence.map(e => `<li>${e}</li>`).join("");
+  show("scr-brief");
+}
+
+function startTrial() {
+  round = 0; score = 0;
+  document.getElementById("trial-title").textContent = CASES[currentCase].icon + " " + CASES[currentCase].title;
+  document.getElementById("trial-scene").innerHTML = courtScene("tj");
+  SND.gavel();
+  renderRound();
+  show("scr-trial");
+}
+
+function renderRound() {
+  const c = CASES[currentCase];
+  const r = c.rounds[round];
+  document.getElementById("trial-round").textContent = `Tur ${round + 1} / ${c.rounds.length}`;
+  document.getElementById("claim-text").textContent = "“" + r.claim + "”";
+  updateMeter();
+  judgeMood("tj", "neutral");
+  const scene = document.getElementById("trial-scene");
+  scene.classList.remove("good", "bad");
+  const fb = document.getElementById("feedback");
+  fb.className = "feedback"; fb.textContent = "";
+  document.getElementById("next-btn").style.display = "none";
+  document.getElementById("options-wrap").style.display = "block";
+
+  // Seçenekleri karıştır
+  const shuffled = r.opts.map((o, idx) => ({ ...o, idx })).sort(() => Math.random() - 0.5);
+  const wrap = document.getElementById("options");
+  wrap.innerHTML = "";
+  shuffled.forEach(o => {
+    const b = document.createElement("button");
+    b.className = "opt";
+    b.textContent = o.t;
+    b.onclick = () => pick(o, b);
+    wrap.appendChild(b);
+  });
+}
+
+function pick(opt, btn) {
+  document.querySelectorAll(".opt").forEach(b => (b.disabled = true));
+  const cls = opt.p >= 25 ? "good" : opt.p >= 12 ? "mid" : "bad";
+  btn.classList.add(cls);
+  score += opt.p;
+  updateMeter();
+
+  judgeMood("tj", cls === "good" ? "happy" : cls === "bad" ? "angry" : "neutral");
+  const scene = document.getElementById("trial-scene");
+  scene.classList.remove("good", "bad");
+  if (cls === "good") scene.classList.add("good");
+  if (cls === "bad") scene.classList.add("bad");
+
+  SND[cls === "good" ? "good" : cls === "bad" ? "bad" : "mid"]();
+
+  const fb = document.getElementById("feedback");
+  fb.className = "feedback show " + cls;
+  fb.textContent = opt.f;
+  document.getElementById("next-btn").style.display = "block";
+}
+
+function updateMeter() {
+  const max = CASES[currentCase].rounds.length * 25;
+  const pct = Math.round(score / max * 100);
+  document.getElementById("meter-bar").style.width = pct + "%";
+  document.getElementById("meter-val").textContent = pct + "%";
+}
+
+function nextRound() {
+  SND.click();
+  round++;
+  if (round < CASES[currentCase].rounds.length) renderRound();
+  else verdict();
+}
+
+/* ================= KARAR ================= */
+function verdict() {
+  const c = CASES[currentCase];
+  const max = c.rounds.length * 25;
+  const pct = score / max;
+  const win = score >= 50;
+  const stars = pct >= 1 ? 3 : pct >= 0.8 ? 2 : win ? 1 : 0;
+
+  document.getElementById("verdict-gavel").innerHTML = GAVEL_SVG;
+  const title = document.getElementById("verdict-title");
+  title.textContent = win ? "DAVAYI KAZANDIN!" : "DAVAYI KAYBETTİN";
+  title.className = win ? "win" : "lose";
+  document.getElementById("verdict-stars").textContent = win ? "⭐".repeat(stars) + "☆".repeat(3 - stars) : "";
+  document.getElementById("verdict-text").textContent = win
+    ? `Hâkim kararını verdi: müvekkilin haklı bulundu! ${stars === 3 ? "Kusursuz bir savunmaydı! 👏" : "İyi iş çıkardın, daha da iyisi mümkün."}`
+    : "Hâkim ikna olmadı. Kanıtlara dikkat ederek tekrar dene — her dava kaybedilse bile tecrübe kazandırır!";
+
+  const oldRank = rankInfo(save.xp).cur.name;
+  const gained = win ? 80 + stars * 20 : 25;
+  save.xp += gained;
+  if (win) {
+    const idx = CASES.indexOf(c);
+    if (idx + 1 > save.unlocked - 1) save.unlocked = Math.min(CASES.length, idx + 2);
+    save.stars[c.id] = Math.max(save.stars[c.id] || 0, stars);
+  }
+  persist();
+  document.getElementById("verdict-xp").textContent = `+${gained} Tecrübe Puanı`;
+
+  const newRank = rankInfo(save.xp).cur.name;
+  const lu = document.getElementById("levelup-box");
+  if (newRank !== oldRank) {
+    lu.style.display = "block";
+    lu.textContent = `🎉 Seviye atladın! Artık bir ${newRank}sın!`;
+  } else lu.style.display = "none";
+
+  SND[win ? "win" : "lose"]();
+  show("scr-verdict");
+}
+
+/* ================= BAŞLAT ================= */
+document.getElementById("home-scene").innerHTML = courtScene("hj");
+document.getElementById("me-avatar").innerHTML = avatarSVG({ skin: "#e6b488", hair: "short", hc: "#3b2a1a", shirt: "#1d2a3f", bg: "#4a3417" });
+document.getElementById("opp-avatar").innerHTML = avatarSVG({ skin: "#e0af80", hair: "bald", hc: "#5a4634", facial: "mustache", fc: "#4a3624", shirt: "#4a2f2f", bg: "#3a2020" });
+document.getElementById("mute-btn").textContent = save.muted ? "🔇" : "🔊";
+renderHome();
+
+// Çevrimdışı destek (yalnızca https üzerinde çalışır)
+if ("serviceWorker" in navigator && location.protocol === "https:") {
+  navigator.serviceWorker.register("sw.js").catch(() => {});
+}
+</script>

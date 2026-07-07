@@ -1,0 +1,17 @@
+{
+  "name": "Adalet Peşinde",
+  "short_name": "Adalet",
+  "description": "Avukat ol, müvekkillerini savun, davaları kazan, seviye atla!",
+  "lang": "tr",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#171110",
+  "theme_color": "#171110",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon-1024.png", "sizes": "1024x1024", "type": "image/png", "purpose": "any" }
+  ]
+}
