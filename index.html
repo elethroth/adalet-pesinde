@@ -80,6 +80,69 @@
   .play-btn{font-size:20px}
   .play-btn .tri{font-size:16px;margin-right:4px}
 
+  /* ---------- ANA MENÜ ---------- */
+  #scr-home.menu{padding:0;justify-content:flex-start}
+  .menu-scene{position:absolute;inset:0;overflow:hidden;z-index:0}
+  .menu-scene svg{width:100%;height:100%;display:block}
+  .menu-overlay{position:absolute;inset:0;z-index:1;
+    background:linear-gradient(180deg,rgba(15,10,7,.30) 0%,rgba(15,10,7,.68) 52%,rgba(14,9,6,.94) 100%)}
+  .menu-content{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;align-items:center;
+    padding:calc(30px + env(safe-area-inset-top)) 24px calc(26px + env(safe-area-inset-bottom))}
+  .logo{text-align:center}
+  .logo-emblem{font-size:42px;filter:drop-shadow(0 4px 10px rgba(0,0,0,.6))}
+  .logo-title{font-family:Georgia,'Times New Roman',serif;font-weight:800;font-size:46px;line-height:.96;
+    letter-spacing:1px;color:#f4d789;margin-top:4px;
+    text-shadow:0 2px 0 #4a2c10,0 3px 0 #38200b,0 7px 18px rgba(0,0,0,.65)}
+  .logo-sub{color:#e0cfa8;font-size:13.5px;margin-top:12px;text-shadow:0 2px 6px rgba(0,0,0,.8);line-height:1.4}
+  .rank-badge{display:inline-flex;align-items:center;gap:11px;margin-top:16px;cursor:pointer;
+    background:rgba(20,14,9,.62);border:1px solid var(--line);border-radius:99px;padding:7px 16px 7px 8px}
+  .rank-badge .rb-av{width:34px;height:34px}
+  .rank-badge .rb-name{font-weight:800;font-size:14px;color:var(--gold)}
+  .rank-badge .rb-xp{font-size:11px;color:var(--muted);margin-top:1px}
+
+  .menu-btns{margin-top:auto;width:100%;max-width:330px;display:flex;flex-direction:column;gap:15px;padding-top:24px}
+  .menu-btn{
+    position:relative;width:100%;border:3px solid #7a4410;cursor:pointer;border-radius:20px;
+    padding:16px 18px;font-size:19px;font-weight:800;letter-spacing:.5px;color:#fff8ee;
+    text-shadow:0 2px 3px rgba(110,50,0,.7);
+    background:linear-gradient(180deg,#ffce59 0%,#f0a92e 46%,#d17d1b 100%);
+    box-shadow:0 6px 0 #97590f,0 12px 20px -5px rgba(0,0,0,.6),inset 0 2px 2px rgba(255,255,255,.55);
+    display:flex;align-items:center;justify-content:center;gap:10px;
+    transition:transform .08s ease,box-shadow .08s ease;
+  }
+  .menu-btn::before{content:"";position:absolute;left:12px;right:12px;top:6px;height:36%;border-radius:14px;
+    background:linear-gradient(180deg,rgba(255,255,255,.5),rgba(255,255,255,0));pointer-events:none}
+  .menu-btn:active{transform:translateY(4px);
+    box-shadow:0 2px 0 #97590f,0 5px 10px -3px rgba(0,0,0,.5),inset 0 2px 2px rgba(255,255,255,.55)}
+  .menu-btn .ico{font-size:.95em}
+  .menu-btn.primary{font-size:23px;padding:19px 18px;
+    background:linear-gradient(180deg,#ffe07d 0%,#f5b431 46%,#e08a1a 100%)}
+  .menu-foot{margin-top:18px;color:rgba(224,207,168,.5);font-size:11px;letter-spacing:.5px}
+
+  /* ---------- AYARLAR ---------- */
+  .settings-list{display:flex;flex-direction:column;gap:12px;margin-top:4px}
+  .set-row{background:linear-gradient(180deg,var(--card),#20180f);border:1px solid var(--line);border-radius:16px;padding:15px}
+  .set-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .set-title{font-weight:700;font-size:16px;color:var(--text);display:flex;align-items:center;gap:11px}
+  .set-ic{font-size:20px;width:24px;text-align:center}
+  .set-desc{font-size:12.5px;color:var(--muted);margin-top:9px;line-height:1.45}
+  .toggle{width:58px;height:32px;border-radius:99px;background:#100b08;border:1px solid var(--line);position:relative;cursor:pointer;transition:background .2s;flex-shrink:0}
+  .toggle.on{background:linear-gradient(90deg,var(--gold-dark),var(--gold));border-color:var(--gold-dark)}
+  .toggle .knob{position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#f3ead9;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.5)}
+  .toggle.on .knob{left:31px}
+  .seg{display:flex;background:#100b08;border:1px solid var(--line);border-radius:12px;padding:4px;gap:4px;margin-top:11px}
+  .seg button{flex:1;border:none;background:transparent;color:var(--muted);font-weight:700;font-size:14px;padding:10px;border-radius:9px;cursor:pointer;transition:all .15s}
+  .seg button.active{background:linear-gradient(180deg,var(--gold),var(--gold-dark));color:#241c08}
+  .reset-btn{margin-top:12px;width:100%;background:rgba(224,102,102,.12);border:1px solid var(--red);color:#eaa;border-radius:12px;padding:12px;font-weight:700;font-size:15px;cursor:pointer}
+  .reset-btn:active{transform:scale(.98)}
+
+  /* ---------- NASIL OYNANIR ---------- */
+  .howto-list{display:flex;flex-direction:column;gap:12px;margin-top:4px}
+  .howto-step{display:flex;gap:14px;align-items:flex-start;background:linear-gradient(180deg,var(--card),#20180f);border:1px solid var(--line);border-radius:16px;padding:14px}
+  .howto-num{width:40px;height:40px;flex-shrink:0;border-radius:50%;background:linear-gradient(180deg,var(--gold),var(--gold-dark));color:#241c08;font-weight:800;display:grid;place-items:center;font-size:19px;box-shadow:inset 0 1px 2px rgba(255,255,255,.4)}
+  .howto-step h4{font-size:15.5px;color:var(--gold)}
+  .howto-step p{font-size:13.5px;color:var(--muted);margin-top:3px;line-height:1.45}
+
   .profile{
     background:var(--card);border-radius:16px;padding:14px 16px;margin:16px 0 8px;
     display:flex;align-items:center;gap:12px;border:1px solid var(--line);
@@ -300,31 +363,87 @@
 <div id="app">
   <button class="mute-btn" id="mute-btn" onclick="toggleMute()">🔊</button>
 
-  <!-- ANA EKRAN (BAŞLANGIÇ) -->
-  <div class="screen active" id="scr-home">
-    <div class="home-hero" id="home-scene"></div>
-    <h1 class="home-title">⚖️ Adalet Peşinde</h1>
-    <p class="home-sub">Müvekkillerini savun, davaları kazan, seviye atla!</p>
-    <div class="profile">
-      <div class="avatar avatar-circle" id="me-avatar"></div>
-      <div class="info">
-        <div class="rank" id="rank-name">Stajyer Avukat</div>
-        <div class="xp-label" id="xp-label">0 / 120 TP</div>
-        <div class="bar"><div id="xp-bar" style="width:0%"></div></div>
+  <!-- ANA MENÜ -->
+  <div class="screen active menu" id="scr-home">
+    <div class="menu-scene" id="home-scene"></div>
+    <div class="menu-overlay"></div>
+    <div class="menu-content">
+      <div class="logo">
+        <div class="logo-emblem">⚖️</div>
+        <h1 class="logo-title">ADALET<br>PEŞİNDE</h1>
+        <p class="logo-sub" data-i18n="subtitle">Müvekkillerini savun, davaları kazan, seviye atla!</p>
       </div>
+      <div class="rank-badge" onclick="openSettings()">
+        <div class="rb-av avatar-circle" id="me-avatar"></div>
+        <div>
+          <div class="rb-name" id="rank-name">Stajyer Avukat</div>
+          <div class="rb-xp" id="xp-label">0 / 120 TP</div>
+        </div>
+      </div>
+      <div class="menu-btns">
+        <button class="menu-btn primary" onclick="goPlay()"><span class="ico">▶</span><span data-i18n="play">OYNA</span></button>
+        <button class="menu-btn" onclick="openSettings()"><span class="ico">⚙️</span><span data-i18n="settings">AYARLAR</span></button>
+        <button class="menu-btn" onclick="openHowto()"><span class="ico">❓</span><span data-i18n="howto">NASIL OYNANIR</span></button>
+      </div>
+      <div class="menu-foot">v1.0 · Adalet Peşinde</div>
     </div>
-    <div class="spacer"></div>
-    <button class="big-btn play-btn" onclick="goPlay()"><span class="tri">▶</span>OYNA</button>
   </div>
 
   <!-- DAVALAR -->
   <div class="screen" id="scr-cases">
     <div class="topbar">
-      <button class="back-btn" onclick="SND.click();show('scr-home');renderHome()">‹ Geri</button>
-      <h2>Davalar</h2>
+      <button class="back-btn" onclick="SND.click();show('scr-home');renderHome()" data-i18n="back">‹ Geri</button>
+      <h2 data-i18n="cases">Davalar</h2>
     </div>
-    <div class="section-title">DAVA DOSYALARI</div>
+    <div class="section-title" data-i18n="caseFiles">DAVA DOSYALARI</div>
     <div id="case-list"></div>
+  </div>
+
+  <!-- AYARLAR -->
+  <div class="screen" id="scr-settings">
+    <div class="topbar">
+      <button class="back-btn" onclick="SND.click();show('scr-home');renderHome()" data-i18n="back">‹ Geri</button>
+      <h2 data-i18n="settingsTitle">Ayarlar</h2>
+    </div>
+    <div class="settings-list">
+      <div class="set-row">
+        <div class="set-head">
+          <div class="set-title"><span class="set-ic">🔊</span><span data-i18n="setSound">Ses Efektleri</span></div>
+          <div class="toggle" id="sound-toggle" onclick="toggleSoundSetting()"><div class="knob"></div></div>
+        </div>
+      </div>
+      <div class="set-row">
+        <div class="set-head">
+          <div class="set-title"><span class="set-ic">🌐</span><span data-i18n="setLang">Oyun Dili</span></div>
+        </div>
+        <div class="seg" id="lang-seg">
+          <button data-lang="tr" onclick="setLang('tr')">Türkçe</button>
+          <button data-lang="en" onclick="setLang('en')">English</button>
+        </div>
+        <div class="set-desc" data-i18n="langNote">Menü ve arayüz dili. Dava metinleri şu an yalnızca Türkçedir.</div>
+      </div>
+      <div class="set-row">
+        <div class="set-head">
+          <div class="set-title"><span class="set-ic">🗑️</span><span data-i18n="setReset">İlerlemeyi Sıfırla</span></div>
+        </div>
+        <div class="set-desc" data-i18n="resetDesc">Tüm ilerlemen ve yıldızların silinir.</div>
+        <button class="reset-btn" id="reset-btn" onclick="resetProgress()" data-i18n="resetBtn">Sıfırla</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- NASIL OYNANIR -->
+  <div class="screen" id="scr-howto">
+    <div class="topbar">
+      <button class="back-btn" onclick="SND.click();show('scr-home')" data-i18n="back">‹ Geri</button>
+      <h2 data-i18n="howtoTitle">Nasıl Oynanır</h2>
+    </div>
+    <div class="howto-list">
+      <div class="howto-step"><div class="howto-num">1</div><div><h4 data-i18n="howto1t"></h4><p data-i18n="howto1d"></p></div></div>
+      <div class="howto-step"><div class="howto-num">2</div><div><h4 data-i18n="howto2t"></h4><p data-i18n="howto2d"></p></div></div>
+      <div class="howto-step"><div class="howto-num">3</div><div><h4 data-i18n="howto3t"></h4><p data-i18n="howto3d"></p></div></div>
+      <div class="howto-step"><div class="howto-num">4</div><div><h4 data-i18n="howto4t"></h4><p data-i18n="howto4d"></p></div></div>
+    </div>
   </div>
 
   <!-- DAVA ÖZETİ -->
@@ -338,27 +457,27 @@
       <div class="case-hero-grad"></div>
       <div class="case-hero-icon" id="brief-hero-icon"></div>
       <div class="case-hero-client avatar-circle" id="brief-hero-av"></div>
-      <div class="case-ribbon">DAVA DOSYASI</div>
+      <div class="case-ribbon" data-i18n="caseFile">DAVA DOSYASI</div>
       <div class="case-no" id="brief-no"></div>
     </div>
     <div class="brief-box">
-      <h3>MÜVEKKİLİN</h3>
+      <h3 data-i18n="client">MÜVEKKİLİN</h3>
       <p id="brief-client"></p>
     </div>
     <div class="brief-box">
-      <h3>SUÇLAMA / KONU</h3>
+      <h3 data-i18n="charge">SUÇLAMA / KONU</h3>
       <p id="brief-charge"></p>
     </div>
     <div class="brief-box">
-      <h3>ELİNDEKİ KANITLAR</h3>
+      <h3 data-i18n="evidence">ELİNDEKİ KANITLAR</h3>
       <div class="ev-list" id="brief-evidence"></div>
     </div>
     <div class="info-strip">
-      <div class="info-cell"><span class="info-k">SÜRE</span><span class="info-v">~2 dk · 3 tur</span></div>
-      <div class="info-cell"><span class="info-k">KAZANINCA</span><span class="info-v" id="brief-reward"></span></div>
+      <div class="info-cell"><span class="info-k" data-i18n="time">SÜRE</span><span class="info-v" data-i18n="timeVal">~2 dk · 3 tur</span></div>
+      <div class="info-cell"><span class="info-k" data-i18n="reward">KAZANINCA</span><span class="info-v" id="brief-reward"></span></div>
     </div>
     <div class="spacer"></div>
-    <button class="big-btn" onclick="startTrial()">🏛️ Duruşmaya Başla</button>
+    <button class="big-btn" onclick="startTrial()" data-i18n="startTrial">🏛️ Duruşmaya Başla</button>
   </div>
 
   <!-- DURUŞMA -->
@@ -369,22 +488,22 @@
     </div>
     <div class="scene-banner" id="trial-scene"></div>
     <div class="meter-wrap">
-      <div class="meter-label"><span>Hâkimi İkna Etme</span><span id="meter-val">0%</span></div>
+      <div class="meter-label"><span data-i18n="persuade">Hâkimi İkna Etme</span><span id="meter-val">0%</span></div>
       <div class="meter"><div id="meter-bar" style="width:0%"></div></div>
     </div>
     <div class="bubble">
       <div class="b-av avatar-circle" id="opp-avatar"></div>
       <div class="b-body">
-        <div class="who">KARŞI TARAF</div>
+        <div class="who" data-i18n="opponent">KARŞI TARAF</div>
         <p id="claim-text"></p>
       </div>
     </div>
     <div class="feedback" id="feedback"></div>
     <div id="options-wrap">
-      <div class="choose-label">👉 Savunmanı seç:</div>
+      <div class="choose-label" data-i18n="chooseDefense">👉 Savunmanı seç:</div>
       <div id="options"></div>
     </div>
-    <button class="big-btn" id="next-btn" style="display:none" onclick="nextRound()">Devam ›</button>
+    <button class="big-btn" id="next-btn" style="display:none" onclick="nextRound()" data-i18n="continue">Devam ›</button>
   </div>
 
   <!-- KARAR -->
@@ -398,8 +517,8 @@
       <div class="levelup" id="levelup-box" style="display:none"></div>
     </div>
     <div class="spacer"></div>
-    <button class="big-btn" onclick="SND.click();renderHome();renderCases();show('scr-cases')">📋 Davalara Dön</button>
-    <button class="big-btn secondary" onclick="openBrief(currentCase)">↻ Tekrar Dene</button>
+    <button class="big-btn" onclick="SND.click();renderHome();renderCases();show('scr-cases')" data-i18n="returnCases">📋 Davalara Dön</button>
+    <button class="big-btn secondary" onclick="openBrief(currentCase)" data-i18n="retry">↻ Tekrar Dene</button>
   </div>
 
 </div>
@@ -757,20 +876,79 @@ function toggleMute() {
   save.muted = !save.muted;
   persist();
   document.getElementById("mute-btn").textContent = save.muted ? "🔇" : "🔊";
+  var st = document.getElementById("sound-toggle");
+  if (st) st.classList.toggle("on", !save.muted);
   if (!save.muted) SND.click();
+}
+
+/* ================= DİL (i18n) ================= */
+const LANG = {
+  tr: {
+    subtitle: "Müvekkillerini savun, davaları kazan, seviye atla!",
+    play: "OYNA", settings: "AYARLAR", howto: "NASIL OYNANIR",
+    back: "‹ Geri", cases: "Davalar", caseFiles: "DAVA DOSYALARI",
+    locked: "Önceki davayı kazanınca açılır", caseN: "Dava", minutes: "~2 dakika",
+    client: "MÜVEKKİLİN", charge: "SUÇLAMA / KONU", evidence: "ELİNDEKİ KANITLAR",
+    caseFile: "DAVA DOSYASI", file: "DOSYA",
+    time: "SÜRE", timeVal: "~2 dk · 3 tur", reward: "KAZANINCA",
+    startTrial: "🏛️ Duruşmaya Başla",
+    persuade: "Hâkimi İkna Etme", opponent: "KARŞI TARAF", chooseDefense: "👉 Savunmanı seç:",
+    continue: "Devam ›", round: "Tur", tp: "TP", next: "sıradaki", maxLevel: "en yüksek seviyedesin! 🏆",
+    win: "DAVAYI KAZANDIN!", lose: "DAVAYI KAYBETTİN",
+    winText3: "Hâkim kararını verdi: müvekkilin haklı bulundu! Kusursuz bir savunmaydı! 👏",
+    winText: "Hâkim kararını verdi: müvekkilin haklı bulundu! İyi iş çıkardın, daha da iyisi mümkün.",
+    loseText: "Hâkim ikna olmadı. Kanıtlara dikkat ederek tekrar dene — her dava kaybedilse bile tecrübe kazandırır!",
+    xpGain: "Tecrübe Puanı", returnCases: "📋 Davalara Dön", retry: "↻ Tekrar Dene",
+    levelup: "🎉 Seviye atladın! Artık bir {rank}sın!",
+    settingsTitle: "Ayarlar", setSound: "Ses Efektleri",
+    setLang: "Oyun Dili", langNote: "Menü ve arayüz dili. Dava metinleri şu an yalnızca Türkçedir.",
+    setReset: "İlerlemeyi Sıfırla", resetDesc: "Tüm ilerlemen ve yıldızların silinir.",
+    resetBtn: "Sıfırla", resetConfirm: "Emin misin? Tüm ilerleme silinecek.", resetDone: "İlerleme sıfırlandı ✓",
+    howtoTitle: "Nasıl Oynanır",
+    howto1t: "Bir dava seç", howto1d: "Menüde OYNA'ya bas, açık davalardan birini seç.",
+    howto2t: "Dosyayı incele", howto2d: "Müvekkilini, suçlamayı ve elindeki kanıtları oku.",
+    howto3t: "Savunmanı seç", howto3d: "Her turda en güçlü, kanıta dayalı savunmayı seç.",
+    howto4t: "Hâkimi ikna et", howto4d: "İkna çubuğunu doldur, yıldız kazan, seviye atla!",
+    ranks: ["Stajyer Avukat","Genç Avukat","Avukat","Uzman Avukat","Kıdemli Avukat","Usta Savunucu","Adalet Efsanesi"],
+  },
+  en: {
+    subtitle: "Defend your clients, win cases, level up!",
+    play: "PLAY", settings: "SETTINGS", howto: "HOW TO PLAY",
+    back: "‹ Back", cases: "Cases", caseFiles: "CASE FILES",
+    locked: "Unlocks when you win the previous case", caseN: "Case", minutes: "~2 minutes",
+    client: "YOUR CLIENT", charge: "CHARGE / MATTER", evidence: "YOUR EVIDENCE",
+    caseFile: "CASE FILE", file: "FILE",
+    time: "TIME", timeVal: "~2 min · 3 rounds", reward: "ON WINNING",
+    startTrial: "🏛️ Start the Trial",
+    persuade: "Convince the Judge", opponent: "OPPOSING SIDE", chooseDefense: "👉 Choose your defense:",
+    continue: "Continue ›", round: "Round", tp: "XP", next: "next", maxLevel: "you're at the top level! 🏆",
+    win: "YOU WON THE CASE!", lose: "YOU LOST THE CASE",
+    winText3: "The judge has ruled: your client is vindicated! A flawless defense! 👏",
+    winText: "The judge has ruled: your client is vindicated! Well done — even better is possible.",
+    loseText: "The judge wasn't convinced. Mind the evidence and try again — every case earns experience!",
+    xpGain: "Experience Points", returnCases: "📋 Back to Cases", retry: "↻ Try Again",
+    levelup: "🎉 Level up! You are now a {rank}!",
+    settingsTitle: "Settings", setSound: "Sound Effects",
+    setLang: "Game Language", langNote: "Menu and interface language. Case texts are currently Turkish only.",
+    setReset: "Reset Progress", resetDesc: "All your progress and stars will be erased.",
+    resetBtn: "Reset", resetConfirm: "Are you sure? All progress will be deleted.", resetDone: "Progress reset ✓",
+    howtoTitle: "How to Play",
+    howto1t: "Pick a case", howto1d: "Tap PLAY in the menu and choose an unlocked case.",
+    howto2t: "Study the file", howto2d: "Read your client, the charge and your evidence.",
+    howto3t: "Choose your defense", howto3d: "Each round, pick the strongest evidence-based defense.",
+    howto4t: "Convince the judge", howto4d: "Fill the persuasion bar, earn stars, and level up!",
+    ranks: ["Trainee Lawyer","Junior Lawyer","Lawyer","Expert Lawyer","Senior Lawyer","Master Advocate","Legend of Justice"],
+  },
+};
+function t(k) { const L = LANG[save.lang] || LANG.tr; return (k in L ? L[k] : LANG.tr[k]) ?? k; }
+function applyI18n() {
+  document.querySelectorAll("[data-i18n]").forEach(el => { el.textContent = t(el.getAttribute("data-i18n")); });
 }
 
 /* ================= OYUN VERİSİ ================= */
 
-const RANKS = [
-  { xp: 0,    name: "Stajyer Avukat" },
-  { xp: 120,  name: "Genç Avukat" },
-  { xp: 300,  name: "Avukat" },
-  { xp: 550,  name: "Uzman Avukat" },
-  { xp: 850,  name: "Kıdemli Avukat" },
-  { xp: 1200, name: "Usta Savunucu" },
-  { xp: 1650, name: "Adalet Efsanesi" },
-];
+const RANK_XP = [0, 120, 300, 550, 850, 1200, 1650];
+function rankName(i) { const L = LANG[save.lang] || LANG.tr; return L.ranks[i] || LANG.tr.ranks[i]; }
 
 // Her seçenek: t = metin, p = puan (25 iyi / 12 orta / 0 kötü), f = geri bildirim
 const CASES = [
@@ -1174,40 +1352,44 @@ const CASES = [
 
 /* ================= KAYIT ================= */
 const SAVE_KEY = "adalet_pesinde_save";
-let save = { xp: 0, unlocked: 1, stars: {}, muted: false };
+let save = { xp: 0, unlocked: 1, stars: {}, muted: false, lang: "tr" };
 try {
   const s = JSON.parse(localStorage.getItem(SAVE_KEY));
-  if (s && typeof s.xp === "number") save = Object.assign({ muted: false }, s);
+  if (s && typeof s.xp === "number") save = Object.assign({ muted: false, lang: "tr" }, s);
 } catch (e) {}
+if (save.lang !== "tr" && save.lang !== "en") save.lang = "tr";
 function persist() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch (e) {} }
 
 /* ================= YARDIMCILAR ================= */
 function show(id) {
   document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
+  applyI18n();
   window.scrollTo(0, 0);
 }
 function rankInfo(xp) {
-  let cur = RANKS[0], next = null;
-  for (let i = 0; i < RANKS.length; i++) {
-    if (xp >= RANKS[i].xp) cur = RANKS[i];
-    else { next = RANKS[i]; break; }
+  let ci = 0, ni = null;
+  for (let i = 0; i < RANK_XP.length; i++) {
+    if (xp >= RANK_XP[i]) ci = i;
+    else { ni = i; break; }
   }
-  return { cur, next };
+  return { ci, ni };
 }
 
-/* ================= ANA EKRAN ================= */
+/* ================= ANA MENÜ ================= */
 function renderHome() {
-  const { cur, next } = rankInfo(save.xp);
-  document.getElementById("rank-name").textContent = cur.name;
-  if (next) {
-    const span = next.xp - cur.xp;
-    const into = save.xp - cur.xp;
-    document.getElementById("xp-label").textContent = `${save.xp} / ${next.xp} TP — sıradaki: ${next.name}`;
-    document.getElementById("xp-bar").style.width = Math.round(into / span * 100) + "%";
+  const { ci, ni } = rankInfo(save.xp);
+  document.getElementById("rank-name").textContent = rankName(ci);
+  const bar = document.getElementById("xp-bar");
+  if (ni != null) {
+    const span = RANK_XP[ni] - RANK_XP[ci];
+    const into = save.xp - RANK_XP[ci];
+    document.getElementById("xp-label").textContent =
+      `${save.xp} / ${RANK_XP[ni]} ${t("tp")} — ${t("next")}: ${rankName(ni)}`;
+    if (bar) bar.style.width = Math.round(into / span * 100) + "%";
   } else {
-    document.getElementById("xp-label").textContent = `${save.xp} TP — en yüksek seviyedesin! 🏆`;
-    document.getElementById("xp-bar").style.width = "100%";
+    document.getElementById("xp-label").textContent = `${save.xp} ${t("tp")} — ${t("maxLevel")}`;
+    if (bar) bar.style.width = "100%";
   }
 }
 
@@ -1229,13 +1411,61 @@ function renderCases() {
       ${locked ? '<div class="icon">🔒</div>' : `<div class="c-av avatar-circle">${avatarSVG(c.av)}</div>`}
       <div class="c-info">
         <div class="c-title">${c.icon} ${c.title}</div>
-        <div class="c-sub">${locked ? "Önceki davayı kazanınca açılır" : "Dava " + (i + 1) + " · ~2 dakika"}</div>
+        <div class="c-sub">${locked ? t("locked") : t("caseN") + " " + (i + 1) + " · " + t("minutes")}</div>
         ${stars ? `<div class="c-stars">${"⭐".repeat(stars)}</div>` : ""}
       </div>
       ${locked ? "" : '<div class="go">›</div>'}`;
     if (!locked) div.onclick = () => { SND.click(); openBrief(i); };
     list.appendChild(div);
   });
+}
+
+/* ================= AYARLAR / NASIL OYNANIR ================= */
+function openSettings() {
+  SND.click();
+  syncSettingsUI();
+  show("scr-settings");
+}
+function openHowto() {
+  SND.click();
+  show("scr-howto");
+}
+function syncSettingsUI() {
+  document.getElementById("sound-toggle").classList.toggle("on", !save.muted);
+  document.querySelectorAll("#lang-seg button").forEach(b =>
+    b.classList.toggle("active", b.getAttribute("data-lang") === save.lang));
+}
+function toggleSoundSetting() {
+  save.muted = !save.muted;
+  persist();
+  document.getElementById("mute-btn").textContent = save.muted ? "🔇" : "🔊";
+  syncSettingsUI();
+  if (!save.muted) SND.click();
+}
+function setLang(lang) {
+  if (save.lang === lang) return;
+  save.lang = lang;
+  persist();
+  SND.click();
+  applyI18n();
+  renderHome();
+  syncSettingsUI();
+}
+let resetArmed = false;
+function resetProgress() {
+  const btn = document.getElementById("reset-btn");
+  if (!resetArmed) {
+    resetArmed = true;
+    btn.textContent = t("resetConfirm");
+    setTimeout(() => { resetArmed = false; btn.textContent = t("resetBtn"); }, 4000);
+    return;
+  }
+  save.xp = 0; save.unlocked = 1; save.stars = {};
+  persist();
+  resetArmed = false;
+  btn.textContent = t("resetDone");
+  renderHome();
+  setTimeout(() => { btn.textContent = t("resetBtn"); }, 1500);
 }
 
 /* ================= DAVA ================= */
@@ -1248,10 +1478,10 @@ function openBrief(i) {
   document.getElementById("brief-hero-scene").innerHTML = courtScene("bh");
   document.getElementById("brief-hero-icon").textContent = c.icon;
   document.getElementById("brief-hero-av").innerHTML = avatarSVG(c.av);
-  document.getElementById("brief-no").textContent = "DOSYA #" + String(i + 1).padStart(3, "0");
+  document.getElementById("brief-no").textContent = t("file") + " #" + String(i + 1).padStart(3, "0");
   document.getElementById("brief-client").textContent = c.client;
   document.getElementById("brief-charge").textContent = c.charge;
-  document.getElementById("brief-reward").textContent = "+" + (80 + c.rounds.length * 20) + " TP";
+  document.getElementById("brief-reward").textContent = "+" + (80 + c.rounds.length * 20) + " " + t("tp");
   document.getElementById("brief-evidence").innerHTML = c.evidence.map(e => {
     const sp = e.indexOf(" ");
     const ic = sp > 0 ? e.slice(0, sp) : "📎";
@@ -1273,7 +1503,7 @@ function startTrial() {
 function renderRound() {
   const c = CASES[currentCase];
   const r = c.rounds[round];
-  document.getElementById("trial-round").textContent = `Tur ${round + 1} / ${c.rounds.length}`;
+  document.getElementById("trial-round").textContent = `${t("round")} ${round + 1} / ${c.rounds.length}`;
   document.getElementById("claim-text").textContent = "“" + r.claim + "”";
   updateMeter();
   judgeMood("tj", "neutral");
@@ -1342,14 +1572,14 @@ function verdict() {
 
   document.getElementById("verdict-gavel").innerHTML = GAVEL_SVG;
   const title = document.getElementById("verdict-title");
-  title.textContent = win ? "DAVAYI KAZANDIN!" : "DAVAYI KAYBETTİN";
+  title.textContent = win ? t("win") : t("lose");
   title.className = win ? "win" : "lose";
   document.getElementById("verdict-stars").textContent = win ? "⭐".repeat(stars) + "☆".repeat(3 - stars) : "";
   document.getElementById("verdict-text").textContent = win
-    ? `Hâkim kararını verdi: müvekkilin haklı bulundu! ${stars === 3 ? "Kusursuz bir savunmaydı! 👏" : "İyi iş çıkardın, daha da iyisi mümkün."}`
-    : "Hâkim ikna olmadı. Kanıtlara dikkat ederek tekrar dene — her dava kaybedilse bile tecrübe kazandırır!";
+    ? (stars === 3 ? t("winText3") : t("winText"))
+    : t("loseText");
 
-  const oldRank = rankInfo(save.xp).cur.name;
+  const oldRankI = rankInfo(save.xp).ci;
   const gained = win ? 80 + stars * 20 : 25;
   save.xp += gained;
   if (win) {
@@ -1358,13 +1588,13 @@ function verdict() {
     save.stars[c.id] = Math.max(save.stars[c.id] || 0, stars);
   }
   persist();
-  document.getElementById("verdict-xp").textContent = `+${gained} Tecrübe Puanı`;
+  document.getElementById("verdict-xp").textContent = `+${gained} ${t("xpGain")}`;
 
-  const newRank = rankInfo(save.xp).cur.name;
+  const newRankI = rankInfo(save.xp).ci;
   const lu = document.getElementById("levelup-box");
-  if (newRank !== oldRank) {
+  if (newRankI !== oldRankI) {
     lu.style.display = "block";
-    lu.textContent = `🎉 Seviye atladın! Artık bir ${newRank}sın!`;
+    lu.textContent = t("levelup").replace("{rank}", rankName(newRankI));
   } else lu.style.display = "none";
 
   SND[win ? "win" : "lose"]();
@@ -1377,6 +1607,8 @@ document.getElementById("home-scene").innerHTML = courtScene("hj");
 document.getElementById("me-avatar").innerHTML = avatarSVG({ skin: "#e6b488", hair: "short", hc: "#3b2a1a", shirt: "#1d2a3f", bg: "#4a3417" });
 document.getElementById("opp-avatar").innerHTML = avatarSVG({ skin: "#e0af80", hair: "bald", hc: "#5a4634", facial: "mustache", fc: "#4a3624", shirt: "#4a2f2f", bg: "#3a2020" });
 document.getElementById("mute-btn").textContent = save.muted ? "🔇" : "🔊";
+applyI18n();
+syncSettingsUI();
 renderHome();
 
 // Çevrimdışı destek (yalnızca https üzerinde çalışır)
