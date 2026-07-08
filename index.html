@@ -143,10 +143,11 @@
     border-radius:10px;padding:9px 12px;font-size:14.5px;line-height:1.35;
   }
   .ev-chip .ev-ic{
-    width:32px;height:32px;flex-shrink:0;display:grid;place-items:center;
+    width:34px;height:34px;flex-shrink:0;display:grid;place-items:center;
     background:rgba(224,176,79,.12);border:1px solid rgba(224,176,79,.25);
-    border-radius:8px;font-size:17px;
+    border-radius:8px;
   }
+  .ev-chip .ev-ic svg{width:22px;height:22px;display:block}
 
   /* bilgi şeridi */
   .info-strip{display:flex;gap:10px;margin-bottom:2px}
@@ -653,6 +654,41 @@ const GAVEL_SVG = `<svg viewBox="0 0 120 120" width="110" height="110" xmlns="ht
     <rect x="77" y="22" width="7" height="30" fill="#c9a24b"/>
   </g>
 </svg>`;
+
+/* ================= KANIT SİMGELERİ (temaya uygun mini çizimler) ================= */
+const EV_ART = {
+  receipt: `<path d="M6 3h12v16l-2-1.3-2 1.3-2-1.3-2 1.3-2-1.3L6 20z" fill="#ece3cf" stroke="#b8912f" stroke-width="1"/><g stroke="#8a5f49" stroke-width="1.1" stroke-linecap="round"><line x1="8.5" y1="7" x2="15.5" y2="7"/><line x1="8.5" y1="10" x2="15.5" y2="10"/><line x1="8.5" y1="13" x2="13" y2="13"/></g>`,
+  doc: `<path d="M6 3h8l4 4v14H6z" fill="#ece3cf" stroke="#b8912f" stroke-width="1" stroke-linejoin="round"/><path d="M14 3v4h4" fill="none" stroke="#b8912f" stroke-width="1"/><g stroke="#8a5f49" stroke-width="1" stroke-linecap="round"><line x1="8.5" y1="11" x2="15" y2="11"/><line x1="8.5" y1="14" x2="15" y2="14"/><line x1="8.5" y1="17" x2="12.5" y2="17"/></g>`,
+  video: `<rect x="3" y="7" width="12" height="10" rx="2" fill="#3a2c1f" stroke="#d9a845" stroke-width="1"/><circle cx="9" cy="12" r="2.6" fill="#6a7a88" stroke="#e6c672" stroke-width=".8"/><path d="M15 10l5-2.5v9L15 14z" fill="#5a4128" stroke="#d9a845" stroke-width="1" stroke-linejoin="round"/><rect x="5" y="4.6" width="4" height="2.6" rx="1" fill="#2a1d12"/>`,
+  photo: `<rect x="3" y="7" width="18" height="12" rx="2.5" fill="#3a2c1f" stroke="#d9a845" stroke-width="1"/><path d="M8 7l1.4-2h5.2L16 7z" fill="#3a2c1f" stroke="#d9a845" stroke-width="1"/><circle cx="12" cy="13" r="3.4" fill="#2a1d12" stroke="#e6c672" stroke-width="1"/><circle cx="12" cy="13" r="1.4" fill="#6a7a88"/><circle cx="17.6" cy="9.4" r=".9" fill="#e6c672"/>`,
+  witness: `<circle cx="9" cy="8" r="3.4" fill="#e6b488" stroke="#b8912f" stroke-width=".8"/><path d="M3.5 19c0-3.6 2.5-6 5.5-6s5.5 2.4 5.5 6z" fill="#5a4128" stroke="#b8912f" stroke-width=".8"/><g stroke="#e6c672" stroke-width="1.3" stroke-linecap="round" fill="none"><path d="M16.5 8q2 4 0 8"/><path d="M19 6q3 6 0 12"/></g>`,
+  paw: `<g fill="#d9a845"><ellipse cx="12" cy="15" rx="4.2" ry="3.4"/><ellipse cx="6.6" cy="11" rx="1.7" ry="2.2"/><ellipse cx="10" cy="8.2" rx="1.7" ry="2.3"/><ellipse cx="14" cy="8.2" rx="1.7" ry="2.3"/><ellipse cx="17.4" cy="11" rx="1.7" ry="2.2"/></g>`,
+  vet: `<path d="M6 4v5a4 4 0 0 0 8 0V4" fill="none" stroke="#9aa2ab" stroke-width="1.6" stroke-linecap="round"/><path d="M10 13v2a4 4 0 0 0 8 0v-2" fill="none" stroke="#9aa2ab" stroke-width="1.6"/><circle cx="18" cy="10.6" r="2.4" fill="#b5533f" stroke="#e6c672" stroke-width=".8"/><circle cx="6" cy="4" r="1.2" fill="#9aa2ab"/><circle cx="14" cy="4" r="1.2" fill="#9aa2ab"/>`,
+  idcard: `<rect x="2.5" y="6" width="19" height="12" rx="2" fill="#3a2c1f" stroke="#d9a845" stroke-width="1"/><circle cx="8" cy="12" r="2.4" fill="#e6b488"/><path d="M4.8 16.4c0-1.8 1.4-3 3.2-3s3.2 1.2 3.2 3" fill="#5a4128"/><g stroke="#e6c672" stroke-width="1.2" stroke-linecap="round"><line x1="13.5" y1="10.5" x2="18.5" y2="10.5"/><line x1="13.5" y1="13.5" x2="18.5" y2="13.5"/></g>`,
+  message: `<path d="M4 5h16a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H10l-4 3v-3H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z" fill="#3f8f5a" stroke="#e6c672" stroke-width=".8"/><g fill="#eafff0"><circle cx="8" cy="10.6" r="1.1"/><circle cx="12" cy="10.6" r="1.1"/><circle cx="16" cy="10.6" r="1.1"/></g>`,
+  key: `<circle cx="7.5" cy="9" r="4" fill="none" stroke="#d9a845" stroke-width="2"/><circle cx="7.5" cy="9" r="1.3" fill="#d9a845"/><path d="M10.5 11l8 8M15.5 16l2-2M17.5 18l2-2" stroke="#d9a845" stroke-width="2" stroke-linecap="round" fill="none"/>`,
+  ticket: `<path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2 2 2 0 0 0 0 4 2 2 0 0 1-2 2H5a2 2 0 0 1-2-2 2 2 0 0 0 0-4z" fill="#b5533f" stroke="#e6c672" stroke-width=".8"/><line x1="12" y1="7" x2="12" y2="15" stroke="#ffeede" stroke-width="1" stroke-dasharray="1.6 1.6"/>`,
+  sign: `<path d="M12 4l6 11H6z" fill="#d9a845" stroke="#8a5f1f" stroke-width="1" stroke-linejoin="round"/><rect x="11" y="8" width="2" height="3.6" rx="1" fill="#2a1d12"/><circle cx="12" cy="13.2" r="1" fill="#2a1d12"/><path d="M7 15h10l1.6 4H5.4z" fill="#5a4128" stroke="#8a5f1f" stroke-width=".8" stroke-linejoin="round"/>`,
+  book: `<path d="M12 6C9.5 4.5 6 4.5 3.5 6v12C6 16.5 9.5 16.5 12 18z" fill="#ece3cf" stroke="#b8912f" stroke-width="1" stroke-linejoin="round"/><path d="M12 6c2.5-1.5 6-1.5 8.5 0v12C18 16.5 14.5 16.5 12 18z" fill="#e3d8bf" stroke="#b8912f" stroke-width="1" stroke-linejoin="round"/><g stroke="#b09a6a" stroke-width=".8"><line x1="5.5" y1="9" x2="10" y2="9.8"/><line x1="5.5" y1="12" x2="10" y2="12.8"/><line x1="14" y1="9.8" x2="18.5" y2="9"/><line x1="14" y1="12.8" x2="18.5" y2="12"/></g>`,
+  chef: `<path d="M6 12a3.6 3.6 0 0 1-1-7A4 4 0 0 1 12 3.2 4 4 0 0 1 19 5a3.6 3.6 0 0 1-1 7z" fill="#f0ead9" stroke="#b8912f" stroke-width=".8" stroke-linejoin="round"/><rect x="6" y="12" width="12" height="6" rx="1.5" fill="#e3d8bf" stroke="#b8912f" stroke-width=".8"/><g stroke="#b09a6a" stroke-width=".9"><line x1="9" y1="14.5" x2="9" y2="17"/><line x1="12" y1="14.5" x2="12" y2="17"/><line x1="15" y1="14.5" x2="15" y2="17"/></g>`,
+  micro: `<path d="M12 4l3 1.6-3.4 6L8.6 10z" fill="#6a7a88" stroke="#e6c672" stroke-width=".8" stroke-linejoin="round"/><path d="M11 11.4l2.4 1.3-1 1.7a4.6 4.6 0 0 1 2 3.6H8a4.6 4.6 0 0 1 3-4z" fill="#5a4128" stroke="#d9a845" stroke-width=".8" stroke-linejoin="round"/><rect x="5" y="19" width="14" height="2" rx="1" fill="#d9a845"/><circle cx="12" cy="5.6" r="1.1" fill="#e6c672"/>`,
+  phone: `<rect x="6.5" y="3" width="11" height="18" rx="2.5" fill="#3a2c1f" stroke="#d9a845" stroke-width="1"/><rect x="8.4" y="5.4" width="7.2" height="4" rx="1" fill="#6a7a88"/><g fill="#d9a845"><circle cx="9.5" cy="12" r=".95"/><circle cx="12" cy="12" r=".95"/><circle cx="14.5" cy="12" r=".95"/><circle cx="9.5" cy="15" r=".95"/><circle cx="12" cy="15" r=".95"/><circle cx="14.5" cy="15" r=".95"/><circle cx="9.5" cy="18" r=".95"/><circle cx="12" cy="18" r=".95"/><circle cx="14.5" cy="18" r=".95"/></g>`,
+  antenna: `<path d="M12 20V8.5" stroke="#9aa2ab" stroke-width="1.6"/><path d="M8 20l4-11.5 4 11.5" fill="none" stroke="#d9a845" stroke-width="1.4" stroke-linejoin="round"/><circle cx="12" cy="7" r="1.6" fill="#b5533f"/><g stroke="#e6c672" stroke-width="1.2" fill="none" stroke-linecap="round"><path d="M8.5 5.5q-1.5 1.5 0 3"/><path d="M6 4q-3 3 0 6"/><path d="M15.5 5.5q1.5 1.5 0 3"/><path d="M18 4q3 3 0 6"/></g>`,
+  map: `<path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z" fill="#e3d8bf" stroke="#b8912f" stroke-width="1" stroke-linejoin="round"/><path d="M9 4v14M15 6v14" stroke="#b09a6a" stroke-width=".9"/><path d="M6 9.5l3 3 3-4 2.5 2.5" fill="none" stroke="#3f8f5a" stroke-width="1"/><circle cx="14.5" cy="11" r="1.2" fill="#b5533f"/>`,
+  box: `<path d="M12 3l8 4v10l-8 4-8-4V7z" fill="#8a6440" stroke="#5a4128" stroke-width="1" stroke-linejoin="round"/><path d="M4 7l8 4 8-4M12 11v10" stroke="#5a4128" stroke-width="1" fill="none"/><path d="M8.5 5l8 4" stroke="#b8912f" stroke-width="1"/>`,
+  pen: `<path d="M4 20c3-1 4-2 5-3l8.5-8.5-2.5-2.5L6.5 14.5c-1 1-1.5 2-2.5 5.5z" fill="#5a4128" stroke="#d9a845" stroke-width="1" stroke-linejoin="round"/><path d="M15.4 5.6l2.5 2.5 1.1-1.1a1.4 1.4 0 0 0 0-2l-.5-.5a1.4 1.4 0 0 0-2 0z" fill="#d9a845"/><path d="M4 20l1.7-1.1 1.3 1.3z" fill="#2a1d12"/>`,
+};
+const EV_MAP = {
+  "🧾":"receipt","📄":"doc","📑":"doc","🔇":"doc","📹":"video","🎥":"video","📷":"photo",
+  "🗣":"witness","🐾":"paw","🩺":"vet","🪪":"idcard","💬":"message","🔑":"key","🎟":"ticket",
+  "🪧":"sign","📒":"book","📖":"book","👩‍🍳":"chef","🔬":"micro","📟":"phone","📡":"antenna",
+  "🗺":"map","📦":"box","📑":"doc","🖋":"pen","✒":"pen",
+};
+function evidenceIcon(token) {
+  const key = (token || "").replace(/️/g, "");
+  const art = EV_ART[EV_MAP[key]] || EV_ART.doc;
+  return `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">${art}</svg>`;
+}
 
 /* ================= SES EFEKTLERİ ================= */
 const SND = (() => {
@@ -1197,7 +1233,7 @@ function openBrief(i) {
     const sp = e.indexOf(" ");
     const ic = sp > 0 ? e.slice(0, sp) : "📎";
     const tx = sp > 0 ? e.slice(sp + 1) : e;
-    return `<div class="ev-chip"><span class="ev-ic">${ic}</span><span>${tx}</span></div>`;
+    return `<div class="ev-chip"><span class="ev-ic">${evidenceIcon(ic)}</span><span>${tx}</span></div>`;
   }).join("");
   show("scr-brief");
 }
