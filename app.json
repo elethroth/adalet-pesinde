@@ -1,0 +1,26 @@
+{
+  "expo": {
+    "name": "Adalet Peşinde",
+    "slug": "adalet-pesinde",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#171110",
+    "primaryColor": "#e0b04f",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.elethroth.adaletpesinde"
+    },
+    "android": {
+      "package": "com.elethroth.adaletpesinde",
+      "adaptiveIcon": {
+        "backgroundColor": "#171110",
+        "foregroundImage": "./assets/icon.png"
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}
