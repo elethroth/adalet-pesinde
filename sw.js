@@ -1,5 +1,5 @@
-// Adalet Peşinde — çevrimdışı önbellek
-const CACHE = "adalet-v1";
+// Adalet Peşinde — çevrimdışı önbellek (önce ağ, güncellemeler hep gelsin)
+const CACHE = "adalet-v3";
 const FILES = [
   "./",
   "index.html",
@@ -23,16 +23,18 @@ self.addEventListener("activate", (e) => {
   self.clients.claim();
 });
 
+// Önce ağdan dene (en güncel sürüm); çevrimdışıysa önbellekten ver.
 self.addEventListener("fetch", (e) => {
+  if (e.request.method !== "GET") return;
   e.respondWith(
-    caches.match(e.request).then(
-      (hit) =>
-        hit ||
-        fetch(e.request).then((res) => {
-          const copy = res.clone();
-          caches.open(CACHE).then((c) => c.put(e.request, copy));
-          return res;
-        })
-    ).catch(() => caches.match("index.html"))
+    fetch(e.request)
+      .then((res) => {
+        const copy = res.clone();
+        caches.open(CACHE).then((c) => c.put(e.request, copy));
+        return res;
+      })
+      .catch(() =>
+        caches.match(e.request).then((hit) => hit || caches.match("index.html"))
+      )
   );
 });
