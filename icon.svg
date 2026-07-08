@@ -1,114 +1,97 @@
 <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#141c24"/>
-      <stop offset=".45" stop-color="#1b2530"/>
-      <stop offset="1" stop-color="#0c1116"/>
+      <stop offset="0" stop-color="#3a2917"/>
+      <stop offset=".45" stop-color="#2a1c10"/>
+      <stop offset="1" stop-color="#120a05"/>
     </linearGradient>
     <linearGradient id="beam" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#e8ddc2" stop-opacity=".55"/>
-      <stop offset="1" stop-color="#e8ddc2" stop-opacity="0"/>
+      <stop offset="0" stop-color="#ffdf9e" stop-opacity=".6"/>
+      <stop offset="1" stop-color="#ffdf9e" stop-opacity="0"/>
     </linearGradient>
     <radialGradient id="halo" cx="50%" cy="30%" r="52%">
-      <stop offset="0" stop-color="#dcd2b6" stop-opacity=".38"/>
-      <stop offset="60%" stop-color="#dcd2b6" stop-opacity=".07"/>
-      <stop offset="100%" stop-color="#dcd2b6" stop-opacity="0"/>
+      <stop offset="0" stop-color="#ffd98a" stop-opacity=".5"/>
+      <stop offset="60%" stop-color="#ffd98a" stop-opacity=".12"/>
+      <stop offset="100%" stop-color="#ffd98a" stop-opacity="0"/>
     </radialGradient>
-    <linearGradient id="robe" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#0a0e12"/>
-      <stop offset=".55" stop-color="#141a20"/>
-      <stop offset="1" stop-color="#242c33"/>
-    </linearGradient>
-    <linearGradient id="scroll" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#b7a274"/>
-      <stop offset=".5" stop-color="#e6d6ac"/>
-      <stop offset="1" stop-color="#a48f61"/>
+    <linearGradient id="robe" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0c0805"/>
+      <stop offset="1" stop-color="#050302"/>
     </linearGradient>
     <linearGradient id="txt" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#f5ead0"/>
-      <stop offset=".5" stop-color="#e2c88f"/>
-      <stop offset="1" stop-color="#a67c3c"/>
+      <stop offset="0" stop-color="#ffefc8"/>
+      <stop offset=".5" stop-color="#eec779"/>
+      <stop offset="1" stop-color="#a5732f"/>
     </linearGradient>
     <radialGradient id="vig" cx="50%" cy="46%" r="72%">
       <stop offset="55%" stop-color="#000" stop-opacity="0"/>
-      <stop offset="100%" stop-color="#000" stop-opacity=".62"/>
+      <stop offset="100%" stop-color="#000" stop-opacity=".6"/>
     </radialGradient>
   </defs>
 
-  <!-- gökyüzü / salon zemini -->
+  <!-- sıcak salon zemini -->
   <rect width="1024" height="1024" fill="url(#sky)"/>
 
   <!-- geri çekilen sivri kemerler (derinlik) -->
   <g fill="none" stroke-linejoin="round">
-    <path d="M120 800 L120 380 Q120 150 512 118 Q904 150 904 380 L904 800" stroke="#2b333c" stroke-width="26"/>
-    <path d="M120 800 L120 380 Q120 150 512 118 Q904 150 904 380 L904 800" stroke="#3c4650" stroke-width="6"/>
-    <path d="M210 800 L210 400 Q210 214 512 188 Q814 214 814 400 L814 800" stroke="#232b33" stroke-width="20"/>
-    <path d="M292 800 L292 424 Q292 268 512 246 Q732 268 732 424 L732 800" stroke="#1d242b" stroke-width="16"/>
+    <path d="M120 800 L120 380 Q120 150 512 118 Q904 150 904 380 L904 800" stroke="#5a4327" stroke-width="26"/>
+    <path d="M120 800 L120 380 Q120 150 512 118 Q904 150 904 380 L904 800" stroke="#7a5c35" stroke-width="6"/>
+    <path d="M210 800 L210 400 Q210 214 512 188 Q814 214 814 400 L814 800" stroke="#4a3720" stroke-width="20"/>
+    <path d="M292 800 L292 424 Q292 268 512 246 Q732 268 732 424 L732 800" stroke="#3a2a18" stroke-width="16"/>
   </g>
   <!-- iç niş (figür arkası) -->
-  <path d="M292 800 L292 424 Q292 268 512 246 Q732 268 732 424 L732 800 Z" fill="#10151b"/>
+  <path d="M292 800 L292 424 Q292 268 512 246 Q732 268 732 424 L732 800 Z" fill="#1c1209"/>
 
-  <!-- pencereden ışık huzmesi -->
-  <polygon points="740,40 1000,40 650,940 450,940" fill="url(#beam)" opacity=".9"/>
-  <polygon points="300,70 480,70 470,940 350,940" fill="url(#beam)" opacity=".35"/>
-  <!-- figür ardı ışıması (backlight) -->
-  <ellipse cx="512" cy="320" rx="360" ry="380" fill="url(#halo)"/>
-  <ellipse cx="512" cy="300" rx="150" ry="180" fill="#f0e6c8" opacity=".16"/>
+  <!-- pencereden sıcak ışık huzmesi -->
+  <polygon points="740,40 1000,40 650,940 450,940" fill="url(#beam)" opacity=".85"/>
+  <polygon points="300,70 480,70 470,940 350,940" fill="url(#beam)" opacity=".3"/>
+  <!-- figür ardı altın ışıma (backlight) -->
+  <ellipse cx="512" cy="330" rx="370" ry="390" fill="url(#halo)"/>
+  <ellipse cx="512" cy="310" rx="170" ry="200" fill="#ffe6ae" opacity=".22"/>
 
-  <!-- ==== CÜBBELİ AVUKAT (yüzü görünmez, arkadan ışıklı silüet) ==== -->
-  <!-- omuzdan yere düşen cübbe -->
-  <path d="M356 470
-           C330 520 316 660 300 820
-           C292 900 288 950 286 984
-           L738 984
-           C736 950 732 900 724 820
-           C708 660 694 520 668 470
-           C612 424 412 424 356 470 Z" fill="url(#robe)"/>
-  <!-- cübbe ön açıklığı + takım -->
-  <path d="M470 470 L512 512 L554 470 L560 984 L464 984 Z" fill="#0b0f13"/>
-  <path d="M494 486 L512 512 L530 486 L512 470 Z" fill="#e9e6dc" opacity=".85"/>
-  <!-- kravat ipucu -->
-  <path d="M506 512 L518 512 L522 596 L512 620 L502 596 Z" fill="#6e2230"/>
-  <!-- boyun + baş (özelliksiz, gölgede) -->
-  <rect x="494" y="430" width="36" height="40" rx="10" fill="#12181e"/>
-  <ellipse cx="512" cy="372" rx="70" ry="82" fill="#0d1218"/>
-  <!-- saç kütlesi -->
-  <path d="M446 360 Q452 292 512 288 Q572 292 578 360 Q560 322 512 322 Q464 322 446 360 Z" fill="#0a0e13"/>
+  <!-- ==== CÜBBELİ AVUKAT — TAM SİLÜET ==== -->
+  <!-- baş -->
+  <ellipse cx="512" cy="348" rx="62" ry="74" fill="url(#robe)"/>
+  <rect x="476" y="396" width="72" height="36" fill="url(#robe)"/>
+  <!-- cübbe: geniş omuzlar, bol kollar, yere dökülen etek -->
+  <path d="M512 416
+           C448 422 412 446 394 492
+           C370 556 340 664 320 768
+           Q314 798 342 793
+           C366 788 386 756 398 712
+           C390 800 384 900 380 984
+           L644 984
+           C640 900 634 800 626 712
+           C638 756 658 788 682 793
+           Q710 798 704 768
+           C684 664 654 556 630 492
+           C612 446 576 422 512 416 Z" fill="url(#robe)"/>
+  <!-- cübbenin önden dökülen kıvrımı (siluet içinde hafif ton farkı) -->
+  <path d="M512 470 L500 984 L524 984 Z" fill="#150d07" opacity=".8"/>
+  <path d="M448 520 Q436 720 430 960 L446 960 Q452 720 462 530 Z" fill="#150d07" opacity=".5"/>
+  <path d="M576 530 Q586 720 592 960 L578 960 Q572 720 562 520 Z" fill="#150d07" opacity=".5"/>
 
-  <!-- SAĞ kenar rim ışığı (soğuk beyaz, güçlü) -->
-  <g fill="none" stroke="#e6eef4" stroke-linecap="round" opacity=".95">
-    <path d="M556 312 Q580 344 576 382" stroke-width="8"/>
-    <path d="M592 416 Q642 468 668 524 Q694 656 710 808 Q716 888 720 966" stroke-width="10"/>
+  <!-- sıcak kenar ışığı (rim) -->
+  <g fill="none" stroke="#ffd98a" stroke-linecap="round">
+    <path d="M552 288 Q574 322 570 372" stroke-width="9" opacity=".9"/>
+    <path d="M604 460 Q638 540 662 640 Q686 760 700 900 Q704 944 706 976" stroke-width="10" opacity=".85"/>
+    <path d="M584 430 Q600 452 612 484" stroke-width="6" opacity=".5"/>
   </g>
-  <g fill="none" stroke="#f2e7cc" stroke-linecap="round" opacity=".55">
-    <path d="M604 452 Q642 498 662 560" stroke-width="5"/>
-  </g>
-  <!-- SOL kenar hafif dolgu ışığı (sıcak, zayıf) -->
-  <path d="M432 468 Q404 560 388 704 Q380 844 376 954" fill="none" stroke="#8a7a5a" stroke-width="6" stroke-linecap="round" opacity=".5"/>
+  <!-- sol tarafta zayıf sıcak dolgu -->
+  <path d="M428 470 Q400 570 384 712 Q374 850 370 956" fill="none" stroke="#b98d4e" stroke-width="6" stroke-linecap="round" opacity=".45"/>
 
-  <!-- elde tomar (parşömen) -->
-  <g transform="rotate(20 566 720)">
-    <rect x="512" y="690" width="108" height="30" rx="15" fill="url(#scroll)"/>
-    <ellipse cx="512" cy="705" rx="9" ry="15" fill="#cabd93"/>
-    <ellipse cx="620" cy="705" rx="9" ry="15" fill="#efe2ba"/>
-    <g stroke="#8a7548" stroke-width="2" opacity=".6">
-      <line x1="536" y1="700" x2="600" y2="700"/>
-      <line x1="536" y1="710" x2="596" y2="710"/>
-    </g>
-  </g>
-  <!-- eli tutan koyu şekil -->
-  <ellipse cx="560" cy="742" rx="30" ry="22" fill="#0c1116"/>
-
-  <!-- taban gölge/yansıma -->
-  <ellipse cx="512" cy="986" rx="240" ry="30" fill="#000" opacity=".5"/>
+  <!-- taban gölgesi -->
+  <ellipse cx="512" cy="988" rx="250" ry="28" fill="#000" opacity=".5"/>
 
   <!-- vinyet -->
   <rect width="1024" height="1024" fill="url(#vig)"/>
-  <!-- alt karartma (yazı için) -->
-  <rect x="0" y="770" width="1024" height="254" fill="#080b0e" opacity=".55"/>
+  <!-- yazı için alt karartma -->
+  <rect x="0" y="772" width="1024" height="252" fill="#0d0704" opacity=".55"/>
 
   <!-- ==== BAŞLIK ==== -->
-  <text x="512" y="908" text-anchor="middle"
-        font-family="Georgia, 'Times New Roman', serif" font-weight="bold" font-size="104"
-        fill="url(#txt)" stroke="#231306" stroke-width="4.5" paint-order="stroke">ADALET PEŞİNDE</text>
+  <g transform="translate(512 916) scale(.82 1)">
+    <text x="0" y="0" text-anchor="middle"
+          font-family="Georgia, 'Times New Roman', serif" font-weight="bold" font-size="130"
+          fill="url(#txt)" stroke="#241206" stroke-width="5" paint-order="stroke">ADALET PEŞİNDE</text>
+  </g>
 </svg>
