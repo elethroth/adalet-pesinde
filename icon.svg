@@ -1,34 +1,80 @@
 <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <radialGradient id="bg" cx="50%" cy="30%" r="90%">
-      <stop offset="0%" stop-color="#33241a"/>
-      <stop offset="100%" stop-color="#14100c"/>
+    <radialGradient id="bg" cx="50%" cy="36%" r="75%">
+      <stop offset="0%" stop-color="#4c3620"/>
+      <stop offset="52%" stop-color="#2a1d11"/>
+      <stop offset="100%" stop-color="#0e0906"/>
     </radialGradient>
-    <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#f0c25e"/>
-      <stop offset="100%" stop-color="#b8852a"/>
+    <radialGradient id="glow" cx="50%" cy="42%" r="46%">
+      <stop offset="0%" stop-color="#e7b85a" stop-opacity=".5"/>
+      <stop offset="58%" stop-color="#e7b85a" stop-opacity=".12"/>
+      <stop offset="100%" stop-color="#e7b85a" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="goldV" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffedb0"/>
+      <stop offset=".5" stop-color="#e2b153"/>
+      <stop offset="1" stop-color="#9a6d20"/>
+    </linearGradient>
+    <linearGradient id="goldH" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#c2913a"/>
+      <stop offset=".5" stop-color="#ffe9aa"/>
+      <stop offset="1" stop-color="#b0812c"/>
+    </linearGradient>
+    <linearGradient id="pan" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f6d77e"/>
+      <stop offset="1" stop-color="#845e1f"/>
+    </linearGradient>
+    <linearGradient id="base" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e6b757"/>
+      <stop offset="1" stop-color="#79531e"/>
     </linearGradient>
   </defs>
+
+  <!-- zemin -->
   <rect width="1024" height="1024" fill="url(#bg)"/>
-  <!-- ahşap panel çizgileri -->
-  <g stroke="#3d2c1c" stroke-width="10" opacity="0.5">
-    <line x1="128" y1="0" x2="128" y2="1024"/>
-    <line x1="896" y1="0" x2="896" y2="1024"/>
+  <ellipse cx="512" cy="110" rx="540" ry="210" fill="#ffd98a" opacity=".05"/>
+  <circle cx="512" cy="405" r="365" fill="url(#glow)"/>
+
+  <!-- taban gölgesi -->
+  <ellipse cx="512" cy="642" rx="158" ry="26" fill="#000" opacity=".38"/>
+
+  <!-- direk + tepe topuzu -->
+  <rect x="497" y="152" width="30" height="432" rx="13" fill="url(#goldV)"/>
+  <rect x="503" y="156" width="7" height="420" rx="3" fill="#fff6d6" opacity=".5"/>
+  <circle cx="512" cy="150" r="31" fill="url(#goldV)"/>
+  <ellipse cx="503" cy="141" rx="10" ry="6.5" fill="#fff6d6" opacity=".85"/>
+
+  <!-- kiriş -->
+  <rect x="264" y="249" width="496" height="27" rx="13.5" fill="url(#goldH)"/>
+  <rect x="272" y="252" width="480" height="6" rx="3" fill="#fff6d6" opacity=".55"/>
+  <circle cx="268" cy="262" r="18" fill="url(#goldV)"/>
+  <circle cx="756" cy="262" r="18" fill="url(#goldV)"/>
+
+  <!-- zincirler -->
+  <g stroke="#d9a845" stroke-width="6.5" stroke-linecap="round" fill="none">
+    <path d="M268 274 L320 404 M268 274 L394 404"/>
+    <path d="M756 274 L630 404 M756 274 L704 404"/>
   </g>
-  <!-- terazi -->
-  <g stroke="#d9a845" fill="none" stroke-linecap="round">
-    <line x1="512" y1="230" x2="512" y2="700" stroke-width="34"/>
-    <line x1="272" y1="330" x2="752" y2="330" stroke-width="30"/>
-    <circle cx="512" cy="210" r="34" fill="url(#gold)" stroke="none"/>
-    <!-- sol kefe -->
-    <path d="M272 330 L192 470 M272 330 L352 470" stroke-width="16"/>
-    <path d="M172 470 Q272 570 372 470 Z" fill="url(#gold)" stroke="none"/>
-    <!-- sağ kefe -->
-    <path d="M752 330 L672 470 M752 330 L832 470" stroke-width="16"/>
-    <path d="M652 470 Q752 570 852 470 Z" fill="url(#gold)" stroke="none"/>
-    <!-- taban -->
-    <line x1="380" y1="708" x2="644" y2="708" stroke-width="34"/>
-    <path d="M330 790 L694 790" stroke-width="44"/>
-  </g>
-  <text x="512" y="935" font-family="Avenir Next, Helvetica, sans-serif" font-size="104" font-weight="800" fill="url(#gold)" text-anchor="middle" letter-spacing="6">ADALET</text>
+
+  <!-- sol kefe -->
+  <path d="M273 412 Q357 490 441 412 Z" fill="url(#pan)"/>
+  <ellipse cx="357" cy="412" rx="84" ry="19" fill="#f6d77e"/>
+  <ellipse cx="357" cy="412" rx="73" ry="13" fill="#93691f"/>
+  <ellipse cx="348" cy="407" rx="22" ry="5" fill="#fff6d6" opacity=".7"/>
+
+  <!-- sağ kefe -->
+  <path d="M583 412 Q667 490 751 412 Z" fill="url(#pan)"/>
+  <ellipse cx="667" cy="412" rx="84" ry="19" fill="#f6d77e"/>
+  <ellipse cx="667" cy="412" rx="73" ry="13" fill="#93691f"/>
+  <ellipse cx="658" cy="407" rx="22" ry="5" fill="#fff6d6" opacity=".7"/>
+
+  <!-- taban -->
+  <path d="M485 568 L539 568 L558 600 L466 600 Z" fill="url(#base)"/>
+  <rect x="450" y="600" width="124" height="22" rx="9" fill="url(#base)"/>
+  <rect x="420" y="622" width="184" height="26" rx="11" fill="url(#base)"/>
+  <rect x="420" y="622" width="184" height="7" rx="3.5" fill="#fff6d6" opacity=".4"/>
+
+  <!-- yazı -->
+  <text x="512" y="772" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-weight="800" font-size="130" letter-spacing="5" fill="#eccb78">ADALET</text>
+  <text x="512" y="898" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-weight="800" font-size="130" letter-spacing="5" fill="#eccb78">PEŞİNDE</text>
 </svg>
