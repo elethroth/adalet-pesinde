@@ -1,12 +1,6 @@
 import React, { useRef, useState } from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  StatusBar,
-  Platform,
-  View,
-  ActivityIndicator,
-} from 'react-native';
+import { StyleSheet, StatusBar, View, ActivityIndicator } from 'react-native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { WebView } from 'react-native-webview';
 
 // Adalet Peşinde — oyunu WebView içinde çalıştıran uygulama kabuğu.
@@ -14,12 +8,12 @@ import { WebView } from 'react-native-webview';
 // ilk açılıştan sonra çevrimdışı da çalışır.
 const GAME_URL = 'https://elethroth.github.io/adalet-pesinde/';
 
-export default function App() {
+function Game() {
   const webRef = useRef(null);
   const [loading, setLoading] = useState(true);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top', 'bottom', 'left', 'right']}>
       <StatusBar barStyle="light-content" backgroundColor="#171110" />
       <WebView
         ref={webRef}
@@ -42,12 +36,16 @@ export default function App() {
   );
 }
 
+export default function App() {
+  return (
+    <SafeAreaProvider>
+      <Game />
+    </SafeAreaProvider>
+  );
+}
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#171110',
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
-  },
+  container: { flex: 1, backgroundColor: '#171110' },
   web: { flex: 1, backgroundColor: '#171110' },
   loader: {
     position: 'absolute',
