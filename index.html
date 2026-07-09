@@ -56,6 +56,56 @@
   .scene-banner.good{box-shadow:0 0 0 2px var(--green),0 10px 26px rgba(94,201,123,.25)}
   .scene-banner.bad{box-shadow:0 0 0 2px var(--red),0 10px 26px rgba(224,102,102,.25)}
 
+  /* ---------- DURUŞMA SAHNESİ (Nöbetçi Mahkeme tarzı) ---------- */
+  .stage{position:relative;border:1px solid var(--line);border-radius:18px;overflow:hidden;
+    aspect-ratio:1/0.9;background:#161009;box-shadow:0 10px 26px rgba(0,0,0,.5);
+    transition:box-shadow .3s ease}
+  .stage.good{box-shadow:0 0 0 2px var(--green),0 12px 30px rgba(94,201,123,.28)}
+  .stage.bad{box-shadow:0 0 0 2px var(--red),0 12px 30px rgba(224,102,102,.28)}
+  .stage-bg{position:absolute;inset:0}
+  .stage-bg svg{width:100%;height:100%;object-fit:cover;display:block}
+  .stage-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,7,4,.28) 0%,rgba(10,7,4,0) 30%,rgba(10,7,4,.18) 70%,rgba(10,7,4,.55) 100%)}
+
+  .cast-row{position:absolute;top:10px;left:0;right:0;z-index:4;display:flex;gap:12px;
+    padding:2px 12px 6px;overflow-x:auto;scrollbar-width:none}
+  .cast-row::-webkit-scrollbar{display:none}
+  .cast{flex:0 0 auto;width:74px;text-align:center}
+  .cast .c-ring{width:60px;height:60px;margin:0 auto;border-radius:50%;overflow:hidden;
+    border:3px solid rgba(255,255,255,.5);background:#2a2018;box-shadow:0 3px 8px rgba(0,0,0,.45);transition:all .2s}
+  .cast .c-ring img{width:100%;height:100%;object-fit:cover;display:block}
+  .cast .c-ring svg{width:100%;height:100%;display:block}
+  .cast.ring-red .c-ring{border-color:#d24b4b}
+  .cast.ring-green .c-ring{border-color:#5ec97b}
+  .cast.ring-gold .c-ring{border-color:var(--gold)}
+  .cast.active .c-ring{border-color:var(--gold);box-shadow:0 0 0 4px rgba(224,176,79,.35),0 3px 8px rgba(0,0,0,.5);transform:scale(1.04)}
+  .cast .c-name{font-size:11.5px;color:#e9dcc6;margin-top:5px;white-space:nowrap;overflow:hidden;
+    text-overflow:ellipsis;text-shadow:0 1px 4px rgba(0,0,0,.9);font-weight:600}
+  .cast.active .c-name{color:var(--gold);font-weight:800}
+
+  .stage-portrait{position:absolute;left:-4%;bottom:0;width:54%;max-width:270px;z-index:2;pointer-events:none}
+  .stage-portrait img,.stage-portrait svg{width:100%;display:block;
+    filter:drop-shadow(0 8px 16px rgba(0,0,0,.55))}
+  .stage-portrait img{object-fit:contain;object-position:bottom}
+
+  .speech{position:absolute;right:12px;bottom:19%;left:45%;z-index:5;
+    background:#f6f1e4;color:#20242c;border-radius:16px;padding:11px 14px;
+    box-shadow:0 8px 20px rgba(0,0,0,.45);animation:fadeIn .3s ease}
+  .speech::after{content:"";position:absolute;left:-13px;bottom:16px;
+    border:9px solid transparent;border-right-color:#f6f1e4}
+  .speech-who{font-size:11px;font-weight:800;letter-spacing:.5px;color:#8a5a2a;margin-bottom:3px}
+  .speech p{font-size:14.5px;line-height:1.35;font-weight:600}
+
+  .pager{position:absolute;bottom:11px;right:12px;z-index:6;
+    display:flex;align-items:center;gap:11px;background:rgba(18,12,8,.7);border:1px solid var(--line);
+    border-radius:99px;padding:5px 7px;backdrop-filter:blur(3px)}
+  .pager .pg-dots{display:flex;gap:6px;align-items:center}
+  .pager .pg-dots i{width:8px;height:8px;border-radius:50%;background:#6a5a45;display:block;transition:all .2s}
+  .pager .pg-dots i.on{background:var(--gold);box-shadow:0 0 6px rgba(224,176,79,.7)}
+  .pager .pg-arrow{width:30px;height:30px;border-radius:50%;border:none;color:#fff;font-size:17px;
+    font-weight:700;display:grid;place-items:center;line-height:1}
+  .pager .pg-arrow.prev{background:#5a4632;opacity:.55}
+  .pager .pg-arrow.next{background:#2b7fd4;box-shadow:0 2px 6px rgba(43,127,212,.5)}
+
   /* ---------- AVATAR ---------- */
   .avatar-circle{
     border-radius:50%;overflow:hidden;flex-shrink:0;
@@ -602,17 +652,19 @@
       <strong id="trial-title"></strong>
       <span class="round" id="trial-round"></span>
     </div>
-    <div class="scene-banner" id="trial-scene"></div>
+    <div class="stage" id="stage">
+      <div class="stage-bg" id="trial-scene"></div>
+      <div class="cast-row" id="cast-row"></div>
+      <div class="stage-portrait" id="speaker-portrait"></div>
+      <div class="speech" id="speech">
+        <div class="speech-who" id="bubble-who"></div>
+        <p id="claim-text"></p>
+      </div>
+      <div class="pager" id="round-pager"></div>
+    </div>
     <div class="meter-wrap">
       <div class="meter-label"><span data-i18n="persuade">Hâkimi İkna Etme</span><span id="meter-val">0%</span></div>
       <div class="meter"><div id="meter-bar" style="width:0%"></div></div>
-    </div>
-    <div class="bubble">
-      <div class="b-av avatar-circle" id="opp-avatar"></div>
-      <div class="b-body">
-        <div class="who" id="bubble-who" data-i18n="opponent">KARŞI TARAF</div>
-        <p id="claim-text"></p>
-      </div>
     </div>
     <div class="feedback" id="feedback"></div>
     <div id="options-wrap">
@@ -934,7 +986,7 @@ function avatarSVG(a) {
     ? `<path d="M41 56.5 Q50 62 59 56.5 Q50 67 41 56.5 Z" fill="${fc}"/>` : "";
   const mouth = a.facial ? "" : `<path d="M43 59 Q50 65 57 59" stroke="#8a4a3a" stroke-width="2" fill="none" stroke-linecap="round"/>`;
   return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-    <rect width="100" height="100" fill="${a.bg || "#3a2c1e"}"/>
+    ${a.transparent ? "" : `<rect width="100" height="100" fill="${a.bg || "#3a2c1e"}"/>`}
     ${back}
     <rect x="43" y="59" width="14" height="18" fill="${a.skin}"/>
     <path d="M43 71 Q50 76 57 71 L57 77 L43 77 Z" fill="rgba(0,0,0,.10)"/>
@@ -1205,6 +1257,7 @@ const LANG = {
     objection: "İTİRAZ!", presentEv: "Bu iddia bir kanıtınla çelişiyor. Doğru kanıtı sun:",
     witness: "TANIK", findLie: "🔎 İfadedeki çelişkili cümleye dokun:",
     crossIntro: "Tanık ifade veriyor. Yalanı yakala!", nudgeLie: "Bu cümlede bir sorun yok. Dikkatli dinle.",
+    clientRole: "MÜVEKKİL", judgeRole: "HÂKİM", inSession: "Görüşmede",
     continue: "Devam ›", round: "Tur", tp: "TP", next: "sıradaki", maxLevel: "en yüksek seviyedesin! 🏆",
     win: "DAVAYI KAZANDIN!", lose: "DAVAYI KAYBETTİN",
     winText3: "Hâkim kararını verdi: müvekkilin haklı bulundu! Kusursuz bir savunmaydı! 👏",
@@ -1237,6 +1290,7 @@ const LANG = {
     objection: "OBJECTION!", presentEv: "This claim contradicts one of your pieces of evidence. Present the right one:",
     witness: "WITNESS", findLie: "🔎 Tap the contradictory statement:",
     crossIntro: "The witness is testifying. Catch the lie!", nudgeLie: "Nothing wrong with this statement. Listen carefully.",
+    clientRole: "CLIENT", judgeRole: "JUDGE", inSession: "In session",
     continue: "Continue ›", round: "Round", tp: "XP", next: "next", maxLevel: "you're at the top level! 🏆",
     win: "YOU WON THE CASE!", lose: "YOU LOST THE CASE",
     winText3: "The judge has ruled: your client is vindicated! A flawless defense! 👏",
@@ -1947,13 +2001,56 @@ function splitEv(str) {
 }
 
 // Oyuncunun avukatı (savunma tarafı — cübbeli, gözlüklü)
-const AVUKAT = { skin: "#e8c9a4", hair: "quiff", hc: "#2b2018", top: "robe", shirt: "#242b3e", glasses: true, bg: "#2c3552" };
+const AVUKAT = { skin: "#e8c9a4", hair: "quiff", hc: "#2b2018", top: "robe", shirt: "#242b3e", glasses: true, bg: "#2c3552", img: "assets/chars/avukat.png" };
+// Hâkim
+const JUDGE = { skin: "#e2c29c", hair: "short", hc: "#d8d8d8", top: "robe", shirt: "#14161c", bg: "#2a2622", img: "assets/chars/hakim.png" };
 
-// Duruşma balonundaki konuşmacı avatarını rolüne göre ayarla
-function setBubbleAv(cfg, isWit) {
-  const el = document.getElementById("opp-avatar");
-  el.innerHTML = avatarSVG(cfg || AVUKAT);
-  el.classList.toggle("wit", !!isWit);
+// Karakter görseli: resim dosyası varsa onu, yoksa SVG portresini üret.
+// Resim yüklenemezse otomatik SVG'ye düşer (charFallback).
+let __charSeq = 0; const __charStore = {};
+function charArt(cfg, portrait) {
+  if (cfg && cfg.img) {
+    const n = __charSeq++; __charStore[n] = { cfg, portrait };
+    return `<img src="${cfg.img}" alt="" onerror="charFallback(this,${n})">`;
+  }
+  return avatarSVG(portrait ? Object.assign({}, cfg, { transparent: true }) : cfg);
+}
+function charFallback(img, n) {
+  const s = __charStore[n];
+  img.parentNode.innerHTML = avatarSVG(s.portrait ? Object.assign({}, s.cfg, { transparent: true }) : s.cfg);
+}
+
+// Bir role dava-kimliğine göre resim yolu ekle (assets/chars/{id}-{role}.png)
+function imgCfg(cfg, id, role) {
+  return cfg ? Object.assign({}, cfg, { img: `assets/chars/${id}-${role}.png` }) : cfg;
+}
+
+// Sahneyi kur: büyük portre + üst karakter sırası + sayfa göstergesi
+function renderStage(c, r) {
+  const isSorgu = r.type === "sorgu";
+  // Ayrı bir tanık görseli tanımlıysa tanığı ayrı karakter say; değilse tanık = karşı taraf
+  const distinctWit = isSorgu && r.wav;
+  const clientC = imgCfg(c.av, c.id, "muvekkil");
+  const oppC = imgCfg(c.opp || c.av, c.id, "karsi");
+  const witC = distinctWit ? imgCfg(r.wav, c.id, "tanik") : oppC;
+  const activeKind = distinctWit ? "wit" : "opp";
+  const speaker = isSorgu ? witC : oppC;
+
+  document.getElementById("speaker-portrait").innerHTML = charArt(speaker, true);
+
+  const entries = [];
+  if (distinctWit) entries.push({ kind: "wit", cfg: witC, name: t("witness"), ring: "gold" });
+  entries.push({ kind: "opp", cfg: oppC, name: isSorgu && !distinctWit ? t("witness") : (c.oppName || t("opponent")), ring: isSorgu && !distinctWit ? "gold" : "red" });
+  entries.push({ kind: "client", cfg: clientC, name: t("clientRole"), ring: "green" });
+  entries.push({ kind: "judge", cfg: JUDGE, name: t("judgeRole"), ring: "gold" });
+  document.getElementById("cast-row").innerHTML = entries.map(e => {
+    const active = e.kind === activeKind;
+    return `<div class="cast ring-${e.ring}${active ? " active" : ""}"><div class="c-ring">${charArt(e.cfg)}</div><div class="c-name">${active ? t("inSession") : e.name}</div></div>`;
+  }).join("");
+
+  const dots = c.rounds.map((_, i) => `<i class="${i === round ? "on" : ""}"></i>`).join("");
+  document.getElementById("round-pager").innerHTML =
+    `<button class="pg-arrow prev" disabled>‹</button><div class="pg-dots">${dots}</div><button class="pg-arrow next" disabled>›</button>`;
 }
 
 function renderRound() {
@@ -1962,12 +2059,13 @@ function renderRound() {
   document.getElementById("trial-round").textContent = `${t("round")} ${round + 1} / ${c.rounds.length}`;
   updateMeter();
   judgeMood("tj", "neutral");
-  const scene = document.getElementById("trial-scene");
-  scene.classList.remove("good", "bad");
+  document.getElementById("stage").classList.remove("good", "bad");
   const fb = document.getElementById("feedback");
   fb.className = "feedback"; fb.textContent = "";
   document.getElementById("next-btn").style.display = "none";
   document.getElementById("options-wrap").style.display = "block";
+
+  renderStage(c, r);
 
   const who = document.getElementById("bubble-who");
   const label = document.getElementById("choose-label");
@@ -1975,22 +2073,19 @@ function renderRound() {
   wrap.innerHTML = "";
 
   if (r.type === "sorgu") {
-    who.textContent = r.witness || t("witness"); who.classList.add("wit");
-    setBubbleAv(r.wav || c.opp || c.av, true);
+    who.textContent = r.witness || t("witness");
     typeText(document.getElementById("claim-text"), r.intro || t("crossIntro"));
     label.className = "choose-label itiraz";
     label.textContent = t("findLie");
     renderTestimony(r, wrap);
   } else if (r.type === "itiraz") {
-    who.textContent = c.oppName || t("opponent"); who.classList.remove("wit");
-    setBubbleAv(c.opp || c.av, false);
+    who.textContent = c.oppName || t("opponent");
     typeText(document.getElementById("claim-text"), "“" + r.claim + "”");
     label.className = "choose-label itiraz";
     label.innerHTML = `<span class="obj-tag">⚖️ ${t("objection")}</span><br>${r.ask || t("presentEv")}`;
     renderEvidence(r.present, wrap);
   } else {
-    who.textContent = c.oppName || t("opponent"); who.classList.remove("wit");
-    setBubbleAv(c.opp || c.av, false);
+    who.textContent = c.oppName || t("opponent");
     typeText(document.getElementById("claim-text"), "“" + r.claim + "”");
     label.className = "choose-label";
     label.textContent = t("chooseDefense");
@@ -2064,7 +2159,7 @@ function resolvePick(p, f, btn) {
   updateMeter();
 
   judgeMood("tj", cls === "good" ? "happy" : cls === "bad" ? "angry" : "neutral");
-  const scene = document.getElementById("trial-scene");
+  const scene = document.getElementById("stage");
   scene.classList.remove("good", "bad");
   if (cls === "good") scene.classList.add("good");
   if (cls === "bad") scene.classList.add("bad");
