@@ -311,6 +311,40 @@
   .opt.bad{border-color:var(--red);background:rgba(224,102,102,.12)}
   .opt:disabled{cursor:default}
 
+  /* ---------- İTİRAZ / KANIT SUNMA ---------- */
+  .choose-label.itiraz{color:#ff8a63}
+  .obj-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(255,90,60,.14);
+    border:1px solid #ff7b5a;color:#ff9b7a;font-weight:800;font-size:12px;letter-spacing:1px;
+    padding:4px 11px;border-radius:99px;margin-bottom:8px;animation:objPop .45s cubic-bezier(.2,1.5,.4,1)}
+  @keyframes objPop{0%{transform:scale(.3) rotate(-6deg);opacity:0}60%{transform:scale(1.18) rotate(2deg)}100%{transform:scale(1) rotate(0);opacity:1}}
+  .ev-opt{display:flex;align-items:center;gap:11px;width:100%;text-align:left;
+    background:var(--card2);color:var(--text);border:1px solid var(--line);border-left:3px solid var(--gold);
+    border-radius:12px;padding:10px 13px;font-size:14.5px;line-height:1.4;
+    margin-bottom:9px;cursor:pointer;transition:all .15s}
+  .ev-opt:active{transform:scale(.98)}
+  .ev-opt .ev-ic{width:34px;height:34px;flex-shrink:0;display:grid;place-items:center;
+    background:rgba(224,176,79,.12);border:1px solid rgba(224,176,79,.25);border-radius:8px}
+  .ev-opt .ev-ic svg{width:22px;height:22px;display:block}
+  .ev-opt .ev-t{flex:1}
+  .ev-opt.good{border-color:var(--green);border-left-color:var(--green);background:rgba(94,201,123,.12)}
+  .ev-opt.mid{border-color:var(--gold);border-left-color:var(--gold);background:rgba(224,176,79,.10)}
+  .ev-opt.bad{border-color:var(--red);border-left-color:var(--red);background:rgba(224,102,102,.12)}
+  .ev-opt:disabled{cursor:default}
+
+  /* ---------- TANIK ÇAPRAZ SORGUSU ---------- */
+  .bubble .who.wit{color:var(--gold)}
+  .testimony{position:relative;display:block;width:100%;text-align:left;
+    background:linear-gradient(180deg,var(--card2),#1a130d);color:#ece0c8;
+    border:1px solid #4d3823;border-left:3px solid var(--gold-dark);
+    border-radius:12px;padding:12px 14px 12px 15px;font-size:15px;line-height:1.5;
+    font-style:italic;margin-bottom:9px;cursor:pointer;transition:all .15s}
+  .testimony::before{content:"“";color:var(--gold);font-weight:700;margin-right:2px}
+  .testimony:active{transform:scale(.99)}
+  .testimony.lie{border-color:var(--red);border-left-color:var(--red);
+    background:rgba(224,102,102,.14);font-style:normal;animation:objPop .45s}
+  .testimony.nudge{border-left-color:var(--muted);opacity:.55}
+  .testimony:disabled{cursor:default}
+
   .feedback{
     border-radius:14px;padding:12px 15px;font-size:15px;line-height:1.5;
     margin-bottom:12px;display:none;animation:fadeIn .3s ease;
@@ -550,7 +584,7 @@
       <div class="ev-list" id="brief-evidence"></div>
     </div>
     <div class="info-strip">
-      <div class="info-cell"><span class="info-k" data-i18n="time">SÜRE</span><span class="info-v" data-i18n="timeVal">~2 dk · 3 tur</span></div>
+      <div class="info-cell"><span class="info-k" data-i18n="time">SÜRE</span><span class="info-v" id="brief-time">~2 dk · 3 tur</span></div>
       <div class="info-cell"><span class="info-k" data-i18n="reward">KAZANINCA</span><span class="info-v" id="brief-reward"></span></div>
     </div>
     <div class="spacer"></div>
@@ -571,13 +605,13 @@
     <div class="bubble">
       <div class="b-av avatar-circle" id="opp-avatar"></div>
       <div class="b-body">
-        <div class="who" data-i18n="opponent">KARŞI TARAF</div>
+        <div class="who" id="bubble-who" data-i18n="opponent">KARŞI TARAF</div>
         <p id="claim-text"></p>
       </div>
     </div>
     <div class="feedback" id="feedback"></div>
     <div id="options-wrap">
-      <div class="choose-label" data-i18n="chooseDefense">👉 Savunmanı seç:</div>
+      <div class="choose-label" id="choose-label" data-i18n="chooseDefense">👉 Savunmanı seç:</div>
       <div id="options"></div>
     </div>
     <button class="big-btn" id="next-btn" style="display:none" onclick="nextRound()" data-i18n="continue">Devam ›</button>
@@ -1103,9 +1137,12 @@ const LANG = {
     examine: "🔍 Davayı İncele", nextCase: "Sıradaki Dava", mystery: "Gizemli dava — seviye atlayınca açılır",
     client: "MÜVEKKİLİN", charge: "SUÇLAMA / KONU", evidence: "ELİNDEKİ KANITLAR",
     caseFile: "DAVA DOSYASI", file: "DOSYA",
-    time: "SÜRE", timeVal: "~2 dk · 3 tur", reward: "KAZANINCA",
+    time: "SÜRE", timeVal: "~2 dk · {n} tur", reward: "KAZANINCA",
     startTrial: "🏛️ Duruşmaya Başla",
     persuade: "Hâkimi İkna Etme", opponent: "KARŞI TARAF", chooseDefense: "👉 Savunmanı seç:",
+    objection: "İTİRAZ!", presentEv: "Bu iddia bir kanıtınla çelişiyor. Doğru kanıtı sun:",
+    witness: "TANIK", findLie: "🔎 İfadedeki çelişkili cümleye dokun:",
+    crossIntro: "Tanık ifade veriyor. Yalanı yakala!", nudgeLie: "Bu cümlede bir sorun yok. Dikkatli dinle.",
     continue: "Devam ›", round: "Tur", tp: "TP", next: "sıradaki", maxLevel: "en yüksek seviyedesin! 🏆",
     win: "DAVAYI KAZANDIN!", lose: "DAVAYI KAYBETTİN",
     winText3: "Hâkim kararını verdi: müvekkilin haklı bulundu! Kusursuz bir savunmaydı! 👏",
@@ -1132,9 +1169,12 @@ const LANG = {
     examine: "🔍 View the Case", nextCase: "Next Case", mystery: "Mystery case — unlocks as you level up",
     client: "YOUR CLIENT", charge: "CHARGE / MATTER", evidence: "YOUR EVIDENCE",
     caseFile: "CASE FILE", file: "FILE",
-    time: "TIME", timeVal: "~2 min · 3 rounds", reward: "ON WINNING",
+    time: "TIME", timeVal: "~2 min · {n} rounds", reward: "ON WINNING",
     startTrial: "🏛️ Start the Trial",
     persuade: "Convince the Judge", opponent: "OPPOSING SIDE", chooseDefense: "👉 Choose your defense:",
+    objection: "OBJECTION!", presentEv: "This claim contradicts one of your pieces of evidence. Present the right one:",
+    witness: "WITNESS", findLie: "🔎 Tap the contradictory statement:",
+    crossIntro: "The witness is testifying. Catch the lie!", nudgeLie: "Nothing wrong with this statement. Listen carefully.",
     continue: "Continue ›", round: "Round", tp: "XP", next: "next", maxLevel: "you're at the top level! 🏆",
     win: "YOU WON THE CASE!", lose: "YOU LOST THE CASE",
     winText3: "The judge has ruled: your client is vindicated! A flawless defense! 👏",
@@ -1182,11 +1222,12 @@ const CASES = [
         ],
       },
       {
-        claim: "Kamera görüntüsünde bisikleti alan kişi Ali'ye çok benziyor!",
-        opts: [
-          { t: "Görüntü çok bulanık. Görünen kişi kırmızı montlu; Ali'nin ise kırmızı montu hiç olmadı.", p: 25, f: "Hâkim görüntüye baktı: gerçekten de kişi belli olmuyor. 🎯" },
-          { t: "Uzaktan herkes birbirine benzeyebilir.", p: 12, f: "Mantıklı ama biraz zayıf bir savunma. 😐" },
-          { t: "Kameralar her zaman yalan söyler!", p: 0, f: "Hâkim kaşlarını çattı. Bu bir savunma değil. 😠" },
+        type: "itiraz",
+        claim: "Kamera görüntüsünde bisikleti alan kişi tıpatıp Ali! Hem de o kırmızı montuyla.",
+        present: [
+          { t: "📹 Bulanık kamera görüntüsü", p: 25, f: "Görüntüyü büyüttük: kişi seçilemeyecek kadar bulanık — üstelik Ali'nin kırmızı montu hiç olmadı! 🎯" },
+          { t: "🧾 Market fişi (salı, saat 15.05)", p: 6, f: "Fiş başka bir şeyi kanıtlar; kameradaki kişi iddiasını çürütmedi. 😐" },
+          { t: "🗣️ Tanık: mahallenin fırıncısı", p: 6, f: "Tanığın sırası henüz gelmedi; görüntü iddiası havada kaldı. 😐" },
         ],
       },
       {
@@ -1263,6 +1304,23 @@ const CASES = [
           { t: "Asıl sizin söyledikleriniz uydurma!", p: 0, f: "Karşılıklı atışma hâkimi yordu. 😠" },
         ],
       },
+      {
+        type: "sorgu",
+        witness: "TANIK — Patron",
+        intro: "Patron kürsüde ifade veriyor. Yalanı yakala!",
+        lines: [
+          { s: "Kemal her akşam saat 18.00'de, herkesle birlikte çıkardı.", lie: true,
+            pressF: "Durun! Bu cümle, giriş-çıkış kayıtlarıyla açıkça çelişiyor. 🎯",
+            ask: "Bu yalanı çürütecek kanıtı sun:",
+            present: [
+              { t: "🪪 Giriş-çıkış kart kayıtları", p: 25, f: "Kayıtlar tek tek okundu: Kemal 6 ay boyunca 21.00'de çıkış yapmış. Patronun ifadesi yalanmış! 🎯" },
+              { t: "💬 Patronun 'mesaileri sonra öderim' mesajı", p: 6, f: "Mesaj niyeti gösterir ama 'saat 18'de çıkardı' yalanını çürüten kart kayıtlarıydı. 😐" },
+              { t: "🗣️ Tanık: iş arkadaşı Hüseyin", p: 6, f: "Hüseyin destekler ama en kesin çürütme resmî kart kayıtlarıydı. 😐" },
+            ] },
+          { s: "İşe her sabah tam saatinde gelirdi, bunu kabul ederim.", lie: false },
+          { s: "Maaşını her ay eksiksiz ödedim, kimse aksini söyleyemez.", lie: false },
+        ],
+      },
     ],
   },
   {
@@ -1281,11 +1339,12 @@ const CASES = [
         ],
       },
       {
-        claim: "Selin öğle molasında çantasıyla depoya girdi. Neden çantayla?!",
-        opts: [
-          { t: "Depo kamerası kaydı burada: Selin çantasından sadece ilaç kutusunu alıp geri çıkıyor.", p: 25, f: "Görüntü izlendi, çantada para yok, ilaç var. 🎯" },
-          { t: "Çantayla depoya girmek suç değildir.", p: 12, f: "Doğru ama görüntüyü göstermek şüpheyi tamamen dağıtırdı. 😐" },
-          { t: "Siz de her gün çantayla geziyorsunuz!", p: 0, f: "Hâkim 'Konuya dönün lütfen' dedi. 😠" },
+        type: "itiraz",
+        claim: "Selin öğle molasında çantasıyla depoya girdi. Parayı çantasına saklamış olmalı!",
+        present: [
+          { t: "📹 Depo kamerası kaydı", p: 25, f: "Kaydı izledik: Selin çantasından yalnızca ilaç kutusunu çıkarıyor — para yok! 🎯" },
+          { t: "🧾 Kasa raporu: sayım hatası geçmişi", p: 6, f: "Sayım raporu ayrı bir konu; depoya girme iddiasını çürütmez. 😐" },
+          { t: "🔑 Yedek kasa anahtarının listesi", p: 6, f: "Anahtar listesi başka noktayı kanıtlar; çanta iddiası açıkta kaldı. 😐" },
         ],
       },
       {
@@ -1438,11 +1497,12 @@ const CASES = [
     evidence: ["📟 Hüsnü Amca'nın 20 yıllık tuşlu telefonu", "📡 Baz istasyonu kayıtları", "🧾 Son 5 yılın faturaları (hepsi ~200 TL)"],
     rounds: [
       {
-        claim: "Kayıtlarımıza göre bu hattan İtalya'ya 40 saat görüntülü arama yapılmış!",
-        opts: [
-          { t: "Hüsnü Amca'nın telefonu internete bile giremeyen 20 yıllık tuşlu telefon. İşte cihaz, buyurun deneyin.", p: 25, f: "Tuşlu telefon salonda elden ele dolaştı. 🎯" },
-          { t: "Hüsnü Amca İtalya'da kimseyi tanımıyor.", p: 12, f: "İlginç ama telefonun kendisi en büyük kanıttı. 😐" },
-          { t: "Bu yaşta 40 saat konuşacak nefes mi var!", p: 0, f: "Gülüşmeler oldu ama savunmaya katkısı sıfır. 😠" },
+        type: "itiraz",
+        claim: "Kayıtlara göre bu hattan İtalya'ya tam 40 saat GÖRÜNTÜLÜ arama yapılmış!",
+        present: [
+          { t: "📟 Hüsnü Amca'nın 20 yıllık tuşlu telefonu", p: 25, f: "İşte cihaz: ne kamerası ne interneti var. Bu telefonla görüntülü arama fiziken imkânsız! 🎯" },
+          { t: "📡 Baz istasyonu kayıtları", p: 6, f: "Baz kayıtları başka bir çelişkiyi açar; 'görüntülü' iddiasını çürüten cihazın kendisiydi. 😐" },
+          { t: "🧾 Son 5 yılın faturaları (hepsi ~200 TL)", p: 6, f: "Geçmiş faturalar şüphe uyandırır ama iddiayı doğrudan çürütmez. 😐" },
         ],
       },
       {
@@ -1558,6 +1618,23 @@ const CASES = [
           { t: "Baba dostu emekli öğretmen tanığımız: baba, yıllarca kendisine bakan Osman'a evi bırakacağını herkese söylüyormuş.", p: 25, f: "Tanığın sözleri salonu duygulandırdı. Vasiyet geçerli! 🎯" },
           { t: "Vasiyet babanın son isteğidir, saygı duymak gerekir.", p: 12, f: "Güzel söz ama tanık ifadesi daha belirleyiciydi. 😐" },
           { t: "Sevseydi size de bir şey bırakırdı!", p: 0, f: "Salon karıştı! Hâkim tokmağı vurdu. 😠" },
+        ],
+      },
+      {
+        type: "sorgu",
+        witness: "TANIK — Davacı kardeş",
+        intro: "Kardeşlerden biri kürsüde. Çelişkili cümleyi yakala!",
+        lines: [
+          { s: "Babamı hepimiz çok severdik, bu inkâr edilemez.", lie: false },
+          { s: "Vasiyetin imzalandığı gün babam ağır hastaydı, yatağından bile kalkamıyordu.", lie: true,
+            pressF: "İtiraz! Bu ifade, noterin o günkü kamera kaydıyla taban tabana çelişiyor. 🎯",
+            ask: "Bu yalanı çürütecek kanıtı sun:",
+            present: [
+              { t: "🎥 Vasiyetin imzalandığı günün noter kamera kaydı", p: 25, f: "Kayıtta baba kendi ayaklarıyla gelip gülümseyerek imza atıyor. 'Yataktan kalkamıyordu' yalanmış! 🎯" },
+              { t: "🖋️ İmza uzmanı raporu", p: 6, f: "İmza raporu sahtelik iddiasını çürütür ama 'hastaydı' yalanını değil. 😐" },
+              { t: "🗣️ Tanık: baba dostu emekli öğretmen", p: 6, f: "Öğretmen destekler ama o günü birebir gösteren kamera kaydıydı. 😐" },
+            ] },
+          { s: "Vasiyetin varlığından benim de haberim vardı.", lie: false },
         ],
       },
     ],
@@ -1753,6 +1830,7 @@ function openBrief(i) {
   document.getElementById("brief-client").textContent = c.client;
   document.getElementById("brief-charge").textContent = c.charge;
   document.getElementById("brief-reward").textContent = "+" + (80 + c.rounds.length * 20) + " " + t("tp");
+  document.getElementById("brief-time").textContent = t("timeVal").replace("{n}", c.rounds.length);
   document.getElementById("brief-evidence").innerHTML = c.evidence.map(e => {
     const sp = e.indexOf(" ");
     const ic = sp > 0 ? e.slice(0, sp) : "📎";
@@ -1775,11 +1853,16 @@ function startTrial() {
   SND.murmurStart();
 }
 
+// Kanıt metnini ikon + yazı olarak ayır ("🧾 Market fişi" -> {ic,tx})
+function splitEv(str) {
+  const sp = str.indexOf(" ");
+  return { ic: sp > 0 ? str.slice(0, sp) : "📎", tx: sp > 0 ? str.slice(sp + 1) : str };
+}
+
 function renderRound() {
   const c = CASES[currentCase];
   const r = c.rounds[round];
   document.getElementById("trial-round").textContent = `${t("round")} ${round + 1} / ${c.rounds.length}`;
-  typeText(document.getElementById("claim-text"), "“" + r.claim + "”");
   updateMeter();
   judgeMood("tj", "neutral");
   const scene = document.getElementById("trial-scene");
@@ -1789,24 +1872,95 @@ function renderRound() {
   document.getElementById("next-btn").style.display = "none";
   document.getElementById("options-wrap").style.display = "block";
 
-  // Seçenekleri karıştır
-  const shuffled = r.opts.map((o, idx) => ({ ...o, idx })).sort(() => Math.random() - 0.5);
+  const who = document.getElementById("bubble-who");
+  const label = document.getElementById("choose-label");
   const wrap = document.getElementById("options");
   wrap.innerHTML = "";
+
+  if (r.type === "sorgu") {
+    who.textContent = t("witness"); who.classList.add("wit");
+    typeText(document.getElementById("claim-text"), r.intro || t("crossIntro"));
+    label.className = "choose-label itiraz";
+    label.textContent = t("findLie");
+    renderTestimony(r, wrap);
+  } else if (r.type === "itiraz") {
+    who.textContent = t("opponent"); who.classList.remove("wit");
+    typeText(document.getElementById("claim-text"), "“" + r.claim + "”");
+    label.className = "choose-label itiraz";
+    label.innerHTML = `<span class="obj-tag">⚖️ ${t("objection")}</span><br>${r.ask || t("presentEv")}`;
+    renderEvidence(r.present, wrap);
+  } else {
+    who.textContent = t("opponent"); who.classList.remove("wit");
+    typeText(document.getElementById("claim-text"), "“" + r.claim + "”");
+    label.className = "choose-label";
+    label.textContent = t("chooseDefense");
+    // Seçenekleri karıştır
+    const shuffled = r.opts.map((o, idx) => ({ ...o, idx })).sort(() => Math.random() - 0.5);
+    shuffled.forEach(o => {
+      const b = document.createElement("button");
+      b.className = "opt";
+      b.textContent = o.t;
+      b.onclick = () => resolvePick(o.p, o.f, b);
+      wrap.appendChild(b);
+    });
+  }
+}
+
+// İtiraz: elindeki kanıtları tıklanabilir kart olarak sun
+function renderEvidence(present, wrap) {
+  const shuffled = present.map(o => ({ ...o })).sort(() => Math.random() - 0.5);
   shuffled.forEach(o => {
+    const { ic, tx } = splitEv(o.t);
     const b = document.createElement("button");
-    b.className = "opt";
-    b.textContent = o.t;
-    b.onclick = () => pick(o, b);
+    b.className = "ev-opt";
+    b.innerHTML = `<span class="ev-ic">${evidenceIcon(ic)}</span><span class="ev-t"></span>`;
+    b.querySelector(".ev-t").textContent = tx;
+    b.onclick = () => resolvePick(o.p, o.f, b);
     wrap.appendChild(b);
   });
 }
 
-function pick(opt, btn) {
-  document.querySelectorAll(".opt").forEach(b => (b.disabled = true));
-  const cls = opt.p >= 25 ? "good" : opt.p >= 12 ? "mid" : "bad";
+// Çapraz sorgu 1. aşama: ifade cümleleri; yalanı bul
+function renderTestimony(r, wrap) {
+  r.lines.forEach(ln => {
+    const b = document.createElement("button");
+    b.className = "testimony";
+    b.textContent = ln.s;
+    b.onclick = () => pickTestimony(ln, b, r);
+    wrap.appendChild(b);
+  });
+}
+
+function pickTestimony(ln, btn, r) {
+  if (!ln.lie) {
+    btn.classList.add("nudge"); btn.disabled = true;
+    SND.mid(); buzz(20);
+    const fb = document.getElementById("feedback");
+    fb.className = "feedback show mid";
+    fb.textContent = r.nudge || t("nudgeLie");
+    return;
+  }
+  // Yalan yakalandı -> 2. aşama: kanıt sun
+  SND.good(); buzz(30);
+  document.querySelectorAll(".testimony").forEach(b => (b.disabled = true));
+  btn.classList.remove("nudge"); btn.classList.add("lie");
+  judgeMood("tj", "happy");
+  const fb = document.getElementById("feedback");
+  fb.className = "feedback show good";
+  fb.textContent = ln.pressF || "İşte çelişki burada!";
+  const label = document.getElementById("choose-label");
+  label.innerHTML = `<span class="obj-tag">⚖️ ${t("objection")}</span><br>${ln.ask || t("presentEv")}`;
+  const wrap = document.getElementById("options");
+  wrap.innerHTML = "";
+  renderEvidence(ln.present, wrap);
+}
+
+// Ortak puanlama: p puanı + f geri bildirim
+function resolvePick(p, f, btn) {
+  document.querySelectorAll(".opt,.ev-opt").forEach(b => (b.disabled = true));
+  const cls = p >= 25 ? "good" : p >= 12 ? "mid" : "bad";
   btn.classList.add(cls);
-  score += opt.p;
+  score += p;
   updateMeter();
 
   judgeMood("tj", cls === "good" ? "happy" : cls === "bad" ? "angry" : "neutral");
@@ -1820,7 +1974,7 @@ function pick(opt, btn) {
 
   const fb = document.getElementById("feedback");
   fb.className = "feedback show " + cls;
-  fb.textContent = opt.f;
+  fb.textContent = f;
   document.getElementById("next-btn").style.display = "block";
 }
 
@@ -1844,7 +1998,7 @@ function verdict() {
   const c = CASES[currentCase];
   const max = c.rounds.length * 25;
   const pct = score / max;
-  const win = score >= 50;
+  const win = pct >= 0.6;
   const stars = pct >= 1 ? 3 : pct >= 0.8 ? 2 : win ? 1 : 0;
 
   document.getElementById("verdict-gavel").innerHTML = GAVEL_SVG;
