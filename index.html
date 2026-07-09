@@ -294,9 +294,14 @@
     background:var(--card2);border-radius:16px;padding:13px 14px;margin-bottom:13px;
     border:1px solid #4d3823;display:flex;gap:12px;align-items:flex-start;
   }
-  .bubble .b-av{width:44px;height:44px;border-color:rgba(224,102,102,.5)}
+  .bubble .b-av{width:46px;height:46px;border-color:rgba(224,102,102,.55);transition:border-color .2s}
+  .bubble .b-av.wit{border-color:rgba(224,176,79,.7)}
   .bubble .b-body{flex:1}
   .bubble .who{font-size:12px;font-weight:700;color:var(--red);letter-spacing:1px;margin-bottom:5px}
+  .bubble .who.wit{color:var(--gold)}
+  .defender-row{display:flex;align-items:center;gap:11px;margin:2px 2px 11px}
+  .defender-row .d-av{width:40px;height:40px;flex-shrink:0;border:2px solid var(--gold);box-shadow:0 2px 8px rgba(0,0,0,.35)}
+  .defender-row .choose-label{margin:0}
   .bubble p{font-size:15.5px;line-height:1.5}
 
   .choose-label{font-size:13px;color:var(--gold);font-weight:700;margin:2px 4px 10px;letter-spacing:.5px}
@@ -611,7 +616,10 @@
     </div>
     <div class="feedback" id="feedback"></div>
     <div id="options-wrap">
-      <div class="choose-label" id="choose-label" data-i18n="chooseDefense">👉 Savunmanı seç:</div>
+      <div class="defender-row">
+        <div class="d-av avatar-circle" id="avukat-avatar"></div>
+        <div class="choose-label" id="choose-label" data-i18n="chooseDefense">👉 Savunmanı seç:</div>
+      </div>
       <div id="options"></div>
     </div>
     <button class="big-btn" id="next-btn" style="display:none" onclick="nextRound()" data-i18n="continue">Devam ›</button>
@@ -833,7 +841,49 @@ function judgeMood(prefix, mood) {
   }
 }
 
-// Karakter portresi üretici
+// Kıyafet katmanı (düz/flat tarz) — yaka, kazak yeleği, takım, cübbe, elbise, önlük, üniforma
+function outfitSVG(a) {
+  const top = a.top || (a.vest ? "vest" : "plain");
+  const shirt = a.shirt || "#3a4a63";
+  const torso = (c) => `<path d="M6 100 Q9 76 32 71 Q41 78 50 78 Q59 78 68 71 Q91 76 94 100 Z" fill="${c}"/>`;
+  const collar = (c) => `<path d="M41 71 L50 86 L46 70 Z" fill="${c}"/><path d="M59 71 L50 86 L54 70 Z" fill="${c}"/>`;
+  const inner = a.inner || "#f1efe8";
+  let s = "";
+  if (top === "vest") {
+    const vest = a.vest || "#b23a3a";
+    s = torso(inner) + collar(inner) +
+      `<path d="M6 100 Q9 77 33 72 L50 92 L67 72 Q91 77 94 100 Z" fill="${vest}"/>` +
+      `<path d="M50 92 L36 74 M50 92 L64 74" stroke="rgba(0,0,0,.10)" stroke-width="1.5" fill="none"/>` +
+      `<path d="M20 92 l12 -12 M68 80 l12 12 M40 100 l14 -14 M46 100 l14 14" stroke="rgba(255,255,255,.10)" stroke-width="1.4" fill="none"/>`;
+  } else if (top === "suit") {
+    const tie = a.tie || "#7a2e3a";
+    s = torso(inner) + collar(inner) +
+      `<path d="M6 100 Q9 76 32 71 L50 90 L44 72 Z" fill="${shirt}"/>` +
+      `<path d="M94 100 Q91 76 68 71 L50 90 L56 72 Z" fill="${shirt}"/>` +
+      `<path d="M47 84 L53 84 L52 89 L48 89 Z" fill="${tie}"/><path d="M48 89 L52 89 L51.2 100 L48.8 100 Z" fill="${tie}"/>`;
+  } else if (top === "robe") {
+    s = torso(shirt) +
+      `<path d="M40 72 Q50 80 60 72 L57 100 L43 100 Z" fill="#f4f1ea"/>` +
+      `<path d="M50 74 L50 100" stroke="#cfc8b8" stroke-width="1.2"/>` +
+      `<path d="M41 71 L50 84 L46 70 Z" fill="#f4f1ea"/><path d="M59 71 L50 84 L54 70 Z" fill="#f4f1ea"/>`;
+  } else if (top === "dress") {
+    s = `<path d="M6 100 Q9 76 32 71 Q41 82 50 82 Q59 82 68 71 Q91 76 94 100 Z" fill="${shirt}"/>` +
+      (a.necklace ? `<circle cx="50" cy="83" r="2.2" fill="${a.necklace}"/>` : "");
+  } else if (top === "apron") {
+    s = torso(shirt) + collar(a.collar || inner) +
+      `<path d="M40 76 Q40 74 43 74 L57 74 Q60 74 60 76 L60 100 L40 100 Z" fill="${a.apron || "#e9e4d8"}"/>` +
+      `<path d="M43 74 L47 70 M57 74 L53 70" stroke="${a.apron || "#e9e4d8"}" stroke-width="2.5" stroke-linecap="round"/>`;
+  } else if (top === "uniform") {
+    s = torso(shirt) + collar(a.collar || "#efe9dc") +
+      `<circle cx="50" cy="84" r="1.4" fill="rgba(0,0,0,.35)"/><circle cx="50" cy="92" r="1.4" fill="rgba(0,0,0,.35)"/>` +
+      `<rect x="34" y="76" width="8" height="4" rx="1" fill="rgba(255,255,255,.25)"/>`;
+  } else { // plain
+    s = torso(shirt) + collar(a.collar || shirt);
+  }
+  return s;
+}
+
+// Karakter portresi üretici (baş + omuz büstü, düz/flat tarz)
 function avatarSVG(a) {
   const hc = a.hc || "#3b2a1a";
   const fc = a.fc || hc;
@@ -841,6 +891,13 @@ function avatarSVG(a) {
   switch (a.hair) {
     case "short":
       front = `<path d="M30 44 Q29 20 50 20 Q71 20 70 44 Q67 30 57 30 Q52 26 45 31 Q34 32 30 44 Z" fill="${hc}"/>`;
+      break;
+    case "quiff":
+      front = `<path d="M30 45 Q28 22 50 21 Q72 22 70 45 Q66 31 55 31 Q54 22 47 26 Q37 27 30 45 Z" fill="${hc}"/>
+               <path d="M46 24 Q49 12 54 20 Q52 24 48 27 Z" fill="${hc}"/>`;
+      break;
+    case "curly":
+      front = `<g fill="${hc}"><circle cx="34" cy="30" r="9"/><circle cx="45" cy="24" r="9"/><circle cx="56" cy="24" r="9"/><circle cx="66" cy="31" r="9"/><circle cx="30" cy="40" r="7"/><circle cx="70" cy="40" r="7"/></g>`;
       break;
     case "long":
       back = `<path d="M27 42 Q27 14 50 14 Q73 14 73 42 L73 88 Q50 98 27 88 Z" fill="${hc}"/>`;
@@ -862,10 +919,14 @@ function avatarSVG(a) {
       front = `<path d="M30 42 Q30 20 50 20 Q70 20 70 42 Z" fill="${hc}"/><rect x="26" y="38" width="48" height="7" rx="3.5" fill="${hc}"/>`;
       break;
   }
-  const glasses = a.glasses
+  const glasses = a.glasses === "round"
     ? `<circle cx="42" cy="47" r="6.5" fill="none" stroke="#2b2620" stroke-width="2"/>
        <circle cx="58" cy="47" r="6.5" fill="none" stroke="#2b2620" stroke-width="2"/>
        <path d="M48.5 47 h3 M35.5 46 l-4 -2 M64.5 46 l4 -2" stroke="#2b2620" stroke-width="2"/>`
+    : a.glasses
+    ? `<rect x="35" y="41" width="13" height="11" rx="4" fill="none" stroke="#2b2620" stroke-width="2"/>
+       <rect x="52" y="41" width="13" height="11" rx="4" fill="none" stroke="#2b2620" stroke-width="2"/>
+       <path d="M48 46 h4 M35 45 l-4 -2 M65 45 l4 -2" stroke="#2b2620" stroke-width="2" fill="none"/>`
     : "";
   const beard = a.facial === "beard"
     ? `<path d="M32 50 Q32 78 50 78 Q68 78 68 50 Q68 68 50 68 Q32 68 32 50 Z" fill="${fc}"/>` : "";
@@ -874,9 +935,10 @@ function avatarSVG(a) {
   const mouth = a.facial ? "" : `<path d="M43 59 Q50 65 57 59" stroke="#8a4a3a" stroke-width="2" fill="none" stroke-linecap="round"/>`;
   return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
     <rect width="100" height="100" fill="${a.bg || "#3a2c1e"}"/>
-    <path d="M12 98 Q50 64 88 98 L88 100 L12 100 Z" fill="${a.shirt || "#3a4a63"}"/>
     ${back}
-    <rect x="43" y="60" width="14" height="14" fill="${a.skin}"/>
+    <rect x="43" y="59" width="14" height="18" fill="${a.skin}"/>
+    <path d="M43 71 Q50 76 57 71 L57 77 L43 77 Z" fill="rgba(0,0,0,.10)"/>
+    ${outfitSVG(a)}
     <circle cx="30" cy="49" r="4.5" fill="${a.skin}"/>
     <circle cx="70" cy="49" r="4.5" fill="${a.skin}"/>
     <ellipse cx="50" cy="47" rx="19.5" ry="22" fill="${a.skin}"/>
@@ -1208,7 +1270,9 @@ function rankName(i) { const L = LANG[save.lang] || LANG.tr; return L.ranks[i] |
 const CASES = [
   {
     id: "bisiklet", icon: "🚲", title: "Kayıp Bisiklet",
-    av: { skin: "#eab887", hair: "short", hc: "#2e1f12", shirt: "#3a5a8c" },
+    av: { skin: "#eab887", hair: "short", hc: "#2e1f12", top: "polo", shirt: "#3a5a8c" },
+    opp: { skin: "#d8a878", hair: "short", hc: "#7b6a58", facial: "mustache", fc: "#6a5a48", top: "shirt", shirt: "#7d8a52", bg: "#3a3826" },
+    oppName: "KOMŞU HASAN BEY",
     client: "Ali, 16 yaşında bir öğrenci. Komşusunun bisikletini çalmakla suçlanıyor ama suçsuz olduğunu söylüyor.",
     charge: "Komşu Hasan Bey, bisikletinin salı günü saat 15.00'te çalındığını ve Ali'yi sokakta gördüğünü iddia ediyor.",
     evidence: ["🧾 Market fişi (salı, saat 15.05)", "📹 Bulanık kamera görüntüsü", "🗣️ Tanık: mahallenin fırıncısı"],
@@ -1242,7 +1306,9 @@ const CASES = [
   },
   {
     id: "kedi", icon: "🐱", title: "Yaramaz Kedi",
-    av: { skin: "#e8c49a", hair: "scarf", hc: "#a8b8d0", glasses: true, shirt: "#7a5a7a" },
+    av: { skin: "#e8c49a", hair: "scarf", hc: "#a8b8d0", glasses: true, top: "dress", shirt: "#7a5a7a" },
+    opp: { skin: "#e2b98f", hair: "bald", hc: "#9a9088", facial: "mustache", fc: "#8a8078", top: "vest", vest: "#4d5e46", inner: "#e8e6dc", bg: "#2f3a2c" },
+    oppName: "KOMŞU NURİ BEY",
     client: "Ayşe Teyze'nin kedisi Pamuk, komşunun 10 saksısını kırmakla suçlanıyor. Komşu 5.000 lira istiyor.",
     charge: "Komşu Nuri Bey: \"Pamuk her gece bahçeme giriyor, bütün saksılarımı o kırdı!\" diyor ve tazminat istiyor.",
     evidence: ["📷 Bahçe fotoğrafları", "🐾 Kırıkların yanındaki büyük pati izleri", "🩺 Veteriner raporu: Pamuk 2 haftadır evde tedavide"],
@@ -1275,7 +1341,9 @@ const CASES = [
   },
   {
     id: "mesai", icon: "🕐", title: "Ödenmeyen Mesai",
-    av: { skin: "#d9a877", hair: "cap", hc: "#4a5a3a", facial: "mustache", fc: "#4a3624", shirt: "#5a4632" },
+    av: { skin: "#d9a877", hair: "cap", hc: "#4a5a3a", facial: "mustache", fc: "#4a3624", top: "uniform", shirt: "#5a4632" },
+    opp: { skin: "#e0af80", hair: "short", hc: "#2a2a2a", glasses: true, top: "suit", shirt: "#2b3243", tie: "#8a2e3a", bg: "#2b3040" },
+    oppName: "PATRON",
     client: "Kemal Usta, 6 ay boyunca fazla mesai yaptı ama patronu bu ücreti hiç ödemedi. Hakkını arıyor.",
     charge: "Patron: \"Kemal fazla mesai falan yapmadı, akşamları oturup çay içiyordu\" diyor ve ödeme yapmayı reddediyor.",
     evidence: ["🪪 Giriş-çıkış kart kayıtları", "💬 Patronun 'mesaileri sonra öderim' mesajı", "🗣️ Tanık: iş arkadaşı Hüseyin"],
@@ -1325,7 +1393,9 @@ const CASES = [
   },
   {
     id: "kasa", icon: "🛒", title: "Kasadaki Eksik Para",
-    av: { skin: "#f0c9a0", hair: "long", hc: "#4a2f1c", shirt: "#7a3a4a" },
+    av: { skin: "#f0c9a0", hair: "long", hc: "#4a2f1c", top: "dress", shirt: "#7a3a4a" },
+    opp: { skin: "#d6a373", hair: "short", hc: "#3a2a1a", facial: "beard", fc: "#2e2016", top: "apron", shirt: "#5a7a8a", apron: "#e6ded0", bg: "#33454d" },
+    oppName: "MARKET SAHİBİ",
     client: "Kasiyer Selin, market kasasından 2.000 lira eksik çıkınca işten atıldı ve hırsızlıkla suçlandı.",
     charge: "Market sahibi: \"O gün kasada sadece Selin vardı, parayı o aldı\" diyor.",
     evidence: ["📹 Depo kamerası kaydı", "🧾 Kasa raporu: sayım hatası geçmişi", "🔑 Yedek kasa anahtarının listesi"],
@@ -1359,7 +1429,9 @@ const CASES = [
   },
   {
     id: "gurultu", icon: "🥁", title: "Gürültücü Komşu",
-    av: { skin: "#e6b488", hair: "bun", hc: "#1f1f1f", shirt: "#333333" },
+    av: { skin: "#e6b488", hair: "bun", hc: "#1f1f1f", top: "shirt", shirt: "#333333" },
+    opp: { skin: "#efc9a2", hair: "bun", hc: "#8a7a6a", top: "dress", shirt: "#8a5a7a", bg: "#3a2a36" },
+    oppName: "ALT KAT KOMŞUSU",
     client: "Davulcu Deniz, apartmanı her gece gürültüyle inletmekle suçlanıyor. Oysa artık stüdyoda çalışıyor.",
     charge: "Alt kat komşusu: \"Her gece 23.00'te davul sesi! Uyuyamıyoruz, bu adam cezalandırılsın\" diyor.",
     evidence: ["🎟️ Stüdyo giriş kayıtları", "🔇 Evdeki davulun 3 ay önce satıldığına dair fatura", "🗣️ Tanık: yan komşu Fatma Hanım"],
@@ -1392,7 +1464,9 @@ const CASES = [
   },
   {
     id: "zemin", icon: "🧹", title: "Islak Zemin Davası",
-    av: { skin: "#d9a877", hair: "scarf", hc: "#d8b84a", shirt: "#6a4a3a" },
+    av: { skin: "#d9a877", hair: "scarf", hc: "#d8b84a", top: "apron", shirt: "#6a4a3a", apron: "#c9b48a" },
+    opp: { skin: "#e6b488", hair: "long", hc: "#4a2f1c", top: "dress", shirt: "#c2732f", necklace: "#e8c86a", bg: "#4a2f1c" },
+    oppName: "DÜŞEN MÜŞTERİ",
     client: "Temizlik görevlisi Şerife Hanım, markette bir müşteri düşünce 'uyarı levhası koymadı' diye suçlanıyor. İşinden olmak üzere.",
     charge: "Düşen müşteri: \"Yer sırılsıklamdı, hiçbir uyarı yoktu! Tazminat istiyorum\" diyor.",
     evidence: ["📹 Olay anı market kamerası", "🪧 Uyarı levhası zimmet tutanağı", "🗣️ Tanık: kasiyer"],
@@ -1425,7 +1499,9 @@ const CASES = [
   },
   {
     id: "kolye", icon: "💍", title: "Kayıp Kolye",
-    av: { skin: "#eab887", hair: "short", hc: "#1f150c", shirt: "#4a6a5a" },
+    av: { skin: "#eab887", hair: "short", hc: "#1f150c", top: "polo", shirt: "#4a6a5a" },
+    opp: { skin: "#dcae82", hair: "short", hc: "#26221e", facial: "beard", fc: "#1e1a16", top: "suit", shirt: "#2c2c30", tie: "#c9a23b", bg: "#2b2b30" },
+    oppName: "KUYUMCU SAHİBİ",
     client: "Kuyumcu çırağı Emre, vitrindeki altın kolye kaybolunca hırsızlıkla suçlanıyor. Daha ilk yılında işini kaybetmek üzere.",
     charge: "Kuyumcu sahibi: \"Vitrinin anahtarı Emre'deydi, kolyeyi o aldı\" diyor.",
     evidence: ["🧾 Tamirci makbuzu", "📹 Dükkân kamerası", "📒 Vitrin sayım defteri"],
@@ -1458,7 +1534,9 @@ const CASES = [
   },
   {
     id: "tarif", icon: "🍲", title: "Gizli Tarif",
-    av: { skin: "#f0c9a0", hair: "bun", hc: "#5a3a20", shirt: "#8a4a3a" },
+    av: { skin: "#f0c9a0", hair: "bun", hc: "#5a3a20", top: "apron", shirt: "#8a4a3a", apron: "#efe7d6" },
+    opp: { skin: "#d9a877", hair: "cap", hc: "#efe9dc", facial: "mustache", fc: "#3a2a1a", top: "apron", shirt: "#b83c30", apron: "#f2ece0", bg: "#4a2420" },
+    oppName: "KOMŞU LOKANTACI",
     client: "Aşçı Cemile Hanım, komşu lokantanın 'meşhur köfte tarifini çaldığı' iddiasıyla dava edildi.",
     charge: "Komşu lokantacı: \"Bu tarif dedemin sırrıydı, Cemile çaldı!\" diyor ve lokantanın kapatılmasını istiyor.",
     evidence: ["📖 1985 tarihli el yazması aile defteri", "👩‍🍳 Bilirkişi tadım raporu", "🔬 Kâğıt ve mürekkep incelemesi"],
@@ -1491,7 +1569,9 @@ const CASES = [
   },
   {
     id: "fatura", icon: "📱", title: "Dev Telefon Faturası",
-    av: { skin: "#dcb28a", hair: "short", hc: "#cfc8bf", facial: "mustache", fc: "#b6ada2", glasses: true, shirt: "#4a4a55" },
+    av: { skin: "#dcb28a", hair: "short", hc: "#cfc8bf", facial: "mustache", fc: "#b6ada2", glasses: true, top: "vest", vest: "#5a5a66", inner: "#e6e2da", shirt: "#4a4a55" },
+    opp: { skin: "#e8bd93", hair: "long", hc: "#2a2a2a", top: "suit", shirt: "#37415a", tie: "#6a3a7a", bg: "#333a52" },
+    oppName: "OPERATÖR TEMSİLCİSİ",
     client: "Hüsnü Amca'ya bir ayda 45.000 liralık telefon faturası geldi. Operatör \"kullandın, ödeyeceksin\" diyor.",
     charge: "Operatör şirketi: \"Kayıtlar ortada, bu hattan saatlerce yurt dışı araması yapılmış\" diyor.",
     evidence: ["📟 Hüsnü Amca'nın 20 yıllık tuşlu telefonu", "📡 Baz istasyonu kayıtları", "🧾 Son 5 yılın faturaları (hepsi ~200 TL)"],
@@ -1525,7 +1605,9 @@ const CASES = [
   },
   {
     id: "ceviz", icon: "🌳", title: "Ceviz Ağacı Kavgası",
-    av: { skin: "#e8c49a", hair: "scarf", hc: "#7a9a6a", glasses: true, shirt: "#5a6a4a" },
+    av: { skin: "#e8c49a", hair: "scarf", hc: "#7a9a6a", glasses: true, top: "dress", shirt: "#5a6a4a" },
+    opp: { skin: "#e2b98f", hair: "scarf", hc: "#8a2222", top: "dress", shirt: "#4a7a5a", bg: "#2f4636" },
+    oppName: "KOMŞU",
     client: "Ratibe Hanım, kendi bahçesindeki ceviz ağacının cevizlerini topladığı için komşusu tarafından 'hırsızlıkla' suçlanıyor.",
     charge: "Komşu: \"Ağacın dalları benim tarafa uzanıyor, cevizler benimdir! Üstelik bahçeme izinsiz girdi\" diyor.",
     evidence: ["🗺️ Tapu ve sınır krokisi", "📷 Toplama günü fotoğrafları", "🗣️ Tanık: mahalle muhtarı"],
@@ -1558,7 +1640,9 @@ const CASES = [
   },
   {
     id: "album", icon: "📸", title: "Düğün Albümü",
-    av: { skin: "#e6b488", hair: "short", hc: "#2a2016", facial: "beard", fc: "#241b12", shirt: "#2f2f38" },
+    av: { skin: "#e6b488", hair: "short", hc: "#2a2016", facial: "beard", fc: "#241b12", top: "shirt", shirt: "#2f2f38" },
+    opp: { skin: "#e6b488", hair: "short", hc: "#3a2a1a", top: "suit", shirt: "#3a5a8c", tie: "#2a3a5a", bg: "#2a3a54" },
+    oppName: "DAVACI ÇİFT",
     client: "Fotoğrafçı Baran, \"düğün fotoğraflarımızı teslim etmedi\" diyen bir çift tarafından dava edildi. Oysa albüm çoktan teslim edildi.",
     charge: "Çift: \"Düğünümüzün üzerinden 6 ay geçti, tek fotoğraf alamadık; paramızı ve tazminat istiyoruz\" diyor.",
     evidence: ["📦 Kargo teslim tutanağı", "💬 Gelinle mesajlaşma kayıtları", "📑 Sözleşme ve teslim listesi"],
@@ -1591,7 +1675,9 @@ const CASES = [
   },
   {
     id: "miras", icon: "📜", title: "Büyük Miras Davası",
-    av: { skin: "#dcb28a", hair: "bald", hc: "#b6ada2", facial: "mustache", fc: "#9a9088", glasses: true, shirt: "#55606e" },
+    av: { skin: "#dcb28a", hair: "bald", hc: "#b6ada2", facial: "mustache", fc: "#9a9088", glasses: true, top: "vest", vest: "#4a5560", inner: "#e6e2da", shirt: "#55606e" },
+    opp: { skin: "#dcae82", hair: "short", hc: "#6a5a4a", facial: "mustache", fc: "#5a4a3a", glasses: "round", top: "suit", shirt: "#3a4250", tie: "#5a3a2a", bg: "#333a44" },
+    oppName: "DAVACI KARDEŞ",
     client: "Osman Amca'nın kardeşleri, babalarının vasiyetindeki imzanın sahte olduğunu ve evin Osman Amca'ya kalamayacağını söylüyor.",
     charge: "Kardeşler: \"Babamız bu vasiyeti imzalamadı, imza sahte! Ev hepimizin\" diyerek dava açtı.",
     evidence: ["🖋️ İmza uzmanı raporu", "🎥 Vasiyetin imzalandığı günün noter kamera kaydı", "🗣️ Tanık: baba dostu emekli öğretmen"],
@@ -1847,6 +1933,7 @@ function startTrial() {
   round = 0; score = 0; meterPct = 0;
   document.getElementById("trial-title").textContent = CASES[currentCase].icon + " " + CASES[currentCase].title;
   document.getElementById("trial-scene").innerHTML = courtScene("tj");
+  document.getElementById("avukat-avatar").innerHTML = avatarSVG(AVUKAT);
   SND.gavel();
   renderRound();
   show("scr-trial");
@@ -1857,6 +1944,16 @@ function startTrial() {
 function splitEv(str) {
   const sp = str.indexOf(" ");
   return { ic: sp > 0 ? str.slice(0, sp) : "📎", tx: sp > 0 ? str.slice(sp + 1) : str };
+}
+
+// Oyuncunun avukatı (savunma tarafı — cübbeli, gözlüklü)
+const AVUKAT = { skin: "#e8c9a4", hair: "quiff", hc: "#2b2018", top: "robe", shirt: "#242b3e", glasses: true, bg: "#2c3552" };
+
+// Duruşma balonundaki konuşmacı avatarını rolüne göre ayarla
+function setBubbleAv(cfg, isWit) {
+  const el = document.getElementById("opp-avatar");
+  el.innerHTML = avatarSVG(cfg || AVUKAT);
+  el.classList.toggle("wit", !!isWit);
 }
 
 function renderRound() {
@@ -1878,19 +1975,22 @@ function renderRound() {
   wrap.innerHTML = "";
 
   if (r.type === "sorgu") {
-    who.textContent = t("witness"); who.classList.add("wit");
+    who.textContent = r.witness || t("witness"); who.classList.add("wit");
+    setBubbleAv(r.wav || c.opp || c.av, true);
     typeText(document.getElementById("claim-text"), r.intro || t("crossIntro"));
     label.className = "choose-label itiraz";
     label.textContent = t("findLie");
     renderTestimony(r, wrap);
   } else if (r.type === "itiraz") {
-    who.textContent = t("opponent"); who.classList.remove("wit");
+    who.textContent = c.oppName || t("opponent"); who.classList.remove("wit");
+    setBubbleAv(c.opp || c.av, false);
     typeText(document.getElementById("claim-text"), "“" + r.claim + "”");
     label.className = "choose-label itiraz";
     label.innerHTML = `<span class="obj-tag">⚖️ ${t("objection")}</span><br>${r.ask || t("presentEv")}`;
     renderEvidence(r.present, wrap);
   } else {
-    who.textContent = t("opponent"); who.classList.remove("wit");
+    who.textContent = c.oppName || t("opponent"); who.classList.remove("wit");
+    setBubbleAv(c.opp || c.av, false);
     typeText(document.getElementById("claim-text"), "“" + r.claim + "”");
     label.className = "choose-label";
     label.textContent = t("chooseDefense");
@@ -2060,8 +2160,7 @@ function celebrate(stars) {
 /* ================= BAŞLAT ================= */
 document.getElementById("home-scene").innerHTML = courtScene("hj");
 (function(){ var s=document.querySelector("#home-scene svg"); if(s) s.setAttribute("preserveAspectRatio","xMidYMid slice"); })();
-document.getElementById("me-avatar").innerHTML = avatarSVG({ skin: "#e6b488", hair: "short", hc: "#3b2a1a", shirt: "#1d2a3f", bg: "#4a3417" });
-document.getElementById("opp-avatar").innerHTML = avatarSVG({ skin: "#e0af80", hair: "bald", hc: "#5a4634", facial: "mustache", fc: "#4a3624", shirt: "#4a2f2f", bg: "#3a2020" });
+document.getElementById("me-avatar").innerHTML = avatarSVG(AVUKAT);
 document.getElementById("mute-btn").textContent = save.muted ? "🔇" : "🔊";
 applyI18n();
 syncSettingsUI();
