@@ -248,8 +248,10 @@
     border:1px solid var(--gold-dark);color:var(--gold);font-weight:800;font-size:13px;padding:6px 13px;border-radius:99px}
   .cf-icon{position:absolute;top:12px;right:16px;z-index:3;font-size:42px;
     filter:drop-shadow(0 3px 6px rgba(0,0,0,.6));animation:cfFloat 3.2s ease-in-out infinite}
-  .cf-portrait{position:absolute;left:50%;top:36%;width:124px;height:124px;border-width:3px;z-index:3;
+  .cf-portrait{position:absolute;left:16px;top:34%;width:92px;height:92px;border-width:3px;z-index:3;
     animation:cfBob 4s ease-in-out infinite}
+  .cf-opp{position:absolute;right:16px;top:34%;width:92px;height:92px;border-width:3px;z-index:3;
+    border-color:rgba(224,102,102,.6);animation:cfBobOpp 4.4s ease-in-out infinite}
   .cf-body{position:absolute;left:0;right:0;bottom:0;z-index:3;padding:16px 18px 20px;text-align:center}
   .cf-title{font-size:23px;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.85);text-wrap:balance}
   .cf-teaser{font-size:13.5px;color:#e6d4ac;line-height:1.45;margin-top:8px;text-shadow:0 1px 4px rgba(0,0,0,.95);
@@ -259,7 +261,8 @@
     background:linear-gradient(100deg,transparent,rgba(255,240,210,.13),transparent);transform:skewX(-20deg);
     animation:cfShine 6s ease-in-out infinite}
   @keyframes cfFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-  @keyframes cfBob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,-9px)}}
+  @keyframes cfBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+  @keyframes cfBobOpp{0%,100%{transform:translateY(-9px)}50%{transform:translateY(0)}}
   @keyframes cfShine{0%,55%{left:-70%}82%,100%{left:130%}}
 
   .case-dots{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin-top:12px}
@@ -272,7 +275,7 @@
   .dot.solved:active,.dot.cur:active{transform:scale(.9)}
   .dot.shake{animation:dotShake .35s}
   @keyframes dotShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
-  @media (prefers-reduced-motion:reduce){.cf-icon,.cf-portrait,.case-feature::after{animation:none}}
+  @media (prefers-reduced-motion:reduce){.cf-icon,.cf-portrait,.cf-opp,.case-feature::after{animation:none}}
 
   .case-card{
     background:var(--card);border:1px solid var(--line);border-radius:16px;
@@ -580,6 +583,7 @@
       <div class="cf-badge" id="cf-badge"></div>
       <div class="cf-icon" id="cf-icon"></div>
       <div class="cf-portrait avatar-circle" id="cf-av"></div>
+      <div class="cf-opp avatar-circle" id="cf-opp"></div>
       <div class="cf-body">
         <h2 class="cf-title" id="cf-title"></h2>
         <p class="cf-teaser" id="cf-teaser"></p>
@@ -1976,6 +1980,7 @@ function renderCases() {
   document.getElementById("cf-badge").textContent = `${t("caseN")} ${featuredCase + 1} / ${CASES.length}`;
   document.getElementById("cf-icon").textContent = c.icon;
   document.getElementById("cf-av").innerHTML = charArt(imgCfg(c.av, c.id, "muvekkil"));
+  document.getElementById("cf-opp").innerHTML = charArt(imgCfg(c.opp || c.av, c.id, "karsi"));
   document.getElementById("cf-title").textContent = `${c.icon} ${c.title}`;
   document.getElementById("cf-teaser").textContent = c.client;
   const st = save.stars[c.id] || 0;
