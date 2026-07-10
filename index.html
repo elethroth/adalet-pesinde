@@ -1969,9 +1969,9 @@ function goPlay() {
 
 let featuredCase = 0;
 function renderCases() {
-  // Sayfa her açıldığında en baştaki dava öne çıkar; kilit sınırı ayrı hesaplanır.
-  featuredCase = 0;
+  // Öne çıkan dava = sıradaki oynanabilir (henüz kazanılmamış) dava; bir öncekini geçince otomatik ilerler.
   const unlockedTo = Math.min(save.unlocked - 1, CASES.length - 1);
+  featuredCase = unlockedTo;
   const c = CASES[featuredCase];
 
   document.getElementById("cf-scene").innerHTML = courtScene("cf", { realJudge: true });
