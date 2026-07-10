@@ -145,11 +145,34 @@
     letter-spacing:1px;color:#f4d789;margin-top:4px;
     text-shadow:0 2px 0 #4a2c10,0 3px 0 #38200b,0 7px 18px rgba(0,0,0,.65)}
   .logo-sub{color:#e0cfa8;font-size:13.5px;margin-top:12px;text-shadow:0 2px 6px rgba(0,0,0,.8);line-height:1.4}
-  .rank-badge{display:inline-flex;align-items:center;gap:11px;margin-top:16px;
-    background:rgba(20,14,9,.62);border:1px solid var(--line);border-radius:99px;padding:7px 16px 7px 8px}
+  .rank-badge{display:inline-flex;align-items:center;gap:11px;margin-top:16px;cursor:pointer;
+    background:rgba(20,14,9,.62);border:1px solid var(--line);border-radius:99px;padding:7px 16px 7px 8px;
+    transition:transform .1s}
+  .rank-badge:active{transform:scale(.96)}
   .rank-badge .rb-av{width:34px;height:34px}
   .rank-badge .rb-name{font-weight:800;font-size:14px;color:var(--gold)}
   .rank-badge .rb-xp{font-size:11px;color:var(--muted);margin-top:1px}
+  .rank-badge::after{content:"›";margin-left:2px;color:var(--gold);font-size:19px;font-weight:800}
+
+  .rank-list{display:flex;flex-direction:column;gap:10px}
+  .rank-row{
+    display:flex;align-items:center;gap:13px;
+    background:var(--card2);border:1px solid #4d3823;border-radius:16px;padding:12px 15px;
+  }
+  .rank-row.current{border-color:var(--gold);background:linear-gradient(180deg,rgba(224,176,79,.18),rgba(224,176,79,.05))}
+  .rank-row.locked{opacity:.5}
+  .rank-row .rk-num{
+    width:40px;height:40px;border-radius:50%;flex-shrink:0;
+    background:linear-gradient(180deg,var(--gold),var(--gold-dark));color:#241c08;font-weight:800;
+    display:grid;place-items:center;font-size:17px;
+  }
+  .rank-row.locked .rk-num{background:var(--card);color:var(--muted)}
+  .rank-row .rk-body{flex:1;min-width:0}
+  .rank-row .rk-name{font-weight:800;font-size:15.5px}
+  .rank-row.current .rk-name{color:var(--gold)}
+  .rank-row .rk-xp{font-size:12.5px;color:var(--muted);margin-top:2px}
+  .rank-row .rk-tag{font-size:10.5px;font-weight:800;color:#241c08;background:var(--gold);
+    padding:4px 9px;border-radius:99px;letter-spacing:.3px;flex-shrink:0;text-align:center}
 
   .menu-btns{margin-top:auto;width:100%;max-width:330px;display:flex;flex-direction:column;gap:15px;padding-top:24px}
   .menu-btn{
@@ -521,7 +544,7 @@
         <h1 class="logo-title">ADALET<br>PEŞİNDE</h1>
         <p class="logo-sub" data-i18n="subtitle">Müvekkillerini savun, davaları kazan, seviye atla!</p>
       </div>
-      <div class="rank-badge">
+      <div class="rank-badge" onclick="openRanks()">
         <div class="rb-av avatar-circle" id="me-avatar"></div>
         <div>
           <div class="rb-name" id="rank-name">Stajyer Avukat</div>
@@ -610,6 +633,15 @@
       <div class="howto-step"><div class="howto-num">3</div><div><h4 data-i18n="howto3t"></h4><p data-i18n="howto3d"></p></div></div>
       <div class="howto-step"><div class="howto-num">4</div><div><h4 data-i18n="howto4t"></h4><p data-i18n="howto4d"></p></div></div>
     </div>
+  </div>
+
+  <!-- SEVİYELER -->
+  <div class="screen" id="scr-ranks">
+    <div class="topbar">
+      <button class="back-btn" onclick="SND.click();show('scr-home')" data-i18n="back">‹ Geri</button>
+      <h2 data-i18n="ranksTitle">Avukatlık Seviyeleri</h2>
+    </div>
+    <div class="rank-list" id="rank-list"></div>
   </div>
 
   <!-- DAVA ÖZETİ -->
@@ -1311,6 +1343,7 @@ const LANG = {
     setLang: "Oyun Dili", langNote: "Menü ve arayüz dili. Dava metinleri şu an yalnızca Türkçedir.",
     setReset: "İlerlemeyi Sıfırla", resetDesc: "Tüm ilerlemen ve yıldızların silinir.",
     resetBtn: "Sıfırla", resetConfirm: "Emin misin? Tüm ilerleme silinecek.", resetDone: "İlerleme sıfırlandı ✓",
+    ranksTitle: "Avukatlık Seviyeleri", youAreHere: "ŞU AN BURADASIN",
     howtoTitle: "Nasıl Oynanır",
     howto1t: "Bir dava seç", howto1d: "Menüde OYNA'ya bas, açık davalardan birini seç.",
     howto2t: "Dosyayı incele", howto2d: "Müvekkilini, suçlamayı ve elindeki kanıtları oku.",
@@ -1344,6 +1377,7 @@ const LANG = {
     setLang: "Game Language", langNote: "Menu and interface language. Case texts are currently Turkish only.",
     setReset: "Reset Progress", resetDesc: "All your progress and stars will be erased.",
     resetBtn: "Reset", resetConfirm: "Are you sure? All progress will be deleted.", resetDone: "Progress reset ✓",
+    ranksTitle: "Lawyer Ranks", youAreHere: "YOU ARE HERE",
     howtoTitle: "How to Play",
     howto1t: "Pick a case", howto1d: "Tap PLAY in the menu and choose an unlocked case.",
     howto2t: "Study the file", howto2d: "Read your client, the charge and your evidence.",
@@ -1929,6 +1963,29 @@ function openSettings() {
 function openHowto() {
   SND.click();
   show("scr-howto");
+}
+function openRanks() {
+  SND.click();
+  renderRanks();
+  show("scr-ranks");
+}
+function renderRanks() {
+  const { ci } = rankInfo(save.xp);
+  const wrap = document.getElementById("rank-list");
+  wrap.innerHTML = RANK_XP.map((xpFrom, i) => {
+    const reached = save.xp >= xpFrom;
+    const current = i === ci;
+    const xpTo = RANK_XP[i + 1];
+    const range = xpTo != null ? `${xpFrom} – ${xpTo} ${t("tp")}` : `${xpFrom}+ ${t("tp")}`;
+    return `<div class="rank-row${current ? " current" : ""}${reached ? "" : " locked"}">
+      <div class="rk-num">${current ? "★" : reached ? "✓" : (i + 1)}</div>
+      <div class="rk-body">
+        <div class="rk-name">${rankName(i)}</div>
+        <div class="rk-xp">${range}</div>
+      </div>
+      ${current ? `<span class="rk-tag">${t("youAreHere")}</span>` : ""}
+    </div>`;
+  }).join("");
 }
 function syncSettingsUI() {
   document.getElementById("sound-toggle").classList.toggle("on", !save.muted);
