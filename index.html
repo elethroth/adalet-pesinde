@@ -1915,15 +1915,15 @@ function goPlay() {
 
 let featuredCase = 0;
 function renderCases() {
-  // Odaklanılan dava = açık olan en son (henüz oynanmamış sınır) dava
-  const cur = Math.min(save.unlocked - 1, CASES.length - 1);
-  featuredCase = cur;
-  const c = CASES[cur];
+  // Sayfa her açıldığında en baştaki dava öne çıkar; kilit sınırı ayrı hesaplanır.
+  featuredCase = 0;
+  const unlockedTo = Math.min(save.unlocked - 1, CASES.length - 1);
+  const c = CASES[featuredCase];
 
   document.getElementById("cf-scene").innerHTML = courtScene("cf", { realJudge: true });
   const s = document.querySelector("#cf-scene svg");
   if (s) s.setAttribute("preserveAspectRatio", "xMidYMid slice");
-  document.getElementById("cf-badge").textContent = `${t("caseN")} ${cur + 1} / ${CASES.length}`;
+  document.getElementById("cf-badge").textContent = `${t("caseN")} ${featuredCase + 1} / ${CASES.length}`;
   document.getElementById("cf-icon").textContent = c.icon;
   document.getElementById("cf-av").innerHTML = charArt(imgCfg(c.av, c.id, "muvekkil"));
   document.getElementById("cf-title").textContent = `${c.icon} ${c.title}`;
@@ -1931,22 +1931,22 @@ function renderCases() {
   const st = save.stars[c.id] || 0;
   document.getElementById("cf-stars").textContent = st ? "⭐".repeat(st) + "☆".repeat(3 - st) : "";
 
-  // İlerleme noktaları: çözülen / mevcut / gizemli(kilitli)
+  // İlerleme noktaları: çözülen / mevcut / gizemli(kilitli) — ilerleme sınırı save.unlocked'a bağlı, öne çıkan davadan bağımsız.
   const dots = document.getElementById("case-dots");
   dots.innerHTML = "";
   CASES.forEach((cc, i) => {
     const d = document.createElement("div");
-    if (i < cur) {
+    if (i < unlockedTo) {
       d.className = "dot solved";
       d.textContent = "★";
       d.onclick = () => { SND.click(); featuredCase = i; openBrief(i); };
-    } else if (i === cur) {
+    } else if (i === unlockedTo) {
       d.className = "dot cur";
       d.textContent = cc.icon;
       d.onclick = () => { SND.click(); openBrief(i); };
     } else {
       d.className = "dot locked";
-      d.textContent = "🔒";
+      d.textContent = "❔";
       d.title = t("mystery");
       d.onclick = () => { d.classList.remove("shake"); void d.offsetWidth; d.classList.add("shake"); };
     }
