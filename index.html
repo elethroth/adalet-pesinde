@@ -1139,6 +1139,22 @@ const SND = (() => {
     if (ctx.state === "suspended") ctx.resume();
     return ctx;
   }
+  // Büyük salon hissi için sentetik dürtü yanıtı (impulse response) — dış dosya gerektirmez.
+  let hallIR = null;
+  function hallImpulse(c) {
+    if (hallIR && hallIR.sampleRate === c.sampleRate) return hallIR;
+    const dur = 2.6, len = Math.floor(c.sampleRate * dur);
+    const buf = c.createBuffer(2, len, c.sampleRate);
+    for (let ch = 0; ch < 2; ch++) {
+      const d = buf.getChannelData(ch);
+      for (let i = 0; i < len; i++) {
+        const t = i / len;
+        d[i] = (Math.random() * 2 - 1) * Math.pow(1 - t, 2.2);
+      }
+    }
+    hallIR = buf;
+    return buf;
+  }
   function tone(freq, t0, dur, type, vol, slideTo) {
     if (save.muted) return;
     try {
@@ -1178,35 +1194,42 @@ const SND = (() => {
       const master = c.createGain();
       master.gain.setValueAtTime(0.0001, c.currentTime);
       master.gain.linearRampToValueAtTime(1, c.currentTime + 1.4);
-      master.connect(c.destination);
 
-      // sürekli uğultu yatağı: kahverengi gürültü + dar bantlı süzgeç
+      // büyük salon hissi: kuru sinyal + konvolüsyon yankısı karışımı
+      const dryG = c.createGain(); dryG.gain.value = 0.62;
+      const wetG = c.createGain(); wetG.gain.value = 0.7;
+      const conv = c.createConvolver(); conv.buffer = hallImpulse(c); conv.normalize = true;
+      master.connect(dryG); dryG.connect(c.destination);
+      master.connect(conv); conv.connect(wetG); wetG.connect(c.destination);
+
+      // sürekli uğultu yatağı: kahverengi gürültü + dar bantlı süzgeç (derin salon zemini)
       const dur = 4, buf = c.createBuffer(1, c.sampleRate * dur, c.sampleRate), d = buf.getChannelData(0);
       let last = 0;
       for (let i = 0; i < d.length; i++) { const w = Math.random() * 2 - 1; last = (last + 0.02 * w) / 1.02; d[i] = last * 3.2; }
       const bed = c.createBufferSource(); bed.buffer = buf; bed.loop = true;
-      const bp = c.createBiquadFilter(); bp.type = "bandpass"; bp.frequency.value = 430; bp.Q.value = 0.9;
-      const bedG = c.createGain(); bedG.gain.value = 0.010;
+      const bp = c.createBiquadFilter(); bp.type = "bandpass"; bp.frequency.value = 400; bp.Q.value = 0.8;
+      const bedG = c.createGain(); bedG.gain.value = 0.013;
       bed.connect(bp); bp.connect(bedG); bedG.connect(master); bed.start();
       const lfo = c.createOscillator(); lfo.type = "sine"; lfo.frequency.value = 0.13;
       const lfoG = c.createGain(); lfoG.gain.value = 150;
       lfo.connect(lfoG); lfoG.connect(bp.frequency); lfo.start();
-      murmurNodes = { master, bed, lfo };
+      murmurNodes = { master, bed, lfo, dryG, wetG, conv };
 
-      // rastgele, kısık fısıltı heceleri (kalabalık hissi)
+      // rastgele, kısık FISILTI heceleri (yüksek geçiren, nefesli "sss/hhh" dokusu — kalabalık hissi)
       function syllable() {
         if (!murmurOn) return;
         if (!save.muted) {
           try {
-            const sd = 0.09 + Math.random() * 0.10, sb = c.createBuffer(1, c.sampleRate * sd, c.sampleRate), arr = sb.getChannelData(0);
+            const sd = 0.10 + Math.random() * 0.16, sb = c.createBuffer(1, c.sampleRate * sd, c.sampleRate), arr = sb.getChannelData(0);
             let lp = 0;
-            for (let i = 0; i < arr.length; i++) { const w = Math.random() * 2 - 1; lp = (lp + 0.05 * w) / 1.05; arr[i] = lp * 4 * Math.sin(Math.PI * i / arr.length); }
+            for (let i = 0; i < arr.length; i++) { const w = Math.random() * 2 - 1; lp = (lp + 0.22 * w) / 1.22; arr[i] = lp * 4.6 * Math.sin(Math.PI * i / arr.length); }
             const s = c.createBufferSource(); s.buffer = sb;
-            const f = c.createBiquadFilter(); f.type = "bandpass"; f.frequency.value = 230 + Math.random() * 430; f.Q.value = 5 + Math.random() * 5;
-            const g = c.createGain(); g.gain.value = 0.011 + Math.random() * 0.012;
+            const f = c.createBiquadFilter(); f.type = "bandpass"; f.frequency.value = 900 + Math.random() * 1500; f.Q.value = 3 + Math.random() * 4;
+            const hp = c.createBiquadFilter(); hp.type = "highpass"; hp.frequency.value = 550;
+            const g = c.createGain(); g.gain.value = 0.015 + Math.random() * 0.016;
             let out = g;
             if (c.createStereoPanner) { const p = c.createStereoPanner(); p.pan.value = (Math.random() * 2 - 1) * 0.85; g.connect(p); out = p; }
-            s.connect(f); f.connect(g); out.connect(master); s.start();
+            s.connect(f); f.connect(hp); hp.connect(g); out.connect(master); s.start();
           } catch (e) {}
         }
         murmurTimer = setTimeout(syllable, 230 + Math.random() * 620);
@@ -1224,7 +1247,7 @@ const SND = (() => {
         n.master.gain.cancelScheduledValues(c.currentTime);
         n.master.gain.setValueAtTime(n.master.gain.value, c.currentTime);
         n.master.gain.linearRampToValueAtTime(0.0001, c.currentTime + 0.4);
-        setTimeout(() => { try { n.bed.stop(); n.lfo.stop(); n.master.disconnect(); } catch (e) {} }, 500);
+        setTimeout(() => { try { n.bed.stop(); n.lfo.stop(); n.master.disconnect(); n.dryG.disconnect(); n.wetG.disconnect(); n.conv.disconnect(); } catch (e) {} }, 500);
       } catch (e) {}
     }
   }
