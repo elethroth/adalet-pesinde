@@ -279,8 +279,8 @@
   .case-hero{position:relative;border:1px solid var(--line);border-radius:16px;overflow:hidden;margin-bottom:11px;box-shadow:0 10px 26px rgba(0,0,0,.45)}
   .case-hero .case-hero-bg svg{display:block;width:100%}
   .case-hero-grad{position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,14,10,0) 45%,rgba(18,12,9,.82))}
-  .case-hero-icon{position:absolute;right:16px;bottom:8px;font-size:50px;filter:drop-shadow(0 3px 6px rgba(0,0,0,.6))}
   .case-hero-client{position:absolute;left:14px;bottom:12px;width:74px;height:74px;border-width:3px}
+  .case-hero-opp{position:absolute;right:14px;bottom:12px;width:74px;height:74px;border-width:3px;border-color:rgba(224,102,102,.6)}
   .case-ribbon{
     position:absolute;top:0;left:14px;background:#8a2f2f;color:#fbe6d8;
     font-size:11px;font-weight:800;letter-spacing:2px;padding:6px 13px 7px;
@@ -621,7 +621,7 @@
     <div class="case-hero">
       <div class="case-hero-bg" id="brief-hero-scene"></div>
       <div class="case-hero-grad"></div>
-      <div class="case-hero-icon" id="brief-hero-icon"></div>
+      <div class="case-hero-opp avatar-circle" id="brief-hero-opp"></div>
       <div class="case-hero-client avatar-circle" id="brief-hero-av"></div>
       <div class="case-ribbon" data-i18n="caseFile">DAVA DOSYASI</div>
       <div class="case-no" id="brief-no"></div>
@@ -2009,7 +2009,7 @@ function openBrief(i) {
   const c = CASES[i];
   document.getElementById("brief-title").textContent = c.icon + " " + c.title;
   document.getElementById("brief-hero-scene").innerHTML = courtScene("bh", { realJudge: true });
-  document.getElementById("brief-hero-icon").textContent = c.icon;
+  document.getElementById("brief-hero-opp").innerHTML = charArt(imgCfg(c.opp || c.av, c.id, "karsi"));
   document.getElementById("brief-hero-av").innerHTML = charArt(imgCfg(c.av, c.id, "muvekkil"));
   document.getElementById("brief-no").textContent = t("file") + " #" + String(i + 1).padStart(3, "0");
   document.getElementById("brief-client").textContent = c.client;
