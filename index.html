@@ -1184,8 +1184,8 @@ const SND = (() => {
       tone(150, t0, 0.12, "sine", 0.3, 70);
     } catch (e) {}
   }
-  // ---- duruşma ortam uğultusu (çok kısık salon fısıltıları) ----
-  let murmurOn = false, murmurNodes = null, murmurTimer = null;
+  // ---- duruşma ortam uğultusu (kalabalık salonda kısık, uğultulu insan sesleri) ----
+  let murmurOn = false, murmurNodes = null, murmurTimers = [];
   function murmurStart() {
     if (murmurOn || save.muted) return;
     try {
@@ -1215,31 +1215,50 @@ const SND = (() => {
       lfo.connect(lfoG); lfoG.connect(bp.frequency); lfo.start();
       murmurNodes = { master, bed, lfo, dryG, wetG, conv };
 
-      // rastgele, kısık FISILTI heceleri (yüksek geçiren, nefesli "sss/hhh" dokusu — kalabalık hissi)
-      function syllable() {
-        if (!murmurOn) return;
-        if (!save.muted) {
-          try {
-            const sd = 0.10 + Math.random() * 0.16, sb = c.createBuffer(1, c.sampleRate * sd, c.sampleRate), arr = sb.getChannelData(0);
-            let lp = 0;
-            for (let i = 0; i < arr.length; i++) { const w = Math.random() * 2 - 1; lp = (lp + 0.22 * w) / 1.22; arr[i] = lp * 4.6 * Math.sin(Math.PI * i / arr.length); }
-            const s = c.createBufferSource(); s.buffer = sb;
-            const f = c.createBiquadFilter(); f.type = "bandpass"; f.frequency.value = 900 + Math.random() * 1500; f.Q.value = 3 + Math.random() * 4;
-            const hp = c.createBiquadFilter(); hp.type = "highpass"; hp.frequency.value = 550;
-            const g = c.createGain(); g.gain.value = 0.015 + Math.random() * 0.016;
-            let out = g;
-            if (c.createStereoPanner) { const p = c.createStereoPanner(); p.pan.value = (Math.random() * 2 - 1) * 0.85; g.connect(p); out = p; }
-            s.connect(f); f.connect(hp); hp.connect(g); out.connect(master); s.start();
-          } catch (e) {}
-        }
-        murmurTimer = setTimeout(syllable, 230 + Math.random() * 620);
+      // kalabalıkta konuşan, uğultulu-kısık insan sesi heceleri (formant benzeri çift bant süzgeç + alçak geçiren = boğuk "mırıltı")
+      function talkerSyllable(pitch) {
+        if (!murmurOn || save.muted) return;
+        try {
+          const sd = 0.14 + Math.random() * 0.22;
+          const sb = c.createBuffer(1, c.sampleRate * sd, c.sampleRate), arr = sb.getChannelData(0);
+          let lp = 0;
+          for (let i = 0; i < arr.length; i++) { const w = Math.random() * 2 - 1; lp = (lp + 0.08 * w) / 1.08; arr[i] = lp * 4.2 * Math.sin(Math.PI * i / arr.length); }
+          const s = c.createBufferSource(); s.buffer = sb;
+          // iki formant bandı: insan sesindeki ünlü rezonanslarını taklit eder
+          const f1 = c.createBiquadFilter(); f1.type = "bandpass"; f1.Q.value = 4 + Math.random() * 3;
+          const f1a = pitch * (0.9 + Math.random() * 0.3), f1b = pitch * (0.75 + Math.random() * 0.3);
+          f1.frequency.setValueAtTime(f1a, c.currentTime);
+          f1.frequency.linearRampToValueAtTime(f1b, c.currentTime + sd);
+          const f2 = c.createBiquadFilter(); f2.type = "bandpass"; f2.Q.value = 3 + Math.random() * 3;
+          const f2a = pitch * 2.6 * (0.9 + Math.random() * 0.3), f2b = pitch * 2.6 * (0.8 + Math.random() * 0.3);
+          f2.frequency.setValueAtTime(f2a, c.currentTime);
+          f2.frequency.linearRampToValueAtTime(f2b, c.currentTime + sd);
+          const lpf = c.createBiquadFilter(); lpf.type = "lowpass"; lpf.frequency.value = 2000 + Math.random() * 500; lpf.Q.value = 0.5;
+          const g = c.createGain(); g.gain.value = 0.016 + Math.random() * 0.018;
+          let out = g;
+          if (c.createStereoPanner) { const p = c.createStereoPanner(); p.pan.value = (Math.random() * 2 - 1) * 0.85; g.connect(p); out = p; }
+          s.connect(f1); f1.connect(f2); f2.connect(lpf); lpf.connect(g); out.connect(master); s.start();
+        } catch (e) {}
       }
-      syllable();
+      // birkaç eşzamanlı "konuşmacı": her biri farklı ton/temposunda döngüye girer, kalabalık hissi yaratır
+      const talkers = [
+        { pitch: 130, min: 260, max: 760 },  // kalın sesli
+        { pitch: 190, min: 340, max: 900 },  // orta ton
+        { pitch: 250, min: 300, max: 820 },  // ince/tiz sesli
+      ];
+      talkers.forEach((tk, idx) => {
+        function loop() {
+          if (!murmurOn) return;
+          talkerSyllable(tk.pitch * (0.92 + Math.random() * 0.16));
+          murmurTimers[idx] = setTimeout(loop, tk.min + Math.random() * (tk.max - tk.min));
+        }
+        murmurTimers[idx] = setTimeout(loop, Math.random() * 400);
+      });
     } catch (e) { murmurOn = false; }
   }
   function murmurStop() {
     murmurOn = false;
-    if (murmurTimer) { clearTimeout(murmurTimer); murmurTimer = null; }
+    murmurTimers.forEach(t => clearTimeout(t)); murmurTimers = [];
     if (murmurNodes) {
       const n = murmurNodes; murmurNodes = null;
       try {
