@@ -1860,7 +1860,7 @@ const CASES = [
 /* ================= KAYIT ================= */
 const SAVE_KEY = "adalet_pesinde_save";
 // Tüm davaları baştan açık tut (sıralı kilit istersen false yap)
-const UNLOCK_ALL = true;
+const UNLOCK_ALL = false;
 let save = { xp: 0, unlocked: 1, stars: {}, muted: false, music: true, lang: "tr" };
 try {
   const s = JSON.parse(localStorage.getItem(SAVE_KEY));
