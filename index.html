@@ -140,7 +140,14 @@
   .menu-content{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;align-items:center;
     padding:calc(30px + env(safe-area-inset-top)) 24px calc(26px + env(safe-area-inset-bottom))}
   .logo{text-align:center}
-  .logo-emblem{font-size:42px;filter:drop-shadow(0 4px 10px rgba(0,0,0,.6))}
+  .logo-emblem{width:58px;height:auto;display:block;margin:0 auto;
+    filter:drop-shadow(0 4px 10px rgba(0,0,0,.55)) drop-shadow(0 0 16px rgba(224,176,79,.4));
+    animation:emblemGlow 3.6s ease-in-out infinite}
+  @keyframes emblemGlow{
+    0%,100%{filter:drop-shadow(0 4px 10px rgba(0,0,0,.55)) drop-shadow(0 0 12px rgba(224,176,79,.32))}
+    50%{filter:drop-shadow(0 4px 10px rgba(0,0,0,.55)) drop-shadow(0 0 20px rgba(224,176,79,.55))}
+  }
+  @media (prefers-reduced-motion:reduce){.logo-emblem{animation:none}}
   .logo-title{font-weight:800;font-size:46px;line-height:.96;
     letter-spacing:1px;color:#f4d789;margin-top:4px;
     text-shadow:0 2px 0 #4a2c10,0 3px 0 #38200b,0 7px 18px rgba(0,0,0,.65)}
@@ -540,7 +547,8 @@
     <div class="menu-overlay"></div>
     <div class="menu-content">
       <div class="logo">
-        <div class="logo-emblem">⚖️</div>
+        <img class="logo-emblem" src="assets/emblem-scales.png" alt="">
+
         <h1 class="logo-title">ADALET<br>PEŞİNDE</h1>
         <p class="logo-sub" data-i18n="subtitle">Müvekkillerini savun, davaları kazan, seviye atla!</p>
       </div>
