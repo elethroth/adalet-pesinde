@@ -113,6 +113,7 @@
     box-shadow:0 4px 10px rgba(0,0,0,.4);
   }
   .avatar-circle svg{display:block;width:100%;height:100%}
+  .avatar-circle img{display:block;width:100%;height:100%;object-fit:cover}
 
   /* ---------- ANA EKRAN (BAŞLANGIÇ) ---------- */
   .home-hero{
@@ -1783,6 +1784,8 @@ const CASES = [
 
 /* ================= KAYIT ================= */
 const SAVE_KEY = "adalet_pesinde_save";
+// Tüm davaları baştan açık tut (sıralı kilit istersen false yap)
+const UNLOCK_ALL = true;
 let save = { xp: 0, unlocked: 1, stars: {}, muted: false, music: true, lang: "tr" };
 try {
   const s = JSON.parse(localStorage.getItem(SAVE_KEY));
@@ -1790,6 +1793,7 @@ try {
 } catch (e) {}
 if (typeof save.music !== "boolean") save.music = true;
 if (save.lang !== "tr" && save.lang !== "en") save.lang = "tr";
+if (UNLOCK_ALL) save.unlocked = CASES.length;
 function persist() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch (e) {} }
 
 /* ================= YARDIMCILAR ================= */
@@ -1925,7 +1929,7 @@ function resetProgress() {
     setTimeout(() => { resetArmed = false; btn.textContent = t("resetBtn"); }, 4000);
     return;
   }
-  save.xp = 0; save.unlocked = 1; save.stars = {};
+  save.xp = 0; save.unlocked = UNLOCK_ALL ? CASES.length : 1; save.stars = {};
   persist();
   resetArmed = false;
   btn.textContent = t("resetDone");
@@ -1987,7 +1991,7 @@ function startTrial() {
   round = 0; score = 0; meterPct = 0;
   document.getElementById("trial-title").textContent = CASES[currentCase].icon + " " + CASES[currentCase].title;
   document.getElementById("trial-scene").innerHTML = courtScene("tj");
-  document.getElementById("avukat-avatar").innerHTML = avatarSVG(AVUKAT);
+  document.getElementById("avukat-avatar").innerHTML = charArt(AVUKAT);
   SND.gavel();
   renderRound();
   show("scr-trial");
@@ -2028,11 +2032,12 @@ function imgCfg(cfg, id, role) {
 // Sahneyi kur: büyük portre + üst karakter sırası + sayfa göstergesi
 function renderStage(c, r) {
   const isSorgu = r.type === "sorgu";
-  // Ayrı bir tanık görseli tanımlıysa tanığı ayrı karakter say; değilse tanık = karşı taraf
+  // r.wav ayrı bir tanık tanımlarsa tanık ayrı bir karakter olarak listelenir.
+  // Aksi halde tanık = karşı taraf (tek kart), ama görseli {dava}-tanik.png olur.
   const distinctWit = isSorgu && r.wav;
   const clientC = imgCfg(c.av, c.id, "muvekkil");
   const oppC = imgCfg(c.opp || c.av, c.id, "karsi");
-  const witC = distinctWit ? imgCfg(r.wav, c.id, "tanik") : oppC;
+  const witC = isSorgu ? imgCfg(r.wav || c.opp || c.av, c.id, "tanik") : null;
   const activeKind = distinctWit ? "wit" : "opp";
   const speaker = isSorgu ? witC : oppC;
 
@@ -2040,7 +2045,8 @@ function renderStage(c, r) {
 
   const entries = [];
   if (distinctWit) entries.push({ kind: "wit", cfg: witC, name: t("witness"), ring: "gold" });
-  entries.push({ kind: "opp", cfg: oppC, name: isSorgu && !distinctWit ? t("witness") : (c.oppName || t("opponent")), ring: isSorgu && !distinctWit ? "gold" : "red" });
+  const oppIsWitness = isSorgu && !distinctWit;
+  entries.push({ kind: "opp", cfg: oppIsWitness ? witC : oppC, name: oppIsWitness ? t("witness") : (c.oppName || t("opponent")), ring: oppIsWitness ? "gold" : "red" });
   entries.push({ kind: "client", cfg: clientC, name: t("clientRole"), ring: "green" });
   entries.push({ kind: "judge", cfg: JUDGE, name: t("judgeRole"), ring: "gold" });
   document.getElementById("cast-row").innerHTML = entries.map(e => {
@@ -2255,7 +2261,7 @@ function celebrate(stars) {
 /* ================= BAŞLAT ================= */
 document.getElementById("home-scene").innerHTML = courtScene("hj");
 (function(){ var s=document.querySelector("#home-scene svg"); if(s) s.setAttribute("preserveAspectRatio","xMidYMid slice"); })();
-document.getElementById("me-avatar").innerHTML = avatarSVG(AVUKAT);
+document.getElementById("me-avatar").innerHTML = charArt(AVUKAT);
 document.getElementById("mute-btn").textContent = save.muted ? "🔇" : "🔊";
 applyI18n();
 syncSettingsUI();

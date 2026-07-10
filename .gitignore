@@ -11,3 +11,6 @@ npm-debug.*
 .expo-shared/
 ios/
 android/
+
+# ham karakter görselleri (çok büyük, optimize edilmişler commit'leniyor)
+assets/chars/_orig/

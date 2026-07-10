@@ -1,8 +1,7 @@
 # Karakter Görselleri
 
-Buraya PNG (tercihen kare, arka planı şeffaf ya da dolu) koy.
-Dosya adları TAM olarak aşağıdaki gibi olmalı. Eksik olan otomatik
-olarak çizilen SVG karaktere düşer (oyun yine çalışır).
+Oyun bu klasördeki PNG'leri kullanır. Bir dosya yoksa oyun otomatik olarak
+çizilen SVG karaktere düşer (`charFallback`), yani eksik dosya oyunu bozmaz.
 
 ## Genel
 - avukat.png              → Oyuncunun avukatı (sen)
@@ -22,8 +21,21 @@ olarak çizilen SVG karaktere düşer (oyun yine çalışır).
 - album-muvekkil.png      / album-karsi.png
 - miras-muvekkil.png      / miras-karsi.png      / miras-tanik.png  (çapraz sorgu)
 
-## İpuçları
-- Büyük portre için: yüz + omuz görünen, dikey kadraj iyi durur
-  (arka plan şeffaf PNG en temizi; sahne arkasına oturur).
-- Üstteki küçük dairelerde aynı görselin ortası (yüz) kullanılır.
-- Kare (ör. 512x512 veya 768x1024 dikey) yükleyebilirsin.
+`-tanik` yalnızca çapraz sorgusu olan davalarda kullanılır; yoksa tanık
+olarak `-karsi` görseli gösterilir.
+
+## Biçim
+- Uzun kenar **512 px**, **saydam arka planlı PNG**.
+- Uzantı `.png` olmalı — kod yolu `assets/chars/{dava}-{rol}.png` olarak
+  kurar (`imgCfg`). `.jpg` çalışmaz.
+- Görsel iki yerde kullanılır: üstteki dairelerde ortası kırpılır
+  (`object-fit: cover`), sahnede sol altta büyük portre olur. Bu yüzden
+  **yüzü yatayda ortalı** tut.
+
+## Yeni görsel eklerken
+Ham (küçültülmemiş) görseller `_orig/` içinde durur; git'e girmez.
+
+Dikkat: görsel üreten araçların koyduğu **"şeffaflık damalı" desen gerçek
+saydamlık değildir** — piksellere gömülüdür. Temizlenmezse sahnede dama
+tahtası olarak görünür. Yeni görselde uzun kenarı 512'ye küçült ve arka planı
+gerçekten saydam yap.
