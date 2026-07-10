@@ -1850,7 +1850,7 @@ function renderCases() {
   if (s) s.setAttribute("preserveAspectRatio", "xMidYMid slice");
   document.getElementById("cf-badge").textContent = `${t("caseN")} ${cur + 1} / ${CASES.length}`;
   document.getElementById("cf-icon").textContent = c.icon;
-  document.getElementById("cf-av").innerHTML = avatarSVG(c.av);
+  document.getElementById("cf-av").innerHTML = charArt(imgCfg(c.av, c.id, "muvekkil"));
   document.getElementById("cf-title").textContent = `${c.icon} ${c.title}`;
   document.getElementById("cf-teaser").textContent = c.client;
   const st = save.stars[c.id] || 0;
@@ -1969,7 +1969,7 @@ function openBrief(i) {
   document.getElementById("brief-title").textContent = c.icon + " " + c.title;
   document.getElementById("brief-hero-scene").innerHTML = courtScene("bh");
   document.getElementById("brief-hero-icon").textContent = c.icon;
-  document.getElementById("brief-hero-av").innerHTML = avatarSVG(c.av);
+  document.getElementById("brief-hero-av").innerHTML = charArt(imgCfg(c.av, c.id, "muvekkil"));
   document.getElementById("brief-no").textContent = t("file") + " #" + String(i + 1).padStart(3, "0");
   document.getElementById("brief-client").textContent = c.client;
   document.getElementById("brief-charge").textContent = c.charge;
