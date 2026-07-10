@@ -364,6 +364,14 @@
   }
   .big-btn:active{transform:scale(.98)}
   .big-btn.secondary{background:var(--card);color:var(--text);border:1px solid var(--line);box-shadow:none;margin-top:10px}
+  /* Kaydırmadan her zaman görünsün: ekranın altına sabitlenmiş çağrı butonu */
+  .fixed-cta{
+    position:fixed;left:50%;transform:translateX(-50%);
+    bottom:calc(14px + env(safe-area-inset-bottom));
+    width:min(calc(100% - 32px), 448px);z-index:40;margin-top:0;
+  }
+  #scr-brief{padding-bottom:calc(94px + env(safe-area-inset-bottom))}
+  #scr-trial{padding-bottom:calc(94px + env(safe-area-inset-bottom))}
 
   /* ---------- DURUŞMA ---------- */
   .trial-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding-right:56px}
@@ -692,8 +700,7 @@
       <div class="info-cell"><span class="info-k" data-i18n="time">SÜRE</span><span class="info-v" id="brief-time">~2 dk · 3 tur</span></div>
       <div class="info-cell"><span class="info-k" data-i18n="reward">KAZANINCA</span><span class="info-v" id="brief-reward"></span></div>
     </div>
-    <div class="spacer"></div>
-    <button class="big-btn" onclick="startTrial()" data-i18n="startTrial">🏛️ Duruşmaya Başla</button>
+    <button class="big-btn fixed-cta" onclick="startTrial()" data-i18n="startTrial">🏛️ Duruşmaya Başla</button>
   </div>
 
   <!-- DURUŞMA -->
@@ -724,7 +731,7 @@
       </div>
       <div id="options"></div>
     </div>
-    <button class="big-btn" id="next-btn" style="display:none" onclick="nextRound()" data-i18n="continue">Devam ›</button>
+    <button class="big-btn fixed-cta" id="next-btn" style="display:none" onclick="nextRound()" data-i18n="continue">Devam ›</button>
   </div>
 
   <!-- KARAR -->
