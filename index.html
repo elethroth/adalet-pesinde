@@ -178,6 +178,25 @@
   .rank-row .rk-name{font-weight:800;font-size:15.5px}
   .rank-row.current .rk-name{color:var(--gold)}
   .rank-row .rk-xp{font-size:12.5px;color:var(--muted);margin-top:2px}
+  .ach-list{display:flex;flex-direction:column;gap:10px}
+  .ach-row{
+    display:flex;align-items:center;gap:13px;
+    background:var(--card2);border:1px solid #4d3823;border-radius:16px;padding:12px 15px;
+  }
+  .ach-row.unlocked{border-color:var(--gold);background:linear-gradient(180deg,rgba(224,176,79,.18),rgba(224,176,79,.05))}
+  .ach-row.locked{opacity:.5}
+  .ach-row .ak-icon{
+    width:44px;height:44px;border-radius:50%;flex-shrink:0;font-size:21px;
+    background:linear-gradient(180deg,var(--gold),var(--gold-dark));
+    display:grid;place-items:center;filter:none;
+  }
+  .ach-row.locked .ak-icon{background:var(--card);filter:grayscale(1) opacity(.7)}
+  .ach-row .ak-body{flex:1;min-width:0}
+  .ach-row .ak-name{font-weight:800;font-size:15.5px}
+  .ach-row.unlocked .ak-name{color:var(--gold)}
+  .ach-row .ak-desc{font-size:12.5px;color:var(--muted);margin-top:2px}
+  .ach-row .ak-check{font-size:20px;color:var(--gold);flex-shrink:0}
+
   .rank-row .rk-tag{font-size:10.5px;font-weight:800;color:#241c08;background:var(--gold);
     padding:4px 9px;border-radius:99px;letter-spacing:.3px;flex-shrink:0;text-align:center}
 
@@ -398,6 +417,16 @@
   }
 
   .choose-label{font-size:13px;color:var(--gold);font-weight:700;margin:2px 4px 10px;letter-spacing:.5px}
+  .choose-label.quick{color:#ff8a63}
+
+  /* ---------- HIZLI KARAR (süreli tur) ---------- */
+  .round-timer{display:none;align-items:center;gap:9px;margin:0 4px 10px}
+  .round-timer.show{display:flex}
+  .round-timer .rt-track{flex:1;background:#100b08;border-radius:99px;height:10px;overflow:hidden;border:1px solid var(--line)}
+  .round-timer .rt-bar{height:100%;width:100%;background:linear-gradient(90deg,var(--green),var(--gold),#ff8a63);border-radius:99px}
+  .round-timer .rt-bar.danger{animation:rtPulse .5s ease-in-out infinite}
+  @keyframes rtPulse{0%,100%{opacity:1}50%{opacity:.55}}
+  .round-timer .rt-val{font-size:12px;font-weight:800;color:var(--muted);flex-shrink:0;min-width:20px;text-align:right}
   .opt{
     display:block;width:100%;text-align:left;background:#f6efe0;color:#2b2013;
     border:1px solid var(--gold-dark);border-radius:16px;padding:13px 15px;font-size:15.5px;
@@ -580,6 +609,7 @@
         <button class="menu-btn primary" onclick="goPlay()"><span class="ico">▶</span><span data-i18n="play">OYNA</span></button>
         <button class="menu-btn" onclick="openSettings()"><span class="ico">⚙️</span><span data-i18n="settings">AYARLAR</span></button>
         <button class="menu-btn" onclick="openHowto()"><span class="ico">❓</span><span data-i18n="howto">NASIL OYNANIR</span></button>
+        <button class="menu-btn" onclick="openAchievements()"><span class="ico">🏆</span><span data-i18n="achievements">BAŞARIMLAR</span></button>
       </div>
       <div class="menu-foot">v1.0 · Adalet Peşinde</div>
     </div>
@@ -670,6 +700,15 @@
     <div class="rank-list" id="rank-list"></div>
   </div>
 
+  <!-- BAŞARIMLAR -->
+  <div class="screen" id="scr-achievements">
+    <div class="topbar">
+      <button class="back-btn" onclick="SND.click();show('scr-home')" data-i18n="back">‹ Geri</button>
+      <h2 data-i18n="achievementsTitle">Başarımlar</h2>
+    </div>
+    <div class="ach-list" id="ach-list"></div>
+  </div>
+
   <!-- DAVA ÖZETİ -->
   <div class="screen" id="scr-brief">
     <div class="topbar">
@@ -729,6 +768,10 @@
         <div class="d-av avatar-circle" id="avukat-avatar"></div>
         <div class="choose-label" id="choose-label" data-i18n="chooseDefense">👉 Savunmanı seç:</div>
       </div>
+      <div class="round-timer" id="round-timer">
+        <div class="rt-track"><div class="rt-bar" id="rt-bar"></div></div>
+        <div class="rt-val" id="rt-val"></div>
+      </div>
       <div id="options"></div>
     </div>
     <button class="big-btn fixed-cta" id="next-btn" style="display:none" onclick="nextRound()" data-i18n="continue">Devam ›</button>
@@ -743,6 +786,7 @@
       <p class="v-text" id="verdict-text"></p>
       <div class="xp-gain" id="verdict-xp"></div>
       <div class="levelup" id="levelup-box" style="display:none"></div>
+      <div class="levelup" id="ach-toast-box" style="display:none"></div>
     </div>
     <div class="spacer"></div>
     <button class="big-btn" onclick="SND.click();renderHome();renderCases();show('scr-cases')" data-i18n="returnCases">📋 Davalara Dön</button>
@@ -1417,6 +1461,19 @@ const LANG = {
     howto3t: "Savunmanı seç", howto3d: "Her turda en güçlü, kanıta dayalı savunmayı seç.",
     howto4t: "Hâkimi ikna et", howto4d: "İkna çubuğunu doldur, yıldız kazan, seviye atla!",
     ranks: ["Stajyer Avukat","Genç Avukat","Avukat","Uzman Avukat","Kıdemli Avukat","Usta Savunucu","Adalet Efsanesi"],
+    achievements: "BAŞARIMLAR", achievementsTitle: "Başarımlar", achNew: "🏆 Yeni başarım kazandın!",
+    quickDecision: "⏱️ Hızlı Karar!", quickDecisionAsk: "Süre bitmeden en güçlü savunmayı seç!",
+    timeUp: "⏰ Vakit doldu! Hâkim kararsızlığından hiç hoşlanmadı.",
+    achList: [
+      { name: "İlk Zafer", desc: "İlk davanı kazan", icon: "🥇" },
+      { name: "Mükemmeliyetçi", desc: "Bir davada 3 yıldız al", icon: "⭐" },
+      { name: "Yarı Yol", desc: "6 dava kazan", icon: "📂" },
+      { name: "Tam Takım", desc: "Tüm davaları kazan", icon: "🏆" },
+      { name: "Kusursuz Koleksiyon", desc: "Tüm davalarda 3 yıldız al", icon: "💎" },
+      { name: "Yükselen Yıldız", desc: "Uzman Avukat rütbesine ulaş", icon: "🎖️" },
+      { name: "Adalet Efsanesi", desc: "En yüksek rütbeye ulaş", icon: "👑" },
+      { name: "Hızlı Zekâ", desc: "Süreye karşı bir kararı zamanında ver", icon: "⚡" },
+    ],
   },
   en: {
     subtitle: "Defend your clients, win cases, level up!",
@@ -1451,6 +1508,19 @@ const LANG = {
     howto3t: "Choose your defense", howto3d: "Each round, pick the strongest evidence-based defense.",
     howto4t: "Convince the judge", howto4d: "Fill the persuasion bar, earn stars, and level up!",
     ranks: ["Trainee Lawyer","Junior Lawyer","Lawyer","Expert Lawyer","Senior Lawyer","Master Advocate","Legend of Justice"],
+    achievements: "ACHIEVEMENTS", achievementsTitle: "Achievements", achNew: "🏆 New achievement unlocked!",
+    quickDecision: "⏱️ Quick Decision!", quickDecisionAsk: "Pick the strongest defense before time runs out!",
+    timeUp: "⏰ Time's up! The judge did not like your hesitation.",
+    achList: [
+      { name: "First Victory", desc: "Win your first case", icon: "🥇" },
+      { name: "Perfectionist", desc: "Earn 3 stars on a case", icon: "⭐" },
+      { name: "Halfway There", desc: "Win 6 cases", icon: "📂" },
+      { name: "Full House", desc: "Win every case", icon: "🏆" },
+      { name: "Flawless Collection", desc: "Earn 3 stars on every case", icon: "💎" },
+      { name: "Rising Star", desc: "Reach the rank of Expert Lawyer", icon: "🎖️" },
+      { name: "Legend of Justice", desc: "Reach the top rank", icon: "👑" },
+      { name: "Quick Wit", desc: "Answer a timed round before time runs out", icon: "⚡" },
+    ],
   },
 };
 function t(k) { const L = LANG[save.lang] || LANG.tr; return (k in L ? L[k] : LANG.tr[k]) ?? k; }
@@ -1462,6 +1532,35 @@ function applyI18n() {
 
 const RANK_XP = [0, 120, 300, 550, 850, 1200, 1650];
 function rankName(i) { const L = LANG[save.lang] || LANG.tr; return L.ranks[i] || LANG.tr.ranks[i]; }
+
+// Başarımlar: her biri save durumuna bakan bir check() fonksiyonuyla tanımlı.
+// Metin/ikon LANG[lang].achList[i] içinden aynı sırayla okunur.
+const ACH_DEFS = [
+  { id: "ilk_zafer", check: s => Object.keys(s.stars).length >= 1 },
+  { id: "uc_yildiz", check: s => Object.values(s.stars).some(v => v === 3) },
+  { id: "yari_yol", check: s => Object.keys(s.stars).length >= 6 },
+  { id: "tam_takim", check: s => Object.keys(s.stars).length >= CASES.length },
+  { id: "kusursuz_koleksiyon", check: s => CASES.every(c => s.stars[c.id] === 3) },
+  { id: "yukselen_yildiz", check: s => rankInfo(s.xp).ci >= 3 },
+  { id: "adalet_efsanesi", check: s => rankInfo(s.xp).ci >= RANK_XP.length - 1 },
+  { id: "hizli_zeka", check: s => (s.fastWins || 0) >= 1 },
+];
+function achText(i) {
+  const L = LANG[save.lang] || LANG.tr;
+  return (L.achList && L.achList[i]) || LANG.tr.achList[i];
+}
+// Yeni açılan başarımları hesaplayıp save.achUnlocked'a işler; yeni açılanların id listesini döner.
+function checkAchievements() {
+  const opened = [];
+  ACH_DEFS.forEach((a, i) => {
+    if (!save.achUnlocked[a.id] && a.check(save)) {
+      save.achUnlocked[a.id] = true;
+      opened.push(i);
+    }
+  });
+  if (opened.length) persist();
+  return opened;
+}
 
 // Her seçenek: t = metin, p = puan (25 iyi / 12 orta / 0 kötü), f = geri bildirim
 const CASES = [
@@ -1532,6 +1631,16 @@ const CASES = [
           { t: "Mahalledeki başıboş köpek o gece birçok bahçeye girmiş; diğer komşular da şikâyetçi. Sorumlu Pamuk değil.", p: 25, f: "Diğer komşuların şikâyetleri de dosyaya girdi. Dava çözüldü! 🎯" },
           { t: "Üzgünüz ama bu Pamuk'un suçu değil.", p: 12, f: "Kısa ve net, ama asıl sorumluyu göstermek daha iyiydi. 😐" },
           { t: "Saksı dediğin kırılır, olur böyle şeyler.", p: 0, f: "Bu bir savunma değil, hâkim not aldı. 😠" },
+        ],
+      },
+      {
+        type: "hizli", timeLimit: 8,
+        claim: "Vaktim daralıyor! Telafi için hemen bir teklifte bulun, yoksa kendim karar veririm!",
+        ask: "Süre bitmeden en güçlü teklifi seç!",
+        opts: [
+          { t: "Nuri Bey'in bahçesine köpeklerin giremeyeceği bir tel çit yaptırmayı öneriyoruz, masrafı biz karşılarız.", p: 25, f: "Hâkim teklifi beğendi: adil ve pratik! 🎯" },
+          { t: "Ayşe Teyze özür diler, ama ödeme yapmaz.", p: 12, f: "Kısmi bir çözüm ama hâkim tatmin olmadı. 😐" },
+          { t: "Hiçbir şey ödemeyiz, bu haksızlık!", p: 0, f: "Hâkim bu tavrı hiç sevmedi. 😠" },
         ],
       },
     ],
@@ -1692,6 +1801,15 @@ const CASES = [
           { t: "Kolunuz ağrıyorsa doktora gidin, mahkemeye değil.", p: 0, f: "Salonda uğultu... Hâkim tokmağı vurdu. 😠" },
         ],
       },
+      {
+        type: "hizli", timeLimit: 8,
+        claim: "Karar vermeden önce son bir söz hakkınız var, hemen konuşun!",
+        opts: [
+          { t: "Şerife Hanım'ın markette 12 yıllık kusursuz sicili var; kayıtlar ve tanık ifadesi ortada, işine devam etmeli.", p: 25, f: "Hâkim son sözü beğendi, karar hızlandı! 🎯" },
+          { t: "Şerife Hanım işini çok seviyor.", p: 12, f: "Duygusal ama zayıf bir kapanış. 😐" },
+          { t: "Artık ne olursa olsun, bize ne!", p: 0, f: "Hâkim bu kayıtsızlığa çok kızdı. 😠" },
+        ],
+      },
     ],
   },
   {
@@ -1760,6 +1878,15 @@ const CASES = [
           { t: "Bilirkişi tadım raporu açık: baharatlar da pişirme şekli de farklı. 'Aynı tat' iddiası dayanaksız.", p: 25, f: "Rapor okununca dava lezzetli bir şekilde kapandı! 🎯" },
           { t: "Benzer tat, tarifin çalındığını kanıtlamaz.", p: 12, f: "Mantıklı ama rapor varken eksik kaldı. 😐" },
           { t: "Demek ki damak tadınız yok.", p: 0, f: "Hâkim 'Bu ne üslup!' dedi. 😠" },
+        ],
+      },
+      {
+        type: "hizli", timeLimit: 8,
+        claim: "Deliller tartışıldı, son savunmanızı hemen yapın!",
+        opts: [
+          { t: "Aile defteri, bilirkişi raporu ve tadım analizi aynı şeyi söylüyor: bu tarif Cemile Hanım'ın mirası. Lokantasının kapatılması haksızlık olur.", p: 25, f: "Hâkim tüm kanıtları özetleyen bu kapanışı çok beğendi! 🎯" },
+          { t: "Cemile Hanım iyi bir aşçıdır, bu yeter.", p: 12, f: "Sempatik ama kanıtları hatırlatmadı. 😐" },
+          { t: "Bu davanın daha fazla uzamasını istemiyoruz, karar sizin.", p: 0, f: "Hâkim bu ilgisizlikten hiç memnun kalmadı. 😠" },
         ],
       },
     ],
@@ -1928,13 +2055,15 @@ const CASES = [
 const SAVE_KEY = "adalet_pesinde_save";
 // Tüm davaları baştan açık tut (sıralı kilit istersen false yap)
 const UNLOCK_ALL = false;
-let save = { xp: 0, unlocked: 1, stars: {}, muted: false, music: true, lang: "tr" };
+let save = { xp: 0, unlocked: 1, stars: {}, muted: false, music: true, lang: "tr", achUnlocked: {}, fastWins: 0 };
 try {
   const s = JSON.parse(localStorage.getItem(SAVE_KEY));
-  if (s && typeof s.xp === "number") save = Object.assign({ muted: false, music: true, lang: "tr" }, s);
+  if (s && typeof s.xp === "number") save = Object.assign({ muted: false, music: true, lang: "tr", achUnlocked: {}, fastWins: 0 }, s);
 } catch (e) {}
 if (typeof save.music !== "boolean") save.music = true;
 if (save.lang !== "tr" && save.lang !== "en") save.lang = "tr";
+if (!save.achUnlocked || typeof save.achUnlocked !== "object") save.achUnlocked = {};
+if (typeof save.fastWins !== "number") save.fastWins = 0;
 if (UNLOCK_ALL) save.unlocked = CASES.length;
 function persist() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch (e) {} }
 
@@ -2055,6 +2184,26 @@ function renderRanks() {
     </div>`;
   }).join("");
 }
+function openAchievements() {
+  SND.click();
+  renderAchievements();
+  show("scr-achievements");
+}
+function renderAchievements() {
+  const wrap = document.getElementById("ach-list");
+  wrap.innerHTML = ACH_DEFS.map((a, i) => {
+    const unlocked = !!save.achUnlocked[a.id];
+    const tx = achText(i);
+    return `<div class="ach-row${unlocked ? " unlocked" : " locked"}">
+      <div class="ak-icon">${unlocked ? tx.icon : "🔒"}</div>
+      <div class="ak-body">
+        <div class="ak-name">${tx.name}</div>
+        <div class="ak-desc">${tx.desc}</div>
+      </div>
+      ${unlocked ? `<span class="ak-check">✓</span>` : ""}
+    </div>`;
+  }).join("");
+}
 function syncSettingsUI() {
   document.getElementById("sound-toggle").classList.toggle("on", !save.muted);
   document.getElementById("music-toggle").classList.toggle("on", save.music);
@@ -2096,6 +2245,7 @@ function resetProgress() {
     return;
   }
   save.xp = 0; save.unlocked = UNLOCK_ALL ? CASES.length : 1; save.stars = {};
+  save.achUnlocked = {}; save.fastWins = 0;
   persist();
   resetArmed = false;
   btn.textContent = t("resetDone");
@@ -2236,6 +2386,7 @@ function renderRound() {
   fb.className = "feedback"; fb.textContent = "";
   document.getElementById("next-btn").style.display = "none";
   document.getElementById("options-wrap").style.display = "block";
+  clearRoundTimer();
 
   renderStage(c, r);
 
@@ -2256,21 +2407,82 @@ function renderRound() {
     label.className = "choose-label itiraz";
     label.innerHTML = `<span class="obj-tag">⚖️ ${t("objection")}</span><br>${r.ask || t("presentEv")}`;
     renderEvidence(r.present, wrap);
+  } else if (r.type === "hizli") {
+    who.textContent = c.oppName || t("opponent");
+    typeText(document.getElementById("claim-text"), "“" + r.claim + "”");
+    label.className = "choose-label quick";
+    label.innerHTML = `<span class="obj-tag">${t("quickDecision")}</span><br>${r.ask || t("quickDecisionAsk")}`;
+    const made = renderDefenseOptions(r.opts, wrap, r);
+    startRoundTimer(r.timeLimit || 8, made, r);
   } else {
     who.textContent = c.oppName || t("opponent");
     typeText(document.getElementById("claim-text"), "“" + r.claim + "”");
     label.className = "choose-label";
     label.textContent = t("chooseDefense");
-    // Seçenekleri karıştır
-    const shuffled = r.opts.map((o, idx) => ({ ...o, idx })).sort(() => Math.random() - 0.5);
-    shuffled.forEach(o => {
-      const b = document.createElement("button");
-      b.className = "opt";
-      b.textContent = o.t;
-      b.onclick = () => resolvePick(o.p, o.f, b);
-      wrap.appendChild(b);
-    });
+    renderDefenseOptions(r.opts, wrap, r);
   }
+}
+
+// Savunma seçeneklerini karıştırıp buton olarak çizer; hızlı karar turunda zamanlayıcının
+// kullanacağı {btn,o} listesini döner.
+function renderDefenseOptions(opts, wrap, r) {
+  const shuffled = opts.map((o, idx) => ({ ...o, idx })).sort(() => Math.random() - 0.5);
+  const made = [];
+  shuffled.forEach(o => {
+    const b = document.createElement("button");
+    b.className = "opt";
+    b.textContent = o.t;
+    b.onclick = () => {
+      const wasTimed = r && r.type === "hizli" && document.getElementById("round-timer").classList.contains("show");
+      clearRoundTimer();
+      if (wasTimed) { save.fastWins = (save.fastWins || 0) + 1; persist(); }
+      resolvePick(o.p, o.f, b);
+    };
+    wrap.appendChild(b);
+    made.push({ btn: b, o });
+  });
+  return made;
+}
+
+// ---- Hızlı Karar zamanlayıcısı: süre dolarsa en zayıf seçenek otomatik seçilir ----
+let roundTimerHandle = null;
+function clearRoundTimer() {
+  if (roundTimerHandle) { clearTimeout(roundTimerHandle); roundTimerHandle = null; }
+  const wrap = document.getElementById("round-timer");
+  if (!wrap) return;
+  wrap.classList.remove("show");
+  const bar = document.getElementById("rt-bar");
+  bar.style.transition = "none";
+  bar.classList.remove("danger");
+  bar.style.width = "100%";
+}
+function startRoundTimer(seconds, made, r) {
+  const wrap = document.getElementById("round-timer");
+  const bar = document.getElementById("rt-bar");
+  const val = document.getElementById("rt-val");
+  wrap.classList.add("show");
+  bar.classList.remove("danger");
+  bar.style.transition = "none";
+  bar.style.width = "100%";
+  let remaining = seconds;
+  val.textContent = remaining + "s";
+  void bar.offsetWidth;
+  bar.style.transition = `width ${seconds}s linear`;
+  bar.style.width = "0%";
+  const tick = () => {
+    remaining--;
+    if (remaining <= 0) {
+      roundTimerHandle = null;
+      wrap.classList.remove("show");
+      const worst = made.reduce((a, b) => (a.o.p <= b.o.p ? a : b));
+      resolvePick(worst.o.p, r.timeoutF || t("timeUp"), worst.btn);
+      return;
+    }
+    val.textContent = remaining + "s";
+    if (remaining <= Math.ceil(seconds * 0.3)) bar.classList.add("danger");
+    roundTimerHandle = setTimeout(tick, 1000);
+  };
+  roundTimerHandle = setTimeout(tick, 1000);
 }
 
 // İtiraz: elindeki kanıtları tıklanabilir kart olarak sun
@@ -2394,6 +2606,16 @@ function verdict() {
     lu.style.display = "block";
     lu.textContent = t("levelup").replace("{rank}", rankName(newRankI));
   } else lu.style.display = "none";
+
+  const opened = checkAchievements();
+  const achBox = document.getElementById("ach-toast-box");
+  if (opened.length) {
+    achBox.style.display = "block";
+    achBox.innerHTML = `${t("achNew")}<br>` + opened.map(i => {
+      const tx = achText(i);
+      return `${tx.icon} <strong>${tx.name}</strong>`;
+    }).join(" · ");
+  } else achBox.style.display = "none";
 
   SND[win ? "win" : "lose"]();
   buzz(win ? [0, 50, 40, 70] : 140);
