@@ -3549,10 +3549,13 @@ function openBrief(i) {
    dokunmaz: yalnızca `prepBonus` adında gizli bir puan üretir ve bu puan
    startTrial() içinde ikna çubuğuna başlangıç avantajı olarak eklenir.
    Yeni dava eklemek için CASES[i].prep.options dizisine veri eklemek yeterli. */
-// Rütbeye göre hazırlık hakkı: Uzman Avukat'ta 4, Kıdemli Avukat ve üstünde 5.
+// Rütbeye göre hazırlık hakkı: Uzman Avukat'ta 3, Kıdemli Avukat ve üstünde 4.
+// Her dava 4 seçenek sunar ve toplam maliyetleri 5'tir — bu yüzden en yüksek
+// rütbede bile tüm seçenekler birden seçilemez, oyuncu her zaman öncelik belirlemek
+// zorunda kalır.
 function prepPointsForRank() {
   const ci = rankInfo(save.xp).ci;
-  return ci >= 4 ? 5 : ci === 3 ? 4 : 3;
+  return ci >= 4 ? 4 : ci === 3 ? 3 : 2;
 }
 // (maliyet, sonuç) -> gizli ikna puanı. Veri odaklı: yeni sonuç tipleri kolayca eklenebilir.
 const PREP_OUTCOME_VALUE = {
