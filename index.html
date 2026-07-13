@@ -36,9 +36,21 @@
   /* ---------- ATMOSFER ARKA PLANI ---------- */
   .bg-atmos{position:fixed;inset:0;z-index:0;pointer-events:none;display:flex;justify-content:center;overflow:hidden;transform:translateZ(0)}
   .bg-atmos svg{width:100%;max-width:480px;height:100%;opacity:.55}
-  .screen{display:none;flex-direction:column;flex:1;padding:calc(14px + env(safe-area-inset-top)) 16px calc(30px + env(safe-area-inset-bottom));animation:fadeIn .3s ease}
+  .screen{display:none;flex-direction:column;flex:1;padding:calc(14px + env(safe-area-inset-top)) 16px calc(30px + env(safe-area-inset-bottom));animation:screenIn .34s cubic-bezier(.22,.9,.32,1)}
   .screen.active{display:flex}
-  @keyframes fadeIn{from{transform:translateY(10px)}to{transform:none}}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  @keyframes screenIn{from{opacity:0;transform:translateY(14px) scale(.988)}to{opacity:1;transform:none}}
+
+  /* ---------- EKRAN SARSINTISI (juice) ---------- */
+  .shake-soft{animation:shakeS .4s ease}
+  .shake-hard{animation:shakeH .5s ease}
+  @keyframes shakeS{0%,100%{transform:none}25%{transform:translate(-4px,2px)}50%{transform:translate(4px,-2px)}75%{transform:translate(-2px,1px)}}
+  @keyframes shakeH{0%,100%{transform:none}15%{transform:translate(-7px,3px)}30%{transform:translate(7px,-3px)}45%{transform:translate(-5px,2px)}60%{transform:translate(5px,-2px)}80%{transform:translate(-2px,1px)}}
+
+  /* ---------- UÇAN PUAN (seçenekten ikna çubuğuna) ---------- */
+  .fly-score{position:fixed;z-index:90;font-size:20px;font-weight:800;pointer-events:none;
+    text-shadow:0 2px 8px rgba(0,0,0,.6);opacity:1;transform:translate(-50%,0);
+    transition:transform .7s cubic-bezier(.35,.7,.25,1),opacity .7s ease;will-change:transform}
 
   .mute-btn{
     position:absolute;top:calc(12px + env(safe-area-inset-top));right:14px;z-index:40;
@@ -397,10 +409,44 @@
   /* ---------- DURUŞMA ---------- */
   .trial-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding-right:56px}
   .trial-head .round{font-size:13px;color:var(--muted)}
-  .meter-wrap{margin:12px 0 14px}
+  .meter-wrap{margin:12px 0 14px;position:relative}
+
+  /* ---------- KOMBO ROZETİ ---------- */
+  .combo-badge{position:absolute;right:2px;top:-38px;z-index:5;display:none;
+    background:linear-gradient(180deg,#ff9b3d,#e05a1a);color:#fff;font-weight:800;
+    border-radius:99px;padding:6px 13px;font-size:14px;letter-spacing:.5px;
+    box-shadow:0 4px 14px rgba(255,155,61,.4);text-shadow:0 1px 2px rgba(90,20,0,.5)}
+  .combo-badge.show{display:block;animation:comboPop .45s cubic-bezier(.2,1.6,.4,1)}
+  .combo-badge.break{display:block;background:#4a3a30;color:#b3a189;text-shadow:none;box-shadow:none;animation:comboBreak .5s ease}
+  @keyframes comboPop{0%{transform:scale(.3) rotate(-8deg)}60%{transform:scale(1.25) rotate(3deg)}100%{transform:scale(1)}}
+  @keyframes comboBreak{0%,100%{transform:none}25%{transform:translateX(-5px)}50%{transform:translateX(5px)}75%{transform:translateX(-3px)}}
+
+  /* ---------- GÜNÜN DAVASI ŞERİDİ ---------- */
+  .daily-strip{display:flex;align-items:center;gap:11px;width:100%;text-align:left;cursor:pointer;
+    background:linear-gradient(135deg,#3a2a12,#57401a);border:1px solid var(--gold);border-radius:14px;
+    padding:11px 13px;margin-bottom:12px;color:var(--text);font-weight:700;font-size:14px;
+    box-shadow:0 4px 14px rgba(224,176,79,.14);position:relative;overflow:hidden;transition:transform .1s}
+  .daily-strip::after{content:"";position:absolute;inset:0;transform:skewX(-20deg) translateX(-140%);
+    background:linear-gradient(100deg,transparent,rgba(255,240,210,.16),transparent);animation:dailySheen 3.4s ease infinite;pointer-events:none}
+  @keyframes dailySheen{0%,55%{transform:skewX(-20deg) translateX(-140%)}100%{transform:skewX(-20deg) translateX(240%)}}
+  .daily-strip .ds-ic{font-size:22px;flex-shrink:0}
+  .daily-strip .ds-body{flex:1;min-width:0}
+  .daily-strip .ds-k{font-size:10.5px;letter-spacing:1.5px;color:var(--gold);font-weight:800}
+  .daily-strip .ds-t{margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .daily-strip .ds-bonus{background:var(--gold);color:#241c08;font-weight:800;font-size:12px;border-radius:99px;padding:4px 10px;white-space:nowrap;flex-shrink:0}
+  .daily-strip.done{opacity:.8;border-color:var(--line);box-shadow:none;cursor:default}
+  .daily-strip.done::after{display:none}
+  .daily-strip.done .ds-bonus{background:var(--green);color:#0d2214}
+  .daily-strip:active:not(.done){transform:scale(.98)}
+
+  /* ---------- SERİ (STREAK) ROZETİ ---------- */
+  .rb-streak{margin-left:auto;background:rgba(255,120,40,.16);border:1px solid #b85e1e;color:#ffb066;
+    font-weight:800;font-size:12.5px;border-radius:99px;padding:5px 11px;white-space:nowrap;flex-shrink:0}
   .meter-label{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:5px}
   .meter{background:#100b08;border-radius:99px;height:14px;overflow:hidden;border:1px solid var(--line)}
   .meter > div{height:100%;background:linear-gradient(90deg,#8a5a2a,var(--gold),var(--green));transition:width .7s ease;border-radius:99px}
+  .meter.pulse{animation:meterPulse .45s ease}
+  @keyframes meterPulse{40%{transform:scale(1.04,1.4)}}
 
   .bubble{
     background:#f6efe0;border-radius:16px;padding:13px 14px;margin-bottom:13px;
@@ -435,6 +481,8 @@
     line-height:1.55;font-weight:700;letter-spacing:.2px;margin-bottom:9px;cursor:pointer;transition:all .15s;
     box-shadow:0 4px 12px rgba(0,0,0,.3);
   }
+  .opt,.ev-opt,.testimony{animation:optIn .32s cubic-bezier(.25,.9,.35,1) backwards}
+  @keyframes optIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
   .opt:active{transform:scale(.98)}
   .opt.good{border-color:var(--green);background:#e8f7ec}
   .opt.mid{border-color:var(--gold-dark);background:#faf1d9}
@@ -494,10 +542,36 @@
   .verdict-box h2{font-size:32px;margin:12px 0 6px}
   .verdict-box h2.win{color:var(--green)}
   .verdict-box h2.lose{color:var(--red)}
-  .verdict-box .stars{font-size:34px;letter-spacing:6px;margin:8px 0}
-  .verdict-box h2.win{animation:vPop .5s ease}
-  .verdict-box h2.win + .stars{animation:vPop .55s .12s both}
-  @keyframes vPop{0%{transform:scale(.5);opacity:0}62%{transform:scale(1.14)}100%{transform:scale(1);opacity:1}}
+  .verdict-box .stars{font-size:34px;letter-spacing:6px;margin:8px 0;min-height:44px}
+
+  /* karar damgası: büyükten küçülerek "basılır" */
+  .v-stamp{opacity:0}
+  .v-stamp.on{animation:stampIn .5s cubic-bezier(.3,1.4,.45,1) forwards}
+  @keyframes stampIn{0%{opacity:0;transform:scale(2.4) rotate(-7deg)}55%{opacity:1;transform:scale(.92) rotate(1.5deg)}78%{transform:scale(1.05)}100%{opacity:1;transform:scale(1)}}
+
+  /* yıldızlar tek tek patlayarak gelir */
+  .verdict-box .stars .v-star{display:inline-block;opacity:0;transform:scale(.2)}
+  .verdict-box .stars .v-star.on{animation:starPop .55s cubic-bezier(.2,1.5,.4,1) forwards}
+  .verdict-box .stars .v-star.empty.on{animation:none;opacity:.35;transform:none;transition:opacity .4s}
+  @keyframes starPop{0%{opacity:0;transform:scale(.2) rotate(-40deg)}60%{opacity:1;transform:scale(1.4) rotate(8deg)}100%{opacity:1;transform:scale(1)}}
+
+  /* seremoni sırasında sırayla açılan öğeler */
+  .v-anim{opacity:0;transform:translateY(10px);transition:opacity .45s ease,transform .45s ease}
+  .v-anim.v-on{opacity:1;transform:none}
+  #verdict-actions{pointer-events:none}
+  #verdict-actions.v-on{pointer-events:auto}
+  #verdict-actions .big-btn{margin-top:0}
+
+  /* karar ekranı rütbe ilerleme çubuğu */
+  .v-rank{max-width:320px;margin:16px auto 0;text-align:left}
+  .v-rank .v-rank-top{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted);font-weight:700;margin-bottom:5px}
+  .v-rank .v-rank-top span:first-child{color:var(--gold)}
+
+  @media (prefers-reduced-motion:reduce){
+    .v-stamp.on,.v-star.on{animation-duration:.01s}
+    .v-anim{transition:none}
+    .opt,.ev-opt,.testimony{animation:none}
+  }
 
   /* ---------- KUTLAMA KONFETİSİ ---------- */
   .confetti{position:absolute;inset:0;z-index:60;pointer-events:none;overflow:hidden}
@@ -606,6 +680,7 @@
           <div class="rb-name" id="rank-name">Stajyer Avukat</div>
           <div class="rb-xp" id="xp-label">0 / 120 TP</div>
         </div>
+        <div class="rb-streak" id="rb-streak" style="display:none"></div>
       </div>
       <div class="menu-btns">
         <button class="menu-btn primary" onclick="goPlay()"><span class="ico">▶</span><span data-i18n="play">OYNA</span></button>
@@ -623,6 +698,7 @@
       <button class="back-btn" onclick="SND.click();show('scr-home');renderHome()" data-i18n="back">‹ Geri</button>
       <h2 data-i18n="cases">Davalar</h2>
     </div>
+    <button class="daily-strip" id="daily-strip" onclick="playDaily()"></button>
     <div class="case-feature">
       <div class="cf-scene" id="cf-scene"></div>
       <div class="cf-grad"></div>
@@ -761,6 +837,7 @@
       <div class="pager" id="round-pager"></div>
     </div>
     <div class="meter-wrap">
+      <div class="combo-badge" id="combo-badge"></div>
       <div class="meter-label"><span data-i18n="persuade">Hâkimi İkna Etme</span><span id="meter-val">0%</span></div>
       <div class="meter"><div id="meter-bar" style="width:0%"></div></div>
     </div>
@@ -783,16 +860,24 @@
   <div class="screen" id="scr-verdict">
     <div class="verdict-box">
       <div class="gavel-wrap" id="verdict-gavel"></div>
-      <h2 id="verdict-title"></h2>
+      <h2 id="verdict-title" class="v-stamp"></h2>
       <div class="stars" id="verdict-stars"></div>
-      <p class="v-text" id="verdict-text"></p>
-      <div class="xp-gain" id="verdict-xp"></div>
+      <p class="v-text v-anim" id="verdict-text"></p>
+      <div class="xp-gain v-anim" id="verdict-xp"></div>
+      <div class="v-rank v-anim" id="v-rank">
+        <div class="v-rank-top"><span id="v-rank-name"></span><span id="v-rank-xp"></span></div>
+        <div class="bar"><div id="v-rank-bar" style="width:0%"></div></div>
+      </div>
+      <div class="levelup" id="combo-box" style="display:none"></div>
+      <div class="levelup" id="daily-box" style="display:none"></div>
       <div class="levelup" id="levelup-box" style="display:none"></div>
       <div class="levelup" id="ach-toast-box" style="display:none"></div>
     </div>
     <div class="spacer"></div>
-    <button class="big-btn" onclick="SND.click();renderHome();renderCases();show('scr-cases')" data-i18n="returnCases">📋 Davalara Dön</button>
-    <button class="big-btn secondary" onclick="openBrief(currentCase)" data-i18n="retry">↻ Tekrar Dene</button>
+    <div id="verdict-actions" class="v-anim">
+      <button class="big-btn" onclick="SND.click();renderHome();renderCases();show('scr-cases')" data-i18n="returnCases">📋 Davalara Dön</button>
+      <button class="big-btn secondary" onclick="openBrief(currentCase)" data-i18n="retry">↻ Tekrar Dene</button>
+    </div>
   </div>
 
 </div>
@@ -1402,6 +1487,10 @@ const SND = (() => {
     bad()   { tone(220, 0, 0.3, "sawtooth", 0.07, 110); },
     win()   { knock(0); tone(523, 0.3, 0.15, "triangle", 0.14); tone(659, 0.45, 0.15, "triangle", 0.14); tone(784, 0.6, 0.15, "triangle", 0.14); tone(1047, 0.75, 0.35, "triangle", 0.16); },
     lose()  { knock(0); tone(392, 0.3, 0.25, "triangle", 0.12); tone(311, 0.55, 0.25, "triangle", 0.12); tone(233, 0.8, 0.4, "triangle", 0.12); },
+    star(i) { const f = 784 * Math.pow(1.2, i || 0); tone(f, 0, 0.25, "triangle", 0.14); tone(f * 2, 0.03, 0.3, "sine", 0.05); },
+    combo(n){ const f = 500 * Math.pow(1.13, Math.min(n || 2, 8)); tone(f, 0, 0.09, "triangle", 0.12); tone(f * 1.5, 0.09, 0.16, "triangle", 0.12); },
+    stamp() { knock(0); tone(85, 0, 0.28, "sine", 0.3, 45); },
+    fanfare(){ tone(523, 0, 0.12, "triangle", 0.13); tone(659, 0.12, 0.12, "triangle", 0.13); tone(784, 0.24, 0.12, "triangle", 0.13); tone(1047, 0.36, 0.3, "triangle", 0.16); tone(1319, 0.52, 0.45, "sine", 0.09); },
     murmurStart, murmurStop, musicStart, musicStop,
   };
 })();
@@ -1466,6 +1555,11 @@ const LANG = {
     achievements: "BAŞARIMLAR", achievementsTitle: "Başarımlar", achNew: "🏆 Yeni başarım kazandın!",
     quickDecision: "⏱️ Hızlı Karar!", quickDecisionAsk: "Süre bitmeden en güçlü savunmayı seç!",
     timeUp: "⏰ Vakit doldu! Hâkim kararsızlığından hiç hoşlanmadı.",
+    daily: "GÜNÜN DAVASI", dailyDoneD: "Bugünün davası tamamlandı — yarın yenisi seni bekliyor! 🌙",
+    dailyBonusTag: "+{n} TP", streakDays: "🔥 {n} gün",
+    dailyWinLine: "📅 Günün Davası tamamlandı! +{n} bonus TP · 🔥 {s} gün seri",
+    comboLine: "🔥 Kombo bonusu: en yüksek x{n} → +{b} TP",
+    comboTag: "x{n} KOMBO",
     achList: [
       { name: "İlk Zafer", desc: "İlk davanı kazan", icon: "🥇" },
       { name: "Mükemmeliyetçi", desc: "Bir davada 3 yıldız al", icon: "⭐" },
@@ -1475,6 +1569,8 @@ const LANG = {
       { name: "Yükselen Yıldız", desc: "Uzman Avukat rütbesine ulaş", icon: "🎖️" },
       { name: "Adalet Efsanesi", desc: "En yüksek rütbeye ulaş", icon: "👑" },
       { name: "Hızlı Zekâ", desc: "Süreye karşı bir kararı zamanında ver", icon: "⚡" },
+      { name: "Seri Savunucu", desc: "Bir duruşmada 3 kombo yap", icon: "🔥" },
+      { name: "Sadık Avukat", desc: "Günün davasını 3 gün üst üste kazan", icon: "📅" },
     ],
   },
   en: {
@@ -1513,6 +1609,11 @@ const LANG = {
     achievements: "ACHIEVEMENTS", achievementsTitle: "Achievements", achNew: "🏆 New achievement unlocked!",
     quickDecision: "⏱️ Quick Decision!", quickDecisionAsk: "Pick the strongest defense before time runs out!",
     timeUp: "⏰ Time's up! The judge did not like your hesitation.",
+    daily: "CASE OF THE DAY", dailyDoneD: "Today's case is complete — a new one awaits tomorrow! 🌙",
+    dailyBonusTag: "+{n} XP", streakDays: "🔥 {n} days",
+    dailyWinLine: "📅 Case of the Day complete! +{n} bonus XP · 🔥 {s}-day streak",
+    comboLine: "🔥 Combo bonus: best x{n} → +{b} XP",
+    comboTag: "x{n} COMBO",
     achList: [
       { name: "First Victory", desc: "Win your first case", icon: "🥇" },
       { name: "Perfectionist", desc: "Earn 3 stars on a case", icon: "⭐" },
@@ -1522,6 +1623,8 @@ const LANG = {
       { name: "Rising Star", desc: "Reach the rank of Expert Lawyer", icon: "🎖️" },
       { name: "Legend of Justice", desc: "Reach the top rank", icon: "👑" },
       { name: "Quick Wit", desc: "Answer a timed round before time runs out", icon: "⚡" },
+      { name: "Chain Defender", desc: "Hit a 3x combo in one trial", icon: "🔥" },
+      { name: "Loyal Counsel", desc: "Win the Case of the Day 3 days in a row", icon: "📅" },
     ],
   },
 };
@@ -1546,6 +1649,8 @@ const ACH_DEFS = [
   { id: "yukselen_yildiz", check: s => rankInfo(s.xp).ci >= 3 },
   { id: "adalet_efsanesi", check: s => rankInfo(s.xp).ci >= RANK_XP.length - 1 },
   { id: "hizli_zeka", check: s => (s.fastWins || 0) >= 1 },
+  { id: "seri_savunucu", check: s => (s.bestCombo || 0) >= 3 },
+  { id: "sadik_avukat", check: s => ((s.daily && s.daily.best) || 0) >= 3 },
 ];
 function achText(i) {
   const L = LANG[save.lang] || LANG.tr;
@@ -2057,15 +2162,17 @@ const CASES = [
 const SAVE_KEY = "adalet_pesinde_save";
 // Tüm davaları baştan açık tut (sıralı kilit istersen false yap)
 const UNLOCK_ALL = false;
-let save = { xp: 0, unlocked: 1, stars: {}, muted: false, music: true, lang: "tr", achUnlocked: {}, fastWins: 0 };
+let save = { xp: 0, unlocked: 1, stars: {}, muted: false, music: true, lang: "tr", achUnlocked: {}, fastWins: 0, bestCombo: 0, daily: { streak: 0, lastWin: "", best: 0 } };
 try {
   const s = JSON.parse(localStorage.getItem(SAVE_KEY));
-  if (s && typeof s.xp === "number") save = Object.assign({ muted: false, music: true, lang: "tr", achUnlocked: {}, fastWins: 0 }, s);
+  if (s && typeof s.xp === "number") save = Object.assign({ muted: false, music: true, lang: "tr", achUnlocked: {}, fastWins: 0, bestCombo: 0, daily: { streak: 0, lastWin: "", best: 0 } }, s);
 } catch (e) {}
 if (typeof save.music !== "boolean") save.music = true;
 if (save.lang !== "tr" && save.lang !== "en") save.lang = "tr";
 if (!save.achUnlocked || typeof save.achUnlocked !== "object") save.achUnlocked = {};
 if (typeof save.fastWins !== "number") save.fastWins = 0;
+if (typeof save.bestCombo !== "number") save.bestCombo = 0;
+if (!save.daily || typeof save.daily !== "object") save.daily = { streak: 0, lastWin: "", best: 0 };
 if (UNLOCK_ALL) save.unlocked = CASES.length;
 function persist() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch (e) {} }
 
@@ -2088,6 +2195,32 @@ function rankInfo(xp) {
   return { ci, ni };
 }
 
+/* ================= GÜNÜN DAVASI / SERİ ================= */
+function dayKeyOf(d) {
+  return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+}
+function todayKey() { return dayKeyOf(new Date()); }
+function yesterdayKey() { const d = new Date(); d.setDate(d.getDate() - 1); return dayKeyOf(d); }
+// Günün davası: tarihe göre deterministik; kilitli çıkarsa açık davalardan seçilir
+function dailyIndex() {
+  const k = todayKey();
+  let h = 7;
+  for (let i = 0; i < k.length; i++) h = (h * 31 + k.charCodeAt(i)) >>> 0;
+  const idx = h % CASES.length;
+  return idx < save.unlocked ? idx : h % save.unlocked;
+}
+function dailyDoneToday() { return save.daily.lastWin === todayKey(); }
+// Seri yalnızca dün/bugün kazanılmışsa canlıdır; aksi halde sıfır görünür
+function currentStreak() {
+  return (save.daily.lastWin === todayKey() || save.daily.lastWin === yesterdayKey()) ? save.daily.streak : 0;
+}
+function dailyBonusFor(streak) { return 40 + Math.min(streak, 6) * 10; }
+function playDaily() {
+  if (dailyDoneToday()) { SND.mid(); return; }
+  SND.click();
+  openBrief(dailyIndex());
+}
+
 /* ================= ANA MENÜ ================= */
 function renderHome() {
   const { ci, ni } = rankInfo(save.xp);
@@ -2103,6 +2236,12 @@ function renderHome() {
     document.getElementById("xp-label").textContent = `${save.xp} ${t("tp")} — ${t("maxLevel")}`;
     if (bar) bar.style.width = "100%";
   }
+  const sc = document.getElementById("rb-streak");
+  const st = currentStreak();
+  if (st > 0) {
+    sc.style.display = "block";
+    sc.textContent = t("streakDays").replace("{n}", st);
+  } else sc.style.display = "none";
 }
 
 function goPlay() {
@@ -2112,7 +2251,19 @@ function goPlay() {
 }
 
 let featuredCase = 0;
+function renderDailyStrip() {
+  const ds = document.getElementById("daily-strip");
+  const dc = CASES[dailyIndex()];
+  if (dailyDoneToday()) {
+    ds.className = "daily-strip done";
+    ds.innerHTML = `<span class="ds-ic">✅</span><div class="ds-body"><div class="ds-k">📅 ${t("daily")}</div><div class="ds-t">${t("dailyDoneD")}</div></div><span class="ds-bonus">✓</span>`;
+  } else {
+    ds.className = "daily-strip";
+    ds.innerHTML = `<span class="ds-ic">${dc.icon}</span><div class="ds-body"><div class="ds-k">📅 ${t("daily")}</div><div class="ds-t">${dc.title}</div></div><span class="ds-bonus">${t("dailyBonusTag").replace("{n}", dailyBonusFor(currentStreak() + 1))}</span>`;
+  }
+}
 function renderCases() {
+  renderDailyStrip();
   // Öne çıkan dava = sıradaki oynanabilir (henüz kazanılmamış) dava; bir öncekini geçince otomatik ilerler.
   const unlockedTo = Math.min(save.unlocked - 1, CASES.length - 1);
   featuredCase = unlockedTo;
@@ -2248,6 +2399,7 @@ function resetProgress() {
   }
   save.xp = 0; save.unlocked = UNLOCK_ALL ? CASES.length : 1; save.stars = {};
   save.achUnlocked = {}; save.fastWins = 0;
+  save.bestCombo = 0; save.daily = { streak: 0, lastWin: "", best: 0 };
   persist();
   resetArmed = false;
   btn.textContent = t("resetDone");
@@ -2277,9 +2429,69 @@ function animateNumber(el, from, to, suffix) {
     if (p < 1) requestAnimationFrame(frame);
   })(t0);
 }
+// 0'dan hedefe sayan sayaç (fmt: sayıyı metne çevirir)
+function countUp(el, to, fmt) {
+  if (REDUCE_MOTION) { el.textContent = fmt(to); return; }
+  const dur = 650, t0 = performance.now();
+  (function frame(now) {
+    const p = Math.min(1, (now - t0) / dur);
+    el.textContent = fmt(Math.round(to * p));
+    if (p < 1) requestAnimationFrame(frame);
+  })(t0);
+}
+// Ekran sarsıntısı: hard = tokmak/damga gibi büyük anlar
+function shakeScreen(hard) {
+  if (REDUCE_MOTION) return;
+  const el = document.getElementById("app");
+  el.classList.remove("shake-soft", "shake-hard");
+  void el.offsetWidth;
+  el.classList.add(hard ? "shake-hard" : "shake-soft");
+}
+// Kazanılan puan seçenekten ikna çubuğuna uçar; çubuk puan "konunca" güncellenir
+function flyScore(fromEl, p) {
+  const meter = document.querySelector("#scr-trial .meter");
+  if (REDUCE_MOTION || !meter || p <= 0) { updateMeter(); return; }
+  const r1 = fromEl.getBoundingClientRect(), r2 = meter.getBoundingClientRect();
+  const el = document.createElement("div");
+  el.className = "fly-score";
+  el.textContent = "+" + p;
+  el.style.color = p >= 25 ? "var(--green)" : "var(--gold)";
+  el.style.left = r1.left + r1.width / 2 + "px";
+  el.style.top = r1.top + "px";
+  document.body.appendChild(el);
+  const dx = r2.left + r2.width / 2 - (r1.left + r1.width / 2);
+  const dy = r2.top - r1.top;
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    el.style.transform = `translate(calc(${dx}px - 50%), ${dy}px) scale(.5)`;
+    el.style.opacity = "0";
+  }));
+  setTimeout(() => {
+    el.remove();
+    updateMeter();
+    meter.classList.remove("pulse"); void meter.offsetWidth; meter.classList.add("pulse");
+  }, 700);
+}
 
 /* ================= DAVA ================= */
 let currentCase = 0, round = 0, score = 0, meterPct = 0;
+let combo = 0, maxCombo = 0;
+
+/* ---- kombo rozeti ---- */
+function comboShow(n) {
+  const b = document.getElementById("combo-badge");
+  b.textContent = t("comboTag").replace("{n}", n);
+  b.style.fontSize = (13 + Math.min(n, 6)) + "px";
+  b.className = "combo-badge";
+  void b.offsetWidth;
+  b.className = "combo-badge show";
+  SND.combo(n);
+  buzz([0, 20, 20, 30]);
+}
+function comboBreak() {
+  const b = document.getElementById("combo-badge");
+  b.className = "combo-badge break";
+  setTimeout(() => { b.className = "combo-badge"; }, 600);
+}
 
 function openBrief(i) {
   currentCase = i;
@@ -2307,6 +2519,8 @@ function openBrief(i) {
 
 function startTrial() {
   round = 0; score = 0; meterPct = 0;
+  combo = 0; maxCombo = 0;
+  document.getElementById("combo-badge").className = "combo-badge";
   document.getElementById("trial-title").textContent = CASES[currentCase].icon + " " + CASES[currentCase].title;
   document.getElementById("trial-scene").innerHTML = courtScene("tj", { realJudge: true });
   document.getElementById("avukat-avatar").innerHTML = charArt(AVUKAT);
@@ -2430,9 +2644,10 @@ function renderRound() {
 function renderDefenseOptions(opts, wrap, r) {
   const shuffled = opts.map((o, idx) => ({ ...o, idx })).sort(() => Math.random() - 0.5);
   const made = [];
-  shuffled.forEach(o => {
+  shuffled.forEach((o, i) => {
     const b = document.createElement("button");
     b.className = "opt";
+    b.style.animationDelay = (REDUCE_MOTION ? 0 : i * 60) + "ms";
     b.textContent = o.t;
     b.onclick = () => {
       const wasTimed = r && r.type === "hizli" && document.getElementById("round-timer").classList.contains("show");
@@ -2490,10 +2705,11 @@ function startRoundTimer(seconds, made, r) {
 // İtiraz: elindeki kanıtları tıklanabilir kart olarak sun
 function renderEvidence(present, wrap) {
   const shuffled = present.map(o => ({ ...o })).sort(() => Math.random() - 0.5);
-  shuffled.forEach(o => {
+  shuffled.forEach((o, i) => {
     const { ic, tx } = splitEv(o.t);
     const b = document.createElement("button");
     b.className = "ev-opt";
+    b.style.animationDelay = (REDUCE_MOTION ? 0 : i * 60) + "ms";
     b.innerHTML = `<span class="ev-ic">${evidenceIcon(ic)}</span><span class="ev-t"></span>`;
     b.querySelector(".ev-t").textContent = tx;
     b.onclick = () => resolvePick(o.p, o.f, b);
@@ -2503,9 +2719,10 @@ function renderEvidence(present, wrap) {
 
 // Çapraz sorgu 1. aşama: ifade cümleleri; yalanı bul
 function renderTestimony(r, wrap) {
-  r.lines.forEach(ln => {
+  r.lines.forEach((ln, i) => {
     const b = document.createElement("button");
     b.className = "testimony";
+    b.style.animationDelay = (REDUCE_MOTION ? 0 : i * 60) + "ms";
     b.textContent = ln.s;
     b.onclick = () => pickTestimony(ln, b, r);
     wrap.appendChild(b);
@@ -2542,7 +2759,18 @@ function resolvePick(p, f, btn) {
   const cls = p >= 25 ? "good" : p >= 12 ? "mid" : "bad";
   btn.classList.add(cls);
   score += p;
-  updateMeter();
+  flyScore(btn, p);
+  if (cls === "bad") shakeScreen(false);
+
+  // kombo: üst üste güçlü savunmalar zinciri
+  if (cls === "good") {
+    combo++;
+    if (combo > maxCombo) maxCombo = combo;
+    if (combo >= 2) comboShow(combo);
+  } else {
+    if (combo >= 2) comboBreak();
+    combo = 0;
+  }
 
   judgeMood("tj", cls === "good" ? "happy" : cls === "bad" ? "angry" : "neutral");
   const scene = document.getElementById("stage");
@@ -2574,25 +2802,39 @@ function nextRound() {
   else verdict();
 }
 
-/* ================= KARAR ================= */
+/* ================= KARAR (seremoni sekansı) ================= */
+// Karar ekranı adım adım oynar: tokmak → damga → yıldızlar → TP → rütbe çubuğu → butonlar.
+let verdictTimers = [];
+function vStep(ms, fn) {
+  if (REDUCE_MOTION) { fn(); return; }
+  verdictTimers.push(setTimeout(fn, ms));
+}
 function verdict() {
+  verdictTimers.forEach(clearTimeout);
+  verdictTimers = [];
   const c = CASES[currentCase];
   const max = c.rounds.length * 25;
   const pct = score / max;
   const win = pct >= 0.6;
   const stars = pct >= 1 ? 3 : pct >= 0.8 ? 2 : win ? 1 : 0;
 
-  document.getElementById("verdict-gavel").innerHTML = GAVEL_SVG;
-  const title = document.getElementById("verdict-title");
-  title.textContent = win ? t("win") : t("lose");
-  title.className = win ? "win" : "lose";
-  document.getElementById("verdict-stars").textContent = win ? "⭐".repeat(stars) + "☆".repeat(3 - stars) : "";
-  document.getElementById("verdict-text").textContent = win
-    ? (stars === 3 ? t("winText3") : t("winText"))
-    : t("loseText");
+  // --- bonuslar: kombo + günün davası (kilit güncellenmeden önce hesaplanmalı) ---
+  const comboBonus = maxCombo >= 2 ? maxCombo * 10 : 0;
+  if (maxCombo > (save.bestCombo || 0)) save.bestCombo = maxCombo;
+  const wasDaily = win && currentCase === dailyIndex() && !dailyDoneToday();
+  let dailyBonus = 0;
+  if (wasDaily) {
+    const d = save.daily;
+    d.streak = d.lastWin === yesterdayKey() ? d.streak + 1 : 1;
+    d.lastWin = todayKey();
+    if (d.streak > (d.best || 0)) d.best = d.streak;
+    dailyBonus = dailyBonusFor(d.streak);
+  }
 
-  const oldRankI = rankInfo(save.xp).ci;
-  const gained = win ? 80 + stars * 20 : 25;
+  // --- kayıt: XP, kilit, yıldız, başarımlar ---
+  const oldXp = save.xp;
+  const oldRankI = rankInfo(oldXp).ci;
+  const gained = (win ? 80 + stars * 20 : 25) + comboBonus + dailyBonus;
   save.xp += gained;
   if (win) {
     const idx = CASES.indexOf(c);
@@ -2600,29 +2842,170 @@ function verdict() {
     save.stars[c.id] = Math.max(save.stars[c.id] || 0, stars);
   }
   persist();
-  document.getElementById("verdict-xp").textContent = `+${gained} ${t("xpGain")}`;
-
   const newRankI = rankInfo(save.xp).ci;
-  const lu = document.getElementById("levelup-box");
-  if (newRankI !== oldRankI) {
-    lu.style.display = "block";
-    lu.textContent = t("levelup").replace("{rank}", rankName(newRankI));
-  } else lu.style.display = "none";
-
+  const rankUp = newRankI !== oldRankI;
   const opened = checkAchievements();
-  const achBox = document.getElementById("ach-toast-box");
-  if (opened.length) {
-    achBox.style.display = "block";
-    achBox.innerHTML = `${t("achNew")}<br>` + opened.map(i => {
-      const tx = achText(i);
-      return `${tx.icon} <strong>${tx.name}</strong>`;
-    }).join(" · ");
-  } else achBox.style.display = "none";
 
-  SND[win ? "win" : "lose"]();
-  buzz(win ? [0, 50, 40, 70] : 140);
+  // --- sahneyi hazırla: her şey gizli başlar ---
+  document.getElementById("verdict-gavel").innerHTML = GAVEL_SVG;
+  const title = document.getElementById("verdict-title");
+  title.textContent = win ? t("win") : t("lose");
+  title.className = "v-stamp " + (win ? "win" : "lose");
+  const starWrap = document.getElementById("verdict-stars");
+  starWrap.innerHTML = win
+    ? Array.from({ length: 3 }, (_, i) =>
+        `<span class="v-star${i < stars ? "" : " empty"}" id="v-star-${i}">${i < stars ? "⭐" : "☆"}</span>`).join("")
+    : "";
+  const vText = document.getElementById("verdict-text");
+  vText.textContent = win ? (stars === 3 ? t("winText3") : t("winText")) : t("loseText");
+  vText.classList.remove("v-on");
+  const xpEl = document.getElementById("verdict-xp");
+  xpEl.textContent = `+0 ${t("xpGain")}`;
+  xpEl.classList.remove("v-on");
+  const vRank = document.getElementById("v-rank");
+  vRank.classList.remove("v-on");
+  const comboBox = document.getElementById("combo-box");
+  comboBox.style.display = "none";
+  const dailyBox = document.getElementById("daily-box");
+  dailyBox.style.display = "none";
+  const lu = document.getElementById("levelup-box");
+  lu.style.display = "none";
+  const achBox = document.getElementById("ach-toast-box");
+  achBox.style.display = "none";
+  document.getElementById("verdict-actions").classList.remove("v-on");
+
+  // rütbe çubuğu eski durumdan başlar
+  const rBar = document.getElementById("v-rank-bar");
+  function rankPct(xp, ri) {
+    const from = RANK_XP[ri], to = RANK_XP[ri + 1];
+    return to == null ? 100 : Math.round((xp - from) / (to - from) * 100);
+  }
+  function setRankLabel(ri, xp) {
+    document.getElementById("v-rank-name").textContent = rankName(ri);
+    const to = RANK_XP[ri + 1];
+    document.getElementById("v-rank-xp").textContent =
+      to == null ? `${xp} ${t("tp")}` : `${xp} / ${to} ${t("tp")}`;
+  }
+  rBar.style.transition = "none";
+  rBar.style.width = rankPct(oldXp, oldRankI) + "%";
+  setRankLabel(oldRankI, oldXp);
+
   show("scr-verdict");
-  if (win) celebrate(stars);
+
+  // 1) tokmak iner
+  SND.gavel();
+  buzz(win ? [0, 50, 40, 70] : 140);
+  shakeScreen(false);
+
+  // 2) karar damga gibi basılır
+  vStep(620, () => {
+    title.classList.add("on");
+    SND.stamp();
+    if (!win) SND.lose();
+    shakeScreen(true);
+    buzz(60);
+  });
+
+  // 3) yıldızlar tek tek (ding sesleri yükselerek)
+  let tNow = 1250;
+  if (win) {
+    for (let i = 0; i < 3; i++) {
+      const starId = "v-star-" + i;
+      if (i < stars) {
+        vStep(tNow, ((k, sid) => () => {
+          document.getElementById(sid).classList.add("on");
+          SND.star(k);
+          buzz(25);
+        })(i, starId));
+        tNow += 400;
+      } else {
+        vStep(tNow, () => document.getElementById(starId).classList.add("on"));
+        tNow += 150;
+      }
+    }
+    vStep(tNow, () => celebrate(stars));
+    tNow += 250;
+  } else {
+    tNow = 1350;
+  }
+
+  // 4) açıklama + TP sayacı
+  vStep(tNow, () => vText.classList.add("v-on"));
+  tNow += 350;
+  vStep(tNow, () => {
+    xpEl.classList.add("v-on");
+    countUp(xpEl, gained, v => `+${v} ${t("xpGain")}`);
+  });
+  tNow += 800;
+
+  // 4b) kombo ve günün davası bonusları
+  if (comboBonus) {
+    vStep(tNow, () => {
+      comboBox.style.display = "block";
+      comboBox.textContent = t("comboLine").replace("{n}", maxCombo).replace("{b}", comboBonus);
+      SND.combo(maxCombo);
+      buzz(25);
+    });
+    tNow += 450;
+  }
+  if (wasDaily) {
+    vStep(tNow, () => {
+      dailyBox.style.display = "block";
+      dailyBox.textContent = t("dailyWinLine").replace("{n}", dailyBonus).replace("{s}", save.daily.streak);
+      SND.good();
+      buzz(30);
+    });
+    tNow += 450;
+  }
+
+  // 5) rütbe çubuğu gözle görülür dolar
+  vStep(tNow, () => {
+    vRank.classList.add("v-on");
+    rBar.style.transition = REDUCE_MOTION ? "none" : "width .9s cubic-bezier(.25,.8,.3,1)";
+    void rBar.offsetWidth;
+    if (rankUp) {
+      rBar.style.width = "100%";
+    } else {
+      rBar.style.width = rankPct(save.xp, newRankI) + "%";
+      setRankLabel(newRankI, save.xp);
+    }
+  });
+  if (rankUp) {
+    tNow += 1050;
+    // seviye atlama: çubuk dolar, yeni rütbeye sıfırlanıp yeniden dolar + fanfar
+    vStep(tNow, () => {
+      setRankLabel(newRankI, save.xp);
+      rBar.style.transition = "none";
+      rBar.style.width = "0%";
+      void rBar.offsetWidth;
+      rBar.style.transition = REDUCE_MOTION ? "none" : "width .8s cubic-bezier(.25,.8,.3,1)";
+      rBar.style.width = rankPct(save.xp, newRankI) + "%";
+      lu.style.display = "block";
+      lu.textContent = t("levelup").replace("{rank}", rankName(newRankI));
+      SND.fanfare();
+      shakeScreen(true);
+      buzz([0, 40, 40, 40, 40, 80]);
+      celebrate(3);
+    });
+  }
+  tNow += 500;
+
+  // 6) yeni başarımlar
+  if (opened.length) {
+    vStep(tNow, () => {
+      achBox.style.display = "block";
+      achBox.innerHTML = `${t("achNew")}<br>` + opened.map(i => {
+        const tx = achText(i);
+        return `${tx.icon} <strong>${tx.name}</strong>`;
+      }).join(" · ");
+      SND.good();
+      buzz(30);
+    });
+    tNow += 450;
+  }
+
+  // 7) butonlar en son belirir
+  vStep(tNow, () => document.getElementById("verdict-actions").classList.add("v-on"));
 }
 
 /* ================= KUTLAMA ANİMASYONU ================= */
