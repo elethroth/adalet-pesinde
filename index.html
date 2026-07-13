@@ -588,13 +588,6 @@
     background:linear-gradient(180deg,var(--gold),var(--gold-dark));padding:3px 8px;border-radius:99px;
     white-space:nowrap}
 
-  .media-reaction{border-radius:16px;padding:13px 16px;margin:12px 0;text-align:left;
-    background:linear-gradient(135deg,#3a2e18,#241a0c);border:1px solid var(--gold-dark);
-    animation:fadeIn .4s ease}
-  .media-reaction.angry{background:linear-gradient(135deg,#3a2a1c,#221709);border-color:#8a6a3a}
-  .media-reaction h4{font-size:14.5px;font-weight:900;color:var(--gold);margin-bottom:4px}
-  .media-reaction.angry h4{color:#d9a05f}
-  .media-reaction p{font-size:13px;color:var(--muted);line-height:1.45}
   .meter-label{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:5px}
   .meter{background:#100b08;border-radius:99px;height:14px;overflow:hidden;border:1px solid var(--line)}
   .meter > div{height:100%;background:linear-gradient(90deg,#8a5a2a,var(--gold),var(--green));transition:width .7s ease;border-radius:99px}
@@ -689,65 +682,148 @@
   .feedback.mid{background:#faf1d9;border:3px solid var(--gold-dark)}
   .feedback.bad{background:#fbe9e9;border:3px solid var(--red)}
 
-  /* ---------- KARAR ---------- */
-  .verdict-box{text-align:center;margin-top:26px}
-  .verdict-box .gavel-wrap{display:inline-block;animation:bang .55s ease}
-  @keyframes bang{0%{transform:rotate(-40deg) translateY(-30px)}60%{transform:rotate(10deg)}100%{transform:none}}
-  .verdict-box h2{font-size:32px;margin:12px 0 6px;font-weight:900;letter-spacing:.5px}
-  .verdict-box h2.win{color:var(--green)}
-  .verdict-box h2.lose{color:var(--red)}
-  .verdict-box .stars{font-size:34px;letter-spacing:6px;margin:8px 0;min-height:44px}
+  /* ================= KARAR / SONUÇ EKRANI (premium ödül ekranı) ================= */
+  .verdict-box{text-align:center;margin-top:18px}
 
-  /* karar damgası: büyükten küçülerek "basılır" */
-  .v-stamp{opacity:0}
+  /* --- Zafer amblemi --- */
+  .v-emblem{display:inline-block;width:118px;height:118px;opacity:0;transform:scale(.4) rotate(-8deg)}
+  .v-emblem.on{animation:emblemIn .62s cubic-bezier(.2,1.4,.4,1) forwards}
+  .v-emblem svg{width:100%;height:100%;display:block;filter:drop-shadow(0 8px 16px rgba(0,0,0,.5))}
+  @keyframes emblemIn{0%{opacity:0;transform:scale(.4) rotate(-8deg)}60%{opacity:1;transform:scale(1.08) rotate(2deg)}100%{opacity:1;transform:scale(1) rotate(0)}}
+
+  /* --- Başlık: premium logo-lockup hissi, düz renk değil --- */
+  .verdict-box h2{
+    font-size:30px;margin:14px 0 4px;font-weight:600;letter-spacing:.6px;
+    background:linear-gradient(180deg,#fdf6e3 0%,#f0d99a 45%,#c9a25a 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    filter:drop-shadow(0 2px 10px rgba(240,201,120,.25));
+    opacity:0;
+  }
+  .verdict-box h2.lose{
+    background:linear-gradient(180deg,#e8d9c4 0%,#c9a877 45%,#8a6a45 100%);
+    -webkit-background-clip:text;background-clip:text;
+    filter:drop-shadow(0 2px 8px rgba(140,100,60,.2));
+  }
   .v-stamp.on{animation:stampIn .5s cubic-bezier(.3,1.4,.45,1) forwards}
-  @keyframes stampIn{0%{opacity:0;transform:scale(2.4) rotate(-7deg)}55%{opacity:1;transform:scale(.92) rotate(1.5deg)}78%{transform:scale(1.05)}100%{opacity:1;transform:scale(1)}}
+  @keyframes stampIn{0%{opacity:0;transform:scale(2.2) rotate(-5deg)}55%{opacity:1;transform:scale(.94) rotate(1deg)}78%{transform:scale(1.04)}100%{opacity:1;transform:scale(1)}}
 
-  /* yıldızlar tek tek patlayarak gelir */
-  .verdict-box .stars .v-star{display:inline-block;opacity:0;transform:scale(.2)}
+  /* --- Yıldızlar: özel SVG, ışık kırılmalı --- */
+  .verdict-box .stars{display:flex;justify-content:center;gap:8px;margin:10px 0;min-height:48px}
+  .verdict-box .stars .v-star{display:inline-block;width:42px;height:42px;opacity:0;transform:scale(.2)}
+  .verdict-box .stars .v-star svg{width:100%;height:100%;filter:drop-shadow(0 3px 6px rgba(0,0,0,.4))}
   .verdict-box .stars .v-star.on{animation:starPop .55s cubic-bezier(.2,1.5,.4,1) forwards}
-  .verdict-box .stars .v-star.empty.on{animation:none;opacity:.35;transform:none;transition:opacity .4s}
-  @keyframes starPop{0%{opacity:0;transform:scale(.2) rotate(-40deg)}60%{opacity:1;transform:scale(1.4) rotate(8deg)}100%{opacity:1;transform:scale(1)}}
+  .verdict-box .stars .v-star.empty.on{animation:starDim .4s ease forwards}
+  @keyframes starPop{0%{opacity:0;transform:scale(.2) rotate(-40deg)}60%{opacity:1;transform:scale(1.22) rotate(6deg)}100%{opacity:1;transform:scale(1)}}
+  @keyframes starDim{0%{opacity:0;transform:scale(.6)}100%{opacity:.5;transform:scale(1)}}
 
-  /* seremoni sırasında sırayla açılan öğeler */
-  .v-anim{opacity:0;transform:translateY(10px);transition:opacity .45s ease,transform .45s ease}
-  .v-anim.v-on{opacity:1;transform:none}
-  #verdict-actions{pointer-events:none}
+  /* --- Mahkeme kararı belgesi (parşömen kart) --- */
+  .verdict-doc{
+    position:relative;background:var(--paper);border-radius:16px;padding:16px 18px;
+    margin:14px 4px 0;border:1px solid rgba(139,95,22,.35);
+    box-shadow:0 8px 20px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.5);
+    text-align:left;
+  }
+  .verdict-doc::before{content:"";position:absolute;left:18px;right:18px;top:9px;height:1px;background:rgba(139,95,22,.25)}
+  .verdict-doc::after{content:"";position:absolute;left:18px;right:18px;bottom:9px;height:1px;background:rgba(139,95,22,.25)}
+  .verdict-doc p{color:var(--ink-text);font-size:14.5px;font-weight:400;line-height:1.55;margin:5px 0}
+  .verdict-doc .vd-seal{position:absolute;top:-11px;right:16px;width:26px;height:26px;border-radius:50%;
+    background:linear-gradient(180deg,#f0d99a,#a97c3a);border:1px solid #6b4a1f;
+    box-shadow:0 2px 6px rgba(0,0,0,.4)}
+
+  /* --- Ödül (XP) kartı --- */
+  .reward-card{
+    display:flex;align-items:center;gap:13px;margin:14px 4px 0;padding:13px 18px;
+    background:linear-gradient(155deg,#2e2013,#1c130b);border-radius:16px;
+    border:1px solid rgba(224,176,79,.3);
+    box-shadow:0 10px 22px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,230,180,.08);
+    opacity:0;transform:translateY(14px);transition:opacity .3s ease,transform .3s cubic-bezier(.2,.8,.3,1);
+  }
+  .reward-card.on{opacity:1;transform:none}
+  .reward-card .rc-icon{width:34px;height:34px;flex-shrink:0;filter:drop-shadow(0 2px 4px rgba(0,0,0,.4))}
+  .reward-card .rc-icon svg{width:100%;height:100%;display:block}
+  .reward-card .rc-body{text-align:left}
+  .reward-card .rc-amount{font-size:22px;font-weight:800;color:#f7e6ab;letter-spacing:.3px;line-height:1.1}
+  .reward-card .rc-label{font-size:11.5px;font-weight:500;color:var(--muted);letter-spacing:.5px;margin-top:2px}
+
+  /* --- Rütbe ilerleme çubuğu: ince, metal çerçeveli, ışıklı dolum --- */
+  .v-rank{max-width:340px;margin:16px auto 0;text-align:left;opacity:0;transform:translateY(10px);
+    transition:opacity .4s ease,transform .4s ease}
+  .v-rank.v-on{opacity:1;transform:none}
+  .v-rank .v-rank-top{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);font-weight:500;margin-bottom:6px}
+  .v-rank .v-rank-top span:first-child{color:var(--gold);font-weight:600}
+  .v-rank-track{height:11px;border-radius:99px;background:#0d0904;overflow:hidden;position:relative;
+    border:1px solid rgba(224,176,79,.28);box-shadow:inset 0 1px 3px rgba(0,0,0,.6)}
+  .v-rank-fill{height:100%;width:0%;border-radius:99px;position:relative;overflow:hidden;
+    background:linear-gradient(90deg,#8a5a2a,#e0b04f,#f7e6ab);
+    transition:width .9s cubic-bezier(.25,.8,.3,1);
+    box-shadow:0 0 8px rgba(240,201,120,.4)}
+  .v-rank-fill::after{content:"";position:absolute;inset:0;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.45),transparent);
+    width:40%;transform:translateX(-140%);animation:rankSheen 2.6s ease-in-out infinite}
+  .v-rank-fill.wave::after{animation:rankSheen 1s ease-in-out 1}
+  @keyframes rankSheen{0%{transform:translateX(-140%)}100%{transform:translateX(340%)}}
+  @media (prefers-reduced-motion:reduce){.v-rank-fill::after{display:none}}
+
+  /* --- Bonus kartları: ortak kabuk + tipe özgü vurgu rengi --- */
+  .bonus-card{
+    display:flex;align-items:center;gap:12px;text-align:left;
+    background:linear-gradient(155deg,#2e2013,#1c130b);border-radius:15px;padding:12px 15px;
+    margin:10px 4px 0;border:1px solid var(--bc-accent,rgba(224,176,79,.3));
+    box-shadow:0 6px 16px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,230,180,.06);
+    opacity:0;transform:translateY(10px);transition:opacity .3s ease,transform .3s cubic-bezier(.2,.8,.3,1);
+  }
+  .bonus-card.on{opacity:1;transform:none}
+  .bonus-card .bc-icon{width:28px;height:28px;flex-shrink:0;display:grid;place-items:center;
+    background:var(--bc-icon-bg,rgba(224,176,79,.12));border-radius:50%;padding:5px}
+  .bonus-card .bc-icon svg{width:100%;height:100%;display:block}
+  .bonus-card .bc-title{font-size:13.5px;font-weight:600;color:var(--bc-title,var(--gold));line-height:1.3}
+  .bonus-card .bc-desc{font-size:12px;font-weight:400;color:var(--muted);margin-top:2px;line-height:1.4}
+  .bonus-card.combo{--bc-accent:rgba(243,166,62,.35);--bc-icon-bg:rgba(243,166,62,.14);--bc-title:#f3a63e}
+  .bonus-card.daily{--bc-accent:rgba(94,201,155,.32);--bc-icon-bg:rgba(94,201,155,.14);--bc-title:#7fd9b6}
+  .bonus-card.levelup{--bc-accent:rgba(185,142,224,.35);--bc-icon-bg:rgba(185,142,224,.14);--bc-title:#c9a6ec}
+  .bonus-card.achievement{--bc-accent:rgba(217,185,107,.35);--bc-icon-bg:rgba(217,185,107,.14);--bc-title:var(--gold)}
+  .bonus-card.media{--bc-accent:rgba(224,176,79,.3)}
+  .bonus-card.media.angry{--bc-accent:rgba(200,140,80,.3);--bc-icon-bg:rgba(200,140,80,.14);--bc-title:#d9a05f}
+
+  /* --- Aksiyon butonları: menü butonlarından ayrışan, kendi hiyerarşisi --- */
+  #verdict-actions{pointer-events:none;display:flex;flex-direction:column;gap:11px}
   #verdict-actions.v-on{pointer-events:auto}
-  #verdict-actions .big-btn{margin-top:0}
-
-  /* karar ekranı rütbe ilerleme çubuğu */
-  .v-rank{max-width:320px;margin:16px auto 0;text-align:left}
-  .v-rank .v-rank-top{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted);font-weight:700;margin-bottom:5px}
-  .v-rank .v-rank-top span:first-child{color:var(--gold)}
-
+  .verdict-btn{
+    position:relative;width:100%;border:none;cursor:pointer;border-radius:16px;
+    padding:15px 20px;display:flex;align-items:center;justify-content:center;gap:10px;
+    font-size:16.5px;font-weight:600;letter-spacing:.3px;
+    transition:transform .16s cubic-bezier(.22,.85,.35,1),filter .16s ease,box-shadow .16s ease;
+  }
+  .verdict-btn:active{transform:translateY(2px) scale(.986);filter:brightness(.95)}
+  .verdict-btn .vb-icon{width:19px;height:19px;flex-shrink:0}
+  .verdict-btn .vb-icon svg{width:100%;height:100%;display:block}
+  .verdict-btn.primary{
+    color:#2a1c08;background:linear-gradient(178deg,#eccc7c 0%,#dbab54 46%,#c08c3d 100%);
+    box-shadow:inset 0 1px 0 rgba(255,248,220,.4),inset 0 -1.5px 0 rgba(58,32,8,.3),
+      0 4px 9px -2px rgba(12,7,3,.4),0 12px 22px -9px rgba(12,7,3,.55);
+  }
+  .verdict-btn.primary .vb-icon{color:#2a1c08}
+  .verdict-btn.secondary{
+    color:#d8c6a0;background:transparent;border:1px solid rgba(224,176,79,.3);
+  }
+  .verdict-btn.secondary .vb-icon{color:#c9a877}
   @media (prefers-reduced-motion:reduce){
-    .v-stamp.on,.v-star.on{animation-duration:.01s}
-    .v-anim{transition:none}
-    .opt,.ev-opt,.testimony{animation:none}
+    .v-emblem,.v-stamp.on,.v-star.on,.reward-card,.bonus-card,.v-rank,.verdict-doc{
+      animation:none!important;transition:none!important;opacity:1!important;transform:none!important}
   }
 
-  /* ---------- KUTLAMA KONFETİSİ ---------- */
+  /* ---------- KUTLAMA: ince altın toz/parıltı efekti ---------- */
   .confetti{position:absolute;inset:0;z-index:60;pointer-events:none;overflow:hidden}
-  .confetti span{position:absolute;top:-24px;opacity:0;
-    animation-name:confFall;animation-timing-function:cubic-bezier(.28,.62,.72,1);animation-fill-mode:forwards}
-  @keyframes confFall{
-    0%{opacity:0;transform:translateY(-24px) rotate(0)}
-    8%{opacity:1}
-    100%{opacity:1;transform:translateY(104vh) rotate(700deg)}
+  .confetti span{position:absolute;top:-10px;opacity:0;border-radius:50%;
+    background:radial-gradient(circle,#fff8e2,#f0c96a 55%,transparent 100%);
+    animation-name:dustFall;animation-timing-function:ease-in;animation-fill-mode:forwards}
+  @keyframes dustFall{
+    0%{opacity:0;transform:translateY(-10px) scale(.6)}
+    10%{opacity:1}
+    75%{opacity:.85}
+    100%{opacity:0;transform:translateY(92vh) scale(1.1)}
   }
   @media (prefers-reduced-motion:reduce){.confetti span{animation-duration:.01s;opacity:0}}
-  .verdict-box .v-text{color:var(--muted);font-size:15px;line-height:1.5;padding:0 10px}
-  .xp-gain{
-    display:inline-block;background:var(--card);border:1px solid var(--gold);
-    color:var(--gold);font-weight:800;border-radius:99px;padding:10px 22px;
-    font-size:18px;margin:16px 0 4px;
-  }
-  .levelup{
-    background:linear-gradient(135deg,#4a3417,#6b4d1e);border:1px solid var(--gold);
-    border-radius:16px;padding:14px;margin:14px 0;font-size:16px;font-weight:700;
-    animation:fadeIn .5s ease;
-  }
   .spacer{flex:1}
 </style>
 
@@ -1129,31 +1205,56 @@
     <button class="big-btn fixed-cta" id="next-btn" style="display:none" onclick="nextRound()" data-i18n="continue">Devam ›</button>
   </div>
 
-  <!-- KARAR -->
+  <!-- KARAR / SONUÇ -->
   <div class="screen" id="scr-verdict">
     <div class="verdict-box">
-      <div class="gavel-wrap" id="verdict-gavel"></div>
+      <div class="v-emblem" id="verdict-emblem"></div>
       <h2 id="verdict-title" class="v-stamp"></h2>
       <div class="stars" id="verdict-stars"></div>
-      <p class="v-text v-anim" id="verdict-text"></p>
-      <div class="xp-gain v-anim" id="verdict-xp"></div>
-      <div class="v-rank v-anim" id="v-rank">
+      <div class="verdict-doc v-anim" id="verdict-doc">
+        <div class="vd-seal"></div>
+        <p id="verdict-text"></p>
+      </div>
+      <div class="reward-card" id="verdict-xp-card">
+        <div class="rc-icon" id="verdict-xp-icon"></div>
+        <div class="rc-body">
+          <div class="rc-amount" id="verdict-xp">+0</div>
+          <div class="rc-label" data-i18n="xpGain">Tecrübe Puanı</div>
+        </div>
+      </div>
+      <div class="v-rank" id="v-rank">
         <div class="v-rank-top"><span id="v-rank-name"></span><span id="v-rank-xp"></span></div>
-        <div class="bar"><div id="v-rank-bar" style="width:0%"></div></div>
+        <div class="v-rank-track"><div class="v-rank-fill" id="v-rank-bar"></div></div>
       </div>
-      <div class="levelup" id="combo-box" style="display:none"></div>
-      <div class="levelup" id="daily-box" style="display:none"></div>
-      <div class="media-reaction" id="media-reaction-box" style="display:none">
-        <h4 id="media-reaction-title"></h4>
-        <p id="media-reaction-desc"></p>
+      <div class="bonus-card combo" id="combo-box" style="display:none">
+        <div class="bc-icon" id="combo-box-icon"></div>
+        <div><div class="bc-title" id="combo-box-title"></div><div class="bc-desc" id="combo-box-desc"></div></div>
       </div>
-      <div class="levelup" id="levelup-box" style="display:none"></div>
-      <div class="levelup" id="ach-toast-box" style="display:none"></div>
+      <div class="bonus-card daily" id="daily-box" style="display:none">
+        <div class="bc-icon" id="daily-box-icon"></div>
+        <div><div class="bc-title" id="daily-box-title"></div><div class="bc-desc" id="daily-box-desc"></div></div>
+      </div>
+      <div class="bonus-card media" id="media-reaction-box" style="display:none">
+        <div class="bc-icon" id="media-reaction-icon"></div>
+        <div><div class="bc-title" id="media-reaction-title"></div><div class="bc-desc" id="media-reaction-desc"></div></div>
+      </div>
+      <div class="bonus-card levelup" id="levelup-box" style="display:none">
+        <div class="bc-icon" id="levelup-box-icon"></div>
+        <div><div class="bc-title" id="levelup-box-title"></div></div>
+      </div>
+      <div class="bonus-card achievement" id="ach-toast-box" style="display:none">
+        <div class="bc-icon" id="ach-toast-icon"></div>
+        <div><div class="bc-title" id="ach-toast-title"></div><div class="bc-desc" id="ach-toast-desc"></div></div>
+      </div>
     </div>
     <div class="spacer"></div>
     <div id="verdict-actions" class="v-anim">
-      <button class="big-btn" onclick="SND.click();renderHome();renderCases();show('scr-cases')" data-i18n="returnCases">📋 Davalara Dön</button>
-      <button class="big-btn secondary" onclick="openBrief(currentCase)" data-i18n="retry">↻ Tekrar Dene</button>
+      <button class="verdict-btn primary" onclick="SND.click();renderHome();renderCases();show('scr-cases')">
+        <span class="vb-icon" id="verdict-return-icon"></span><span data-i18n="returnCases">Davalara Dön</span>
+      </button>
+      <button class="verdict-btn secondary" onclick="openBrief(currentCase)">
+        <span class="vb-icon" id="verdict-retry-icon"></span><span data-i18n="retry">Tekrar Dene</span>
+      </button>
     </div>
   </div>
 
@@ -1800,6 +1901,84 @@ function caseIcon(id, cls) {
   return `<svg class="ci${cls ? " " + cls : ""}" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${art}</svg>`;
 }
 
+/* ================= KARAR EKRANI İKON SİSTEMİ (premium, emojisiz) =================
+   Tek sanat dili: sıcak altın/bronz gradyan, ince koyu kontur, yumuşak AO gölgesi.
+   Zafer amblemi, yıldızlar, ödül/bonus kartı ikonları ve aksiyon buton ikonları. */
+// side: -1 sol, +1 sağ. t=0 altta, t=1 tam yanda — kanat/defne süpürmesi.
+function laurelSweep(cx, cy, side, count, r0, r1, leafLen, leafW, colorMain, colorDark) {
+  let s = "";
+  for (let i = 0; i < count; i++) {
+    const t = i / (count - 1);
+    const angDeg = -90 + side * 90 * t;
+    const a = angDeg * Math.PI / 180;
+    const rad = r0 + (r1 - r0) * t;
+    const x = cx + Math.cos(a) * rad, y = cy - Math.sin(a) * rad;
+    const rot = side > 0 ? (-angDeg - 100) : (-angDeg + 100);
+    const len = leafLen * (0.72 + t * 0.5), w = leafW * (0.8 + t * 0.35);
+    s += `<ellipse cx="${x.toFixed(2)}" cy="${y.toFixed(2)}" rx="${w.toFixed(2)}" ry="${len.toFixed(2)}" fill="${colorMain}" stroke="${colorDark}" stroke-width="0.5" transform="rotate(${rot.toFixed(1)} ${x.toFixed(2)} ${y.toFixed(2)})"/>`;
+  }
+  return s;
+}
+// Zafer amblemi: kazanınca parlak altın + kanatlı terazi madalyonu; kaybedince mat/eğik terazi.
+function victoryEmblem(win) {
+  if (win) return `<svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="veGoldW" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f7e6ab"/><stop offset="45%" stop-color="#dcb35a"/><stop offset="100%" stop-color="#a97c3a"/></linearGradient>
+      <radialGradient id="veDiscW" cx=".35" cy=".3" r=".9"><stop offset="0%" stop-color="#3c2a14"/><stop offset="100%" stop-color="#241708"/></radialGradient>
+    </defs>
+    <ellipse cx="70" cy="112" rx="26" ry="5" fill="#000" opacity=".2"/>
+    <g>${laurelSweep(70, 62, 1, 7, 24, 46, 12, 5, "#d9b96b", "#8a6a34")}</g>
+    <g>${laurelSweep(70, 62, -1, 7, 24, 46, 12, 5, "#d9b96b", "#8a6a34")}</g>
+    <circle cx="52" cy="62" r="2.2" fill="#c9a85a"/><circle cx="88" cy="62" r="2.2" fill="#c9a85a"/>
+    <circle cx="70" cy="58" r="33" fill="url(#veGoldW)" stroke="#8a5f16" stroke-width="1.4"/>
+    <circle cx="70" cy="58" r="27" fill="url(#veDiscW)"/>
+    <circle cx="70" cy="58" r="27" fill="none" stroke="#f2cf7a" stroke-width="1" opacity=".3"/>
+    <g stroke="#e3b54a" stroke-width="2" fill="none" stroke-linecap="round">
+      <line x1="70" y1="43" x2="70" y2="72"/><line x1="55" y1="49" x2="85" y2="49"/>
+      <path d="M55 49 q0 8 -7 9 M55 49 q0 8 7 9"/><path d="M85 49 q0 8 -7 9 M85 49 q0 8 7 9"/>
+      <line x1="63" y1="72" x2="77" y2="72"/>
+    </g>
+    <circle cx="70" cy="43" r="2" fill="#e3b54a"/>
+    <path d="M40 34 Q52 18 70 17" stroke="#fbead0" stroke-width="1.6" opacity=".35" fill="none" stroke-linecap="round"/>
+  </svg>`;
+  return `<svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="veGoldL" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#a99a86"/><stop offset="45%" stop-color="#8a7a63"/><stop offset="100%" stop-color="#5f5340"/></linearGradient>
+      <radialGradient id="veDiscL" cx=".35" cy=".3" r=".9"><stop offset="0%" stop-color="#302a20"/><stop offset="100%" stop-color="#201b14"/></radialGradient>
+    </defs>
+    <ellipse cx="70" cy="108" rx="26" ry="5" fill="#000" opacity=".22"/>
+    <circle cx="70" cy="58" r="33" fill="url(#veGoldL)" stroke="#4a4032" stroke-width="1.4"/>
+    <circle cx="70" cy="58" r="27" fill="url(#veDiscL)"/>
+    <circle cx="70" cy="58" r="27" fill="none" stroke="#c9b98a" stroke-width="1" opacity=".22"/>
+    <g stroke="#9c8a68" stroke-width="2" fill="none" stroke-linecap="round">
+      <line x1="70" y1="43" x2="70" y2="70"/><line x1="55" y1="52" x2="85" y2="46"/>
+      <path d="M55 52 q-1 8 -8 8 M55 52 q1 8 8 6"/><path d="M85 46 q-1 8 -8 9 M85 46 q1 8 8 8"/>
+      <line x1="63" y1="70" x2="77" y2="70"/>
+    </g>
+    <circle cx="70" cy="43" r="2" fill="#9c8a68"/>
+  </svg>`;
+}
+// Yıldız: dolu (altın metal, ışık kırılması) / boş (mat, soluk)
+function verdictStarSVG(id, filled) {
+  return `<svg class="v-star-svg" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+    <defs><linearGradient id="starG${id}" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="${filled ? "#f7e6ab" : "#4a3a24"}"/>
+      <stop offset="45%" stop-color="${filled ? "#dcb35a" : "#3a2c1a"}"/>
+      <stop offset="100%" stop-color="${filled ? "#a97c3a" : "#2a2014"}"/>
+    </linearGradient></defs>
+    <path d="M20 3 L24.6 14.6 L37 15.6 L27.6 23.6 L30.6 35.6 L20 29 L9.4 35.6 L12.4 23.6 L3 15.6 L15.4 14.6 Z"
+      fill="url(#starG${id})" stroke="${filled ? "#8a5f16" : "#1c150c"}" stroke-width="1"/>
+    ${filled ? `<path d="M20 6 L23.2 15 L18 12.5 Z" fill="#fff8e2" opacity=".5"/>` : ""}
+  </svg>`;
+}
+const REWARD_ICON = `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="rwG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f7e6ab"/><stop offset="50%" stop-color="#dcb35a"/><stop offset="100%" stop-color="#a97c3a"/></linearGradient></defs><path d="M16 3 L27 12 L22 27 H10 L5 12 Z" fill="url(#rwG)" stroke="#8a5f16" stroke-width="1"/><path d="M16 3 L11 12 H21 Z" fill="#f2e0a4" opacity=".7"/><path d="M11 12 L14 27 M21 12 L18 27 M5 12 H27" stroke="#8a5f16" stroke-width="0.6" opacity=".6"/></svg>`;
+const COMBO_ICON = `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="cmG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ffdf9e"/><stop offset="55%" stop-color="#f3a63e"/><stop offset="100%" stop-color="#c96a1e"/></linearGradient></defs><path d="M16 2 C10 10 8 14 11 19 C9 17 9 14 10 12 C8 18 12 26 18 27 C24 26 26 19 22 14 C22 18 20 19 19 18 C22 12 19 6 16 2 Z" fill="url(#cmG)" stroke="#8a4a12" stroke-width="0.8"/></svg>`;
+const LEVELUP_ICON = `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="luG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#e6d3ff"/><stop offset="55%" stop-color="#b98ee0"/><stop offset="100%" stop-color="#8a5fc0"/></linearGradient></defs><path d="M16 4 L26 14 H20 V27 H12 V14 H6 Z" fill="url(#luG)" stroke="#5a3a8a" stroke-width="0.8"/></svg>`;
+const ACH_MINI_ICON = `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="amG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f2e2ae"/><stop offset="45%" stop-color="#d9b96b"/><stop offset="100%" stop-color="#9c7a3c"/></linearGradient></defs><circle cx="16" cy="14" r="9" fill="url(#amG)" stroke="#6b4a1f" stroke-width="0.8"/><path d="M13 20 L10 27 L16 24.5 L22 27 L19 20" fill="url(#amG)" stroke="#6b4a1f" stroke-width="0.6"/><path d="M16 9.5 L17.3 13 L21 13.3 L18.2 15.6 L19.1 19.2 L16 17.2 L12.9 19.2 L13.8 15.6 L11 13.3 L14.7 13 Z" fill="#6b4a1f"/></svg>`;
+const MEDIA_MINI_ICON = `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="mdG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f0d99a"/><stop offset="50%" stop-color="#d1a85f"/><stop offset="100%" stop-color="#93692f"/></linearGradient></defs><path d="M6 14 L20 8 V24 L6 19 Z" fill="url(#mdG)" stroke="#6b4a1f" stroke-width="0.8"/><path d="M20 8 L27 6 V26 L20 24 Z" fill="url(#mdG)" stroke="#6b4a1f" stroke-width="0.8" opacity=".9"/><path d="M9 19.5 L11 26 H8 Z" fill="#6b4a1f"/></svg>`;
+const RETURN_BTN_ICON = `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M8 6 h13 l3 3 v17 h-16 z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M21 6 v3 h3" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><line x1="11" y1="15" x2="20" y2="15" stroke="currentColor" stroke-width="1.6"/><line x1="11" y1="20" x2="20" y2="20" stroke="currentColor" stroke-width="1.6"/></svg>`;
+const RETRY_BTN_ICON = `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M25 16 A9 9 0 1 1 22.5 9.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M22 4 L23 10.5 L16.5 9.5 Z" fill="currentColor"/></svg>`;
+
 /* ================= SES EFEKTLERİ ================= */
 const SND = (() => {
   let ctx = null;
@@ -2057,11 +2236,11 @@ const LANG = {
     clientRole: "MÜVEKKİL", judgeRole: "HÂKİM", inSession: "Görüşmede",
     continue: "Devam ›", round: "Tur", tp: "TP", next: "sıradaki", maxLevel: "en yüksek seviyedesin! 🏆",
     win: "DAVAYI KAZANDIN!", lose: "DAVAYI KAYBETTİN",
-    winText3: "Hâkim kararını verdi: müvekkilin haklı bulundu! Kusursuz bir savunmaydı! 👏",
+    winText3: "Hâkim kararını verdi: müvekkilin haklı bulundu! Kusursuz bir savunmaydı!",
     winText: "Hâkim kararını verdi: müvekkilin haklı bulundu! İyi iş çıkardın, daha da iyisi mümkün.",
     loseText: "Hâkim ikna olmadı. Kanıtlara dikkat ederek tekrar dene — her dava kaybedilse bile tecrübe kazandırır!",
-    xpGain: "Tecrübe Puanı", returnCases: "📋 Davalara Dön", retry: "↻ Tekrar Dene",
-    levelup: "🎉 Seviye atladın! Artık bir {rank}sın!",
+    xpGain: "Tecrübe Puanı", returnCases: "Davalara Dön", retry: "Tekrar Dene",
+    levelupTitle: "Seviye Atladın", levelupDesc: "Artık bir {rank}sın!",
     settingsTitle: "Ayarlar", setSound: "Ses Efektleri", setMusic: "Müzik",
     setLang: "Oyun Dili", langNote: "Menü ve arayüz dili. Dava metinleri şu an yalnızca Türkçedir.",
     setReset: "İlerlemeyi Sıfırla", resetDesc: "Tüm ilerlemen ve yıldızların silinir.",
@@ -2073,22 +2252,22 @@ const LANG = {
     howto3t: "Savunmanı seç", howto3d: "Her turda en güçlü, kanıta dayalı savunmayı seç.",
     howto4t: "Hâkimi ikna et", howto4d: "İkna çubuğunu doldur, yıldız kazan, seviye atla!",
     ranks: ["Stajyer Avukat","Genç Avukat","Avukat","Uzman Avukat","Kıdemli Avukat","Usta Savunucu","Adalet Efsanesi"],
-    achievements: "BAŞARIMLAR", achievementsTitle: "Başarımlar", achNew: "🏆 Yeni başarım kazandın!",
+    achievements: "BAŞARIMLAR", achievementsTitle: "Başarımlar", achToastTitle: "Yeni Başarım",
     quickDecision: "⏱️ Hızlı Karar!", quickDecisionAsk: "Süre bitmeden en güçlü savunmayı seç!",
     timeUp: "⏰ Vakit doldu! Hâkim kararsızlığından hiç hoşlanmadı.",
     daily: "GÜNÜN DAVASI", dailyDoneD: "Bugünün davası tamamlandı — yarın yenisi seni bekliyor! 🌙",
     dailyBonusTag: "+{n} TP", streakDays: "🔥 {n} gün",
-    dailyWinLine: "📅 Günün Davası tamamlandı! +{n} bonus TP · 🔥 {s} gün seri",
-    comboLine: "🔥 Kombo bonusu: en yüksek x{n} → +{b} TP",
+    dailyBoxTitle: "Günün Davası", dailyBoxDesc: "+{n} bonus TP · {s} gün seri",
+    comboBoxTitle: "Kombo Bonusu", comboBoxDesc: "En yüksek x{n} → +{b} TP",
     comboTag: "x{n} KOMBO",
     chapter: "BÖLÜM", chapters: ["Mahalle Mahkemesi", "Şehir Mahkemesi", "Yüksek Mahkeme"],
     gateNeed: "🔒 Bu bölümü açmak için {n} ⭐ gerekli — davaları 3 yıldızla bitirip yıldız topla!",
     mediaTag: "📰 GÜNDEMDE", publicOpinion: "Halkın Beklentisi",
     stanceGuilty: "Suçlu Bulunmasını İstiyor", stanceInnocent: "Beraat Etmesini İstiyor",
     reputation: "Halk Güveni",
-    mediaPleasedTitle: "📢 Basın Memnun — Halk Destekliyor",
+    mediaPleasedTitle: "Basın Memnun — Halk Destekliyor",
     mediaPleasedDesc: "Kararınız kamuoyunun beklentisiyle örtüştü. İtibarınız arttı.",
-    mediaAngryTitle: "📢 Basın Tepkili — Protestolar Başladı",
+    mediaAngryTitle: "Basın Tepkili — Protestolar Başladı",
     mediaAngryDesc: "Kararınız kamuoyunu kızdırdı ama kanıtlara sadık kaldınız. İtibarınız azaldı.",
     achList: [
       { name: "İlk Zafer", desc: "İlk davanı kazan", icon: "🥇" },
@@ -2121,11 +2300,11 @@ const LANG = {
     clientRole: "CLIENT", judgeRole: "JUDGE", inSession: "In session",
     continue: "Continue ›", round: "Round", tp: "XP", next: "next", maxLevel: "you're at the top level! 🏆",
     win: "YOU WON THE CASE!", lose: "YOU LOST THE CASE",
-    winText3: "The judge has ruled: your client is vindicated! A flawless defense! 👏",
+    winText3: "The judge has ruled: your client is vindicated! A flawless defense!",
     winText: "The judge has ruled: your client is vindicated! Well done — even better is possible.",
     loseText: "The judge wasn't convinced. Mind the evidence and try again — every case earns experience!",
-    xpGain: "Experience Points", returnCases: "📋 Back to Cases", retry: "↻ Try Again",
-    levelup: "🎉 Level up! You are now a {rank}!",
+    xpGain: "Experience Points", returnCases: "Back to Cases", retry: "Try Again",
+    levelupTitle: "Level Up", levelupDesc: "You are now a {rank}!",
     settingsTitle: "Settings", setSound: "Sound Effects", setMusic: "Music",
     setLang: "Game Language", langNote: "Menu and interface language. Case texts are currently Turkish only.",
     setReset: "Reset Progress", resetDesc: "All your progress and stars will be erased.",
@@ -2137,22 +2316,22 @@ const LANG = {
     howto3t: "Choose your defense", howto3d: "Each round, pick the strongest evidence-based defense.",
     howto4t: "Convince the judge", howto4d: "Fill the persuasion bar, earn stars, and level up!",
     ranks: ["Trainee Lawyer","Junior Lawyer","Lawyer","Expert Lawyer","Senior Lawyer","Master Advocate","Legend of Justice"],
-    achievements: "ACHIEVEMENTS", achievementsTitle: "Achievements", achNew: "🏆 New achievement unlocked!",
+    achievements: "ACHIEVEMENTS", achievementsTitle: "Achievements", achToastTitle: "New Achievement",
     quickDecision: "⏱️ Quick Decision!", quickDecisionAsk: "Pick the strongest defense before time runs out!",
     timeUp: "⏰ Time's up! The judge did not like your hesitation.",
     daily: "CASE OF THE DAY", dailyDoneD: "Today's case is complete — a new one awaits tomorrow! 🌙",
     dailyBonusTag: "+{n} XP", streakDays: "🔥 {n} days",
-    dailyWinLine: "📅 Case of the Day complete! +{n} bonus XP · 🔥 {s}-day streak",
-    comboLine: "🔥 Combo bonus: best x{n} → +{b} XP",
+    dailyBoxTitle: "Case of the Day", dailyBoxDesc: "+{n} bonus XP · {s}-day streak",
+    comboBoxTitle: "Combo Bonus", comboBoxDesc: "Best x{n} → +{b} XP",
     comboTag: "x{n} COMBO",
     chapter: "CHAPTER", chapters: ["Neighborhood Court", "City Court", "High Court"],
     gateNeed: "🔒 Collect {n} ⭐ to unlock this chapter — replay cases for 3 stars!",
     mediaTag: "📰 TRENDING", publicOpinion: "Public Expectation",
     stanceGuilty: "Wants a Guilty Verdict", stanceInnocent: "Wants an Acquittal",
     reputation: "Public Trust",
-    mediaPleasedTitle: "📢 Press Pleased — Public Support",
+    mediaPleasedTitle: "Press Pleased — Public Support",
     mediaPleasedDesc: "Your verdict matched public expectation. Your reputation rose.",
-    mediaAngryTitle: "📢 Press Furious — Protests Erupt",
+    mediaAngryTitle: "Press Furious — Protests Erupt",
     mediaAngryDesc: "Your verdict angered the public, but you stayed true to the evidence. Reputation dropped.",
     achList: [
       { name: "First Victory", desc: "Win your first case", icon: "🥇" },
@@ -3553,38 +3732,43 @@ function verdict() {
   const opened = checkAchievements();
 
   // --- sahneyi hazırla: her şey gizli başlar ---
-  document.getElementById("verdict-gavel").innerHTML = GAVEL_SVG;
+  document.getElementById("verdict-emblem").innerHTML = victoryEmblem(win);
+  const emblem = document.getElementById("verdict-emblem");
+  emblem.className = "v-emblem";
   const title = document.getElementById("verdict-title");
   title.textContent = win ? t("win") : t("lose");
   title.className = "v-stamp " + (win ? "win" : "lose");
   const starWrap = document.getElementById("verdict-stars");
   starWrap.innerHTML = win
     ? Array.from({ length: 3 }, (_, i) =>
-        `<span class="v-star${i < stars ? "" : " empty"}" id="v-star-${i}">${i < stars ? "⭐" : "☆"}</span>`).join("")
+        `<span class="v-star${i < stars ? "" : " empty"}" id="v-star-${i}">${verdictStarSVG(i, i < stars)}</span>`).join("")
     : "";
+  const vDoc = document.getElementById("verdict-doc");
   const vText = document.getElementById("verdict-text");
   vText.textContent = win ? (stars === 3 ? t("winText3") : t("winText")) : t("loseText");
-  vText.classList.remove("v-on");
+  vDoc.classList.remove("v-on");
+  const xpCard = document.getElementById("verdict-xp-card");
   const xpEl = document.getElementById("verdict-xp");
-  xpEl.textContent = `+0 ${t("xpGain")}`;
-  xpEl.classList.remove("v-on");
+  xpEl.textContent = `+0`;
+  xpCard.classList.remove("on");
   const vRank = document.getElementById("v-rank");
   vRank.classList.remove("v-on");
   const comboBox = document.getElementById("combo-box");
-  comboBox.style.display = "none";
+  comboBox.style.display = "none"; comboBox.classList.remove("on");
   const dailyBox = document.getElementById("daily-box");
-  dailyBox.style.display = "none";
+  dailyBox.style.display = "none"; dailyBox.classList.remove("on");
   const mediaBox = document.getElementById("media-reaction-box");
   mediaBox.style.display = "none";
-  mediaBox.className = "media-reaction";
+  mediaBox.className = "bonus-card media";
   const lu = document.getElementById("levelup-box");
-  lu.style.display = "none";
+  lu.style.display = "none"; lu.classList.remove("on");
   const achBox = document.getElementById("ach-toast-box");
-  achBox.style.display = "none";
+  achBox.style.display = "none"; achBox.classList.remove("on");
   document.getElementById("verdict-actions").classList.remove("v-on");
 
   // rütbe çubuğu eski durumdan başlar
   const rBar = document.getElementById("v-rank-bar");
+  rBar.classList.remove("wave");
   function rankPct(xp, ri) {
     const from = RANK_XP[ri], to = RANK_XP[ri + 1];
     return to == null ? 100 : Math.round((xp - from) / (to - from) * 100);
@@ -3601,13 +3785,14 @@ function verdict() {
 
   show("scr-verdict");
 
-  // 1) tokmak iner
+  // 1) amblem belirir
   SND.gavel();
   buzz(win ? [0, 50, 40, 70] : 140);
   shakeScreen(false);
+  emblem.classList.add("on");
 
-  // 2) karar damga gibi basılır
-  vStep(620, () => {
+  // 2) başlık damga gibi basılır
+  vStep(420, () => {
     title.classList.add("on");
     SND.stamp();
     if (!win) SND.lose();
@@ -3616,7 +3801,7 @@ function verdict() {
   });
 
   // 3) yıldızlar tek tek (ding sesleri yükselerek)
-  let tNow = 1250;
+  let tNow = 1050;
   if (win) {
     for (let i = 0; i < 3; i++) {
       const starId = "v-star-" + i;
@@ -3626,60 +3811,71 @@ function verdict() {
           SND.star(k);
           buzz(25);
         })(i, starId));
-        tNow += 400;
+        tNow += 380;
       } else {
         vStep(tNow, () => document.getElementById(starId).classList.add("on"));
-        tNow += 150;
+        tNow += 140;
       }
     }
     vStep(tNow, () => celebrate(stars));
     tNow += 250;
   } else {
-    tNow = 1350;
+    tNow = 1150;
   }
 
-  // 4) açıklama + TP sayacı
-  vStep(tNow, () => vText.classList.add("v-on"));
-  tNow += 350;
+  // 4) karar belgesi + ödül kartı
+  vStep(tNow, () => vDoc.classList.add("v-on"));
+  tNow += 300;
   vStep(tNow, () => {
-    xpEl.classList.add("v-on");
-    countUp(xpEl, gained, v => `+${v} ${t("xpGain")}`);
+    xpCard.classList.add("on");
+    countUp(xpEl, gained, v => `+${v}`);
   });
-  tNow += 800;
+  tNow += 700;
 
-  // 4b) kombo ve günün davası bonusları
+  // 4b) kombo ve günün davası bonus kartları
   if (comboBonus) {
     vStep(tNow, () => {
-      comboBox.style.display = "block";
-      comboBox.textContent = t("comboLine").replace("{n}", maxCombo).replace("{b}", comboBonus);
+      document.getElementById("combo-box-icon").innerHTML = COMBO_ICON;
+      document.getElementById("combo-box-title").textContent = t("comboBoxTitle");
+      document.getElementById("combo-box-desc").textContent = t("comboBoxDesc").replace("{n}", maxCombo).replace("{b}", comboBonus);
+      comboBox.style.display = "flex";
+      void comboBox.offsetWidth;
+      comboBox.classList.add("on");
       SND.combo(maxCombo);
       buzz(25);
     });
-    tNow += 450;
+    tNow += 400;
   }
   if (wasDaily) {
     vStep(tNow, () => {
-      dailyBox.style.display = "block";
-      dailyBox.textContent = t("dailyWinLine").replace("{n}", dailyBonus).replace("{s}", save.daily.streak);
+      document.getElementById("daily-box-icon").innerHTML = ACH_MINI_ICON;
+      document.getElementById("daily-box-title").textContent = t("dailyBoxTitle");
+      document.getElementById("daily-box-desc").textContent = t("dailyBoxDesc").replace("{n}", dailyBonus).replace("{s}", save.daily.streak);
+      dailyBox.style.display = "flex";
+      void dailyBox.offsetWidth;
+      dailyBox.classList.add("on");
       SND.good();
       buzz(30);
     });
-    tNow += 450;
+    tNow += 400;
   }
 
   // 4c) basın tepkisi — halkın beklentisiyle örtüşme durumuna göre
   if (c.media) {
     vStep(tNow, () => {
-      mediaBox.className = "media-reaction" + (mediaMatched ? "" : " angry");
-      mediaBox.style.display = "block";
+      mediaBox.className = "bonus-card media" + (mediaMatched ? "" : " angry");
+      document.getElementById("media-reaction-icon").innerHTML = MEDIA_MINI_ICON;
       document.getElementById("media-reaction-title").textContent =
         mediaMatched ? t("mediaPleasedTitle") : t("mediaAngryTitle");
       document.getElementById("media-reaction-desc").textContent =
         mediaMatched ? t("mediaPleasedDesc") : t("mediaAngryDesc");
+      mediaBox.style.display = "flex";
+      void mediaBox.offsetWidth;
+      mediaBox.classList.add("on");
       SND[mediaMatched ? "good" : "mid"]();
       buzz(mediaMatched ? 25 : [30, 40, 30]);
     });
-    tNow += 500;
+    tNow += 450;
   }
 
   // 5) rütbe çubuğu gözle görülür dolar
@@ -3696,16 +3892,21 @@ function verdict() {
   });
   if (rankUp) {
     tNow += 1050;
-    // seviye atlama: çubuk dolar, yeni rütbeye sıfırlanıp yeniden dolar + fanfar
+    // seviye atlama: çubuk dolar, yeni rütbeye sıfırlanıp yeniden dolar + ışık dalgası + fanfar
     vStep(tNow, () => {
       setRankLabel(newRankI, save.xp);
       rBar.style.transition = "none";
       rBar.style.width = "0%";
+      rBar.classList.remove("wave");
       void rBar.offsetWidth;
       rBar.style.transition = REDUCE_MOTION ? "none" : "width .8s cubic-bezier(.25,.8,.3,1)";
       rBar.style.width = rankPct(save.xp, newRankI) + "%";
-      lu.style.display = "block";
-      lu.textContent = t("levelup").replace("{rank}", rankName(newRankI));
+      rBar.classList.add("wave");
+      document.getElementById("levelup-box-icon").innerHTML = LEVELUP_ICON;
+      document.getElementById("levelup-box-title").textContent = t("levelupDesc").replace("{rank}", rankName(newRankI));
+      lu.style.display = "flex";
+      void lu.offsetWidth;
+      lu.classList.add("on");
       SND.fanfare();
       shakeScreen(true);
       buzz([0, 40, 40, 40, 40, 80]);
@@ -3717,48 +3918,50 @@ function verdict() {
   // 6) yeni başarımlar
   if (opened.length) {
     vStep(tNow, () => {
-      achBox.style.display = "block";
-      achBox.innerHTML = `${t("achNew")}<br>` + opened.map(i => {
-        const tx = achText(i);
-        return `${tx.icon} <strong>${tx.name}</strong>`;
-      }).join(" · ");
+      document.getElementById("ach-toast-icon").innerHTML = ACH_MINI_ICON;
+      document.getElementById("ach-toast-title").textContent = t("achToastTitle");
+      document.getElementById("ach-toast-desc").textContent = opened.map(i => achText(i).name).join(" · ");
+      achBox.style.display = "flex";
+      void achBox.offsetWidth;
+      achBox.classList.add("on");
       SND.good();
       buzz(30);
     });
-    tNow += 450;
+    tNow += 400;
   }
 
   // 7) butonlar en son belirir
   vStep(tNow, () => document.getElementById("verdict-actions").classList.add("v-on"));
 }
 
-/* ================= KUTLAMA ANİMASYONU ================= */
+/* ================= KUTLAMA: ince altın toz efekti ================= */
 function celebrate(stars) {
   const box = document.getElementById("confetti");
   if (!box) return;
   box.innerHTML = "";
-  const colors = ["#e0b04f", "#ffd98a", "#bd8f2e", "#f3ead9", "#5ec97b", "#e06666"];
-  const n = 30 + (stars || 0) * 8;
+  const n = 16 + (stars || 0) * 5;
   for (let i = 0; i < n; i++) {
     const s = document.createElement("span");
-    const size = 7 + Math.random() * 7;
+    const size = 3 + Math.random() * 5;
     s.style.left = Math.random() * 100 + "%";
     s.style.width = size + "px";
-    s.style.height = size * 1.4 + "px";
-    s.style.background = colors[i % colors.length];
-    s.style.animationDuration = 2.4 + Math.random() * 1.9 + "s";
-    s.style.animationDelay = Math.random() * 0.6 + "s";
-    if (Math.random() < 0.4) s.style.borderRadius = "50%";
+    s.style.height = size + "px";
+    s.style.opacity = (0.4 + Math.random() * 0.5).toFixed(2);
+    s.style.animationDuration = 2.6 + Math.random() * 2 + "s";
+    s.style.animationDelay = Math.random() * 0.7 + "s";
     box.appendChild(s);
   }
   clearTimeout(celebrate._t);
-  celebrate._t = setTimeout(() => { box.innerHTML = ""; }, 4400);
+  celebrate._t = setTimeout(() => { box.innerHTML = ""; }, 4600);
 }
 
 /* ================= BAŞLAT ================= */
 document.getElementById("home-scene").innerHTML = courtScene("hj", { realJudge: true });
 (function(){ var s=document.querySelector("#home-scene svg"); if(s) s.setAttribute("preserveAspectRatio","xMidYMid slice"); })();
 document.getElementById("me-avatar").innerHTML = charArt(AVUKAT);
+document.getElementById("verdict-xp-icon").innerHTML = REWARD_ICON;
+document.getElementById("verdict-return-icon").innerHTML = RETURN_BTN_ICON;
+document.getElementById("verdict-retry-icon").innerHTML = RETRY_BTN_ICON;
 document.getElementById("mute-btn").textContent = save.muted ? "🔇" : "🔊";
 applyI18n();
 syncSettingsUI();
