@@ -571,6 +571,41 @@
     background:linear-gradient(180deg,#5a4a30,#3a2e1c);border:1px solid rgba(224,176,79,.4);
     padding:3px 8px;border-radius:99px;white-space:nowrap}
 
+  /* ================= BEKLENMEDİK GELİŞMELER (Unexpected Court Events) ================= */
+  .court-event-overlay{
+    position:fixed;inset:0;z-index:75;display:flex;align-items:flex-start;justify-content:center;
+    padding-top:calc(18vh + env(safe-area-inset-top));background:rgba(10,6,3,0);
+    pointer-events:none;transition:background .28s ease;
+  }
+  .court-event-overlay.on{background:rgba(10,6,3,.62);pointer-events:auto}
+  .court-event-card{
+    width:min(88%,360px);text-align:center;padding:22px 22px 18px;border-radius:18px;
+    background:linear-gradient(165deg,#2e2013,#1c130b);border:1px solid rgba(224,176,79,.4);
+    box-shadow:0 4px 10px rgba(0,0,0,.3),0 20px 44px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,230,180,.08);
+    opacity:0;transform:translateY(-26px) scale(.96);
+    transition:opacity .3s cubic-bezier(.2,.8,.3,1),transform .3s cubic-bezier(.2,.8,.3,1);
+  }
+  .court-event-card.on{opacity:1;transform:none}
+  .court-event-card.out{opacity:0;transform:translateY(-6px) scale(.9);transition:opacity .25s ease,transform .25s ease}
+  .ce-seal{width:46px;height:46px;margin:0 auto 10px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%,#e8c56e,#a97c3a);
+    border:1px solid #6b4a1f;box-shadow:0 3px 8px rgba(0,0,0,.4),inset 0 1px 2px rgba(255,240,205,.4);
+    display:grid;place-items:center;transform:scale(.4) rotate(-12deg);opacity:0;
+    transition:transform .4s cubic-bezier(.3,1.6,.4,1),opacity .3s ease}
+  .ce-seal::after{content:"⚖";font-size:20px;color:#3a2510}
+  .court-event-card.on .ce-seal{transform:scale(1) rotate(0);opacity:1}
+  .ce-tag{display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:1.2px;
+    color:#241c08;background:linear-gradient(180deg,var(--gold),var(--gold-dark));
+    padding:4px 11px;border-radius:99px;margin-bottom:9px}
+  .ce-title{font-size:17px;font-weight:600;color:#f7e6ab;line-height:1.35;margin-bottom:6px}
+  .ce-desc{font-size:13px;font-weight:400;color:var(--muted);line-height:1.5}
+  .ce-impact{font-size:11px;font-weight:400;color:rgba(224,176,79,.65);margin-top:10px;
+    padding-top:10px;border-top:1px solid rgba(224,176,79,.18);font-style:italic;display:none}
+  .ce-impact.show{display:block}
+  @media (prefers-reduced-motion:reduce){
+    .court-event-overlay,.court-event-card,.ce-seal{transition:none}
+  }
+
   /* ---------- DURUŞMA ---------- */
   .trial-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding-right:56px}
   .trial-head .round{font-size:13px;color:var(--muted)}
@@ -949,6 +984,15 @@
 <div id="app">
   <button class="mute-btn" id="mute-btn" onclick="toggleMute()">🔊</button>
   <div class="confetti" id="confetti" aria-hidden="true"></div>
+  <div class="court-event-overlay" id="court-event-overlay">
+    <div class="court-event-card" id="court-event-card">
+      <div class="ce-seal" id="ce-seal"></div>
+      <div class="ce-tag" id="ce-tag"></div>
+      <div class="ce-title" id="ce-title"></div>
+      <div class="ce-desc" id="ce-desc"></div>
+      <div class="ce-impact" id="ce-impact"></div>
+    </div>
+  </div>
 
   <!-- ANA MENÜ -->
   <div class="screen active menu" id="scr-home">
@@ -2256,6 +2300,21 @@ const SND = (() => {
     }
   }
 
+  function pageTurn(t0) {
+    if (save.muted) return;
+    try {
+      const c = ac(), dur = 0.16;
+      const buf = c.createBuffer(1, c.sampleRate * dur, c.sampleRate);
+      const d = buf.getChannelData(0);
+      for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 1.5);
+      const s = c.createBufferSource(); s.buffer = buf;
+      const f = c.createBiquadFilter(); f.type = "highpass"; f.frequency.value = 1800;
+      const g = c.createGain(); g.gain.setValueAtTime(0.16, c.currentTime + (t0 || 0));
+      s.connect(f); f.connect(g); g.connect(c.destination);
+      s.start(c.currentTime + (t0 || 0));
+    } catch (e) {}
+  }
+
   return {
     click() { tone(660, 0, 0.05, "triangle", 0.05); },
     gavel() { knock(0); knock(0.18); },
@@ -2267,6 +2326,7 @@ const SND = (() => {
     star(i) { const f = 784 * Math.pow(1.2, i || 0); tone(f, 0, 0.25, "triangle", 0.14); tone(f * 2, 0.03, 0.3, "sine", 0.05); },
     combo(n){ const f = 500 * Math.pow(1.13, Math.min(n || 2, 8)); tone(f, 0, 0.09, "triangle", 0.12); tone(f * 1.5, 0.09, 0.16, "triangle", 0.12); },
     stamp() { knock(0); tone(85, 0, 0.28, "sine", 0.3, 45); },
+    courtEvent() { knock(0); tone(70, 0, 0.32, "sine", 0.2, 38); pageTurn(0.22); knock(0.42); },
     fanfare(){ tone(523, 0, 0.12, "triangle", 0.13); tone(659, 0.12, 0.12, "triangle", 0.13); tone(784, 0.24, 0.12, "triangle", 0.13); tone(1047, 0.36, 0.3, "triangle", 0.16); tone(1319, 0.52, 0.45, "sine", 0.09); },
     murmurStart, murmurStop, musicStart, musicStop,
   };
@@ -2588,6 +2648,21 @@ const CASES = [
       { id: "deep", icon: "💳", title: "Patronun banka hareketlerini incele", desc: "Diğer çalışanlara ödeme yapılıp yapılmadığını kontrol et.", cost: 2, time: "~20 sn", outcome: "good", story: "Patronun aynı yöntemi başka çalışanlara da uyguladığı ortaya çıktı." },
       { id: "misc", icon: "👮", title: "Ofis çalışanlarıyla sohbet et", desc: "Diğer personelden bilgi topla.", cost: 1, time: "~10 sn", outcome: "bad", story: "Çalışanlar patrondan çekindiği için konuşmaktan kaçındı." },
     ] },
+    // BEKLENMEDİK GELİŞME: duruşma sırasında yeni bir tanık ortaya çıkar. Oyuncu
+    // "deep" hazırlığını yaptıysa (patronun banka hareketleri) yeni tanığı çok
+    // daha etkili kullanır; yapmadıysa bilgi eksik kalır.
+    events: [
+      { round: 2, category: "tanik", tag: "TANIK GELİŞMESİ", icon: "👮",
+        title: "Mahkemeye Yeni Tanık Geldi",
+        desc: "Muhasebe departmanından bir çalışan, son anda duruşmaya katıldı.",
+        requiresPrep: "deep",
+        addOption: {
+          t: "Muhasebeci burada: patronun aynı 'sonra öderim' yöntemini başka çalışanlara da uyguladığını belgeleriyle anlatacak.",
+          pGood: 25, fGood: "Muhasebecinin belgeleri bir örüntü ortaya koydu — hâkim artık hiç şüphe duymuyor. 🎯",
+          pWeak: 14, fWeak: "Muhasebeci genel bir şey anlattı ama somut belge sunamadı. 😐",
+        },
+        impactNote: "Bu gelişme öğleden sonra iş dünyası haberlerine düştü." },
+    ],
     rounds: [
       {
         claim: "Kemal mesaiye kalmadı ki! Akşam 6'da herkes gibi evine gitti.",
@@ -2646,6 +2721,21 @@ const CASES = [
       { id: "deep", icon: "👮", title: "Diğer anahtar sahiplerini sorgula", desc: "Kasaya erişimi olan herkesi araştır.", cost: 2, time: "~20 sn", outcome: "good", story: "Anahtarı olan bir çalışanın maddi sıkıntı içinde olduğu ortaya çıktı." },
       { id: "misc", icon: "📄", title: "Market sahibinin geçmiş çalışanlarını araştır", desc: "Eski personel şikâyetlerini kontrol et.", cost: 1, time: "~10 sn", outcome: "bad", story: "Eski çalışan kayıtları bu davayla ilgisiz çıktı." },
     ] },
+    // BEKLENMEDİK GELİŞME: duruşma sırasında bilirkişi raporu son anda ulaşır.
+    // Oyuncu "deep" hazırlığını yaptıysa (diğer anahtar sahiplerini sorgulama)
+    // raporu çok daha keskin kullanır.
+    events: [
+      { round: 2, category: "bilirkisi", tag: "BİLİRKİŞİ", icon: "🧬",
+        title: "Muhasebe Uzmanı Raporu Ulaştı",
+        desc: "Beklenen bağımsız muhasebe raporu duruşma sırasında mahkemeye teslim edildi.",
+        requiresPrep: "deep",
+        addOption: {
+          t: "Rapor burada: anahtarı olan çalışanlardan birinin maddi sıkıntı içinde olduğu ve o gün mesaiye kaldığı resmen kayıtlı.",
+          pGood: 25, fGood: "Rapor tam da aradığımız ismi gösterdi — hâkim kararını netleştirdi. 🎯",
+          pWeak: 14, fWeak: "Rapor genel bir tablo çizdi ama tek bir isme işaret etmedi. 😐",
+        },
+        impactNote: "Market çalışanları arasında olay uzun süre konuşuldu." },
+    ],
     rounds: [
       {
         claim: "O gün kasada tek görevli Selin'di. Para kaybolduysa alan da odur!",
@@ -2902,6 +2992,21 @@ const CASES = [
       { id: "deep", icon: "📱", title: "Telefonun teknik özelliklerini incele", desc: "Cihazın kamerasız olduğunu resmî olarak belgele.", cost: 2, time: "~20 sn", outcome: "good", story: "Üretici belgesi, bu modelde kamera bulunmadığını resmen doğruladı." },
       { id: "misc", icon: "👮", title: "Komşularla konuş", desc: "Hüsnü Amca hakkında bilgi topla.", cost: 1, time: "~10 sn", outcome: "bad", story: "Komşular sadece Hüsnü Amca'yı övdü, davayla ilgili bilgi çıkmadı." },
     ] },
+    // BEKLENMEDİK GELİŞME: telefon inceleme raporu duruşma sırasında tamamlanır.
+    // Oyuncu "deep" hazırlığını yaptıysa (telefonun teknik özellikleri) raporu
+    // çok daha kesin kullanır.
+    events: [
+      { round: 2, category: "bilirkisi", tag: "BİLİRKİŞİ", icon: "📱",
+        title: "Telefon İnceleme Raporu Tamamlandı",
+        desc: "Beklenen resmî cihaz inceleme raporu duruşma sırasında mahkemeye ulaştı.",
+        requiresPrep: "deep",
+        addOption: {
+          t: "Rapor burada: üretici belgesiyle birlikte, bu modelin görüntülü arama ve internet özelliği fabrika çıkışında bile bulunmuyor.",
+          pGood: 25, fGood: "Resmî üretici belgesi tartışmayı tamamen bitirdi. 🎯",
+          pWeak: 14, fWeak: "Rapor cihazı doğruladı ama üretici belgesi olmadan iddia zayıf kaldı. 😐",
+        },
+        impactNote: "Operatörün müşteri hizmetleri politikası bu davadan sonra gündeme geldi." },
+    ],
     rounds: [
       {
         type: "itiraz",
@@ -3562,7 +3667,8 @@ const PREP_OUTCOME_VALUE = {
   "1_good": 10, "2_good": 18, "1_neutral": 3, "2_neutral": 5, "1_bad": -5, "2_bad": -9,
 };
 
-let prepPointsLeft = 0, prepPointsTotal = 0, prepBonus = 0, prepGoodCount = 0;
+let prepPointsLeft = 0, prepPointsTotal = 0, prepBonus = 0, prepGoodCount = 0, prepChosenIds = [];
+function hasPrep(id) { return prepChosenIds.includes(id); }
 
 function openPrep() {
   const c = CASES[currentCase];
@@ -3570,6 +3676,7 @@ function openPrep() {
   prepPointsLeft = prepPointsTotal;
   prepBonus = 0;
   prepGoodCount = 0;
+  prepChosenIds = [];
   document.getElementById("prep-feed").innerHTML = "";
   document.getElementById("prep-meter-fill").style.width = "0%";
   document.getElementById("prep-points-left").textContent = t("prepPointsLeft").replace("{n}", prepPointsLeft);
@@ -3607,6 +3714,7 @@ function choosePrepOption(k) {
   const val = PREP_OUTCOME_VALUE[`${o.cost}_${o.outcome}`] || 0;
   prepBonus += val;
   if (o.outcome === "good") prepGoodCount++;
+  prepChosenIds.push(o.id);
   card.classList.add("chosen");
   card.disabled = true;
   document.querySelectorAll(".prep-card").forEach(b => {
@@ -3636,6 +3744,7 @@ function finishPrep() {
 function startTrial() {
   round = 0; score = prepBonus > 0 ? prepBonus : 0; meterPct = 0;
   combo = 0; maxCombo = 0;
+  shownEvents = new Set();
   document.getElementById("combo-badge").className = "combo-badge";
   const tc = CASES[currentCase];
   document.getElementById("trial-title").innerHTML = (caseIcon(tc.id, "ci-inline") || tc.icon + " ") + tc.title;
@@ -3714,7 +3823,48 @@ function renderStage(c, r) {
     `<button class="pg-arrow prev" disabled>‹</button><div class="pg-dots">${dots}</div><button class="pg-arrow next" disabled>›</button>`;
 }
 
+let shownEvents = null;
+
 function renderRound() {
+  const c = CASES[currentCase];
+  const evt = (c.events || []).find(e => e.round === round && !shownEvents.has(e.id || e.round));
+  if (evt) {
+    shownEvents.add(evt.id || evt.round);
+    showCourtEvent(evt, () => renderRoundCore(evt));
+  } else {
+    renderRoundCore(null);
+  }
+}
+
+// Beklenmedik gelişme bildirimi: koyu perde + altın çerçeveli kart + mühür animasyonu.
+// ~1.6sn görünür kalır, sonra küçülerek kaybolur ve devam callback'i çağrılır.
+function showCourtEvent(evt, done) {
+  if (REDUCE_MOTION) { done(); return; }
+  const overlay = document.getElementById("court-event-overlay");
+  const card = document.getElementById("court-event-card");
+  document.getElementById("ce-tag").textContent = evt.tag;
+  document.getElementById("ce-title").textContent = evt.title;
+  document.getElementById("ce-desc").textContent = evt.desc;
+  const impactEl = document.getElementById("ce-impact");
+  if (evt.impactNote) { impactEl.textContent = evt.impactNote; impactEl.classList.add("show"); }
+  else impactEl.classList.remove("show");
+  card.className = "court-event-card";
+  overlay.classList.add("on");
+  shakeScreen(false);
+  SND.courtEvent();
+  buzz([0, 40, 30, 60]);
+  requestAnimationFrame(() => card.classList.add("on"));
+  setTimeout(() => {
+    card.classList.add("out");
+    setTimeout(() => {
+      overlay.classList.remove("on");
+      card.className = "court-event-card";
+      done();
+    }, 260);
+  }, 1700);
+}
+
+function renderRoundCore(evt) {
   const c = CASES[currentCase];
   const r = c.rounds[round];
   document.getElementById("trial-round").textContent = `${t("round")} ${round + 1} / ${c.rounds.length}`;
@@ -3734,6 +3884,19 @@ function renderRound() {
   const wrap = document.getElementById("options");
   wrap.innerHTML = "";
 
+  // Beklenmedik gelişme yeni bir savunma seçeneği açar; hazırlık yapıldıysa güçlü,
+  // yapılmadıysa zayıf sonuç verir — davanın tamamını tek başına çözmez.
+  let opts = r.opts;
+  if (evt && evt.addOption && r.type !== "sorgu" && r.type !== "itiraz") {
+    const good = evt.requiresPrep ? hasPrep(evt.requiresPrep) : true;
+    const ao = evt.addOption;
+    opts = [...r.opts, {
+      t: ao.t,
+      p: good ? ao.pGood : ao.pWeak,
+      f: good ? ao.fGood : ao.fWeak,
+    }];
+  }
+
   if (r.type === "sorgu") {
     who.textContent = r.witness || t("witness");
     typeText(document.getElementById("claim-text"), r.intro || t("crossIntro"));
@@ -3751,14 +3914,14 @@ function renderRound() {
     typeText(document.getElementById("claim-text"), "“" + r.claim + "”");
     label.className = "choose-label quick";
     label.innerHTML = `<span class="obj-tag">${t("quickDecision")}</span><br>${r.ask || t("quickDecisionAsk")}`;
-    const made = renderDefenseOptions(r.opts, wrap, r);
+    const made = renderDefenseOptions(opts, wrap, r);
     startRoundTimer(r.timeLimit || 8, made, r);
   } else {
     who.textContent = c.oppName || t("opponent");
     typeText(document.getElementById("claim-text"), "“" + r.claim + "”");
     label.className = "choose-label";
     label.textContent = t("chooseDefense");
-    renderDefenseOptions(r.opts, wrap, r);
+    renderDefenseOptions(opts, wrap, r);
   }
 }
 
