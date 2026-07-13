@@ -298,16 +298,42 @@
   @keyframes cfBobOpp{0%,100%{transform:translateY(-9px)}50%{transform:translateY(0)}}
   @keyframes cfShine{0%,55%{left:-70%}82%,100%{left:130%}}
 
-  .case-dots{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin-top:12px}
-  .dot{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-size:15px;
-    border:1px solid var(--line);background:var(--card);color:#6a5a45;transition:transform .1s}
-  .dot.solved{color:var(--gold);border-color:var(--gold-dark);background:rgba(224,176,79,.14);cursor:pointer}
-  .dot.cur{background:linear-gradient(180deg,var(--gold),var(--gold-dark));border-color:var(--gold);
-    color:#241c08;font-size:18px;cursor:pointer;box-shadow:0 0 0 3px rgba(224,176,79,.22)}
-  .dot.locked{opacity:.55}
-  .dot.solved:active,.dot.cur:active{transform:scale(.9)}
-  .dot.shake{animation:dotShake .35s}
+  /* ---------- BÖLÜM HARİTASI ---------- */
+  .total-stars{margin-left:auto;background:rgba(224,176,79,.14);border:1px solid var(--gold-dark);
+    color:var(--gold);font-weight:800;font-size:13px;border-radius:99px;padding:5px 12px;white-space:nowrap}
+  .case-map{margin-top:14px;display:flex;flex-direction:column;gap:13px;padding-bottom:6px}
+  .chap-head{display:flex;align-items:center;gap:9px;padding:0 3px}
+  .chap-head .ch-no{background:linear-gradient(180deg,var(--gold),var(--gold-dark));color:#241c08;
+    font-weight:800;font-size:10.5px;letter-spacing:1px;border-radius:7px;padding:3px 8px;flex-shrink:0}
+  .chap-head .ch-name{font-weight:800;font-size:15px;color:var(--text);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .chap-head .ch-stars{font-size:12.5px;font-weight:800;color:var(--gold);white-space:nowrap}
+  .chap.gated .chap-head .ch-no{background:var(--card2);color:var(--muted)}
+  .chap.gated .chap-head .ch-name{color:var(--muted)}
+  .chap.gated .chap-head .ch-stars{color:var(--muted)}
+  .chap-gate{margin-top:8px;background:rgba(224,176,79,.08);border:1px dashed var(--gold-dark);
+    border-radius:12px;padding:9px 13px;font-size:13px;color:var(--muted);font-weight:700}
+  .chap-path{margin-top:9px;display:flex;align-items:flex-start;justify-content:space-between;
+    background:linear-gradient(180deg,var(--card),#20180f);border:1px solid var(--line);
+    border-radius:16px;padding:14px 12px 10px;position:relative}
+  .chap-path::before{content:"";position:absolute;left:13%;right:13%;top:42px;
+    border-top:3px dashed #4d3823;z-index:0}
+  .chap.gated .chap-path{opacity:.5;filter:grayscale(.65)}
+  .map-node{flex:1;text-align:center;position:relative;z-index:1;cursor:pointer;transition:transform .1s}
+  .map-node:active{transform:scale(.93)}
+  .mn-circle{width:56px;height:56px;border-radius:50%;margin:0 auto;display:grid;place-items:center;
+    font-size:24px;border:2px solid var(--line);background:var(--card2);transition:all .2s}
+  .map-node.won .mn-circle{border-color:var(--gold);background:linear-gradient(180deg,rgba(224,176,79,.3),rgba(224,176,79,.1));
+    box-shadow:0 0 10px rgba(224,176,79,.25)}
+  .map-node.cur .mn-circle{border-color:var(--gold);background:linear-gradient(180deg,var(--gold),var(--gold-dark));
+    animation:mapPulse 1.6s ease-in-out infinite}
+  @keyframes mapPulse{0%,100%{box-shadow:0 0 0 3px rgba(224,176,79,.25)}50%{box-shadow:0 0 0 8px rgba(224,176,79,.08)}}
+  .map-node.locked{cursor:default}
+  .map-node.locked .mn-circle{color:#6a5a45;font-size:19px;opacity:.7}
+  .mn-stars{height:15px;margin-top:5px;font-size:11.5px;letter-spacing:1px;color:var(--gold);font-weight:800}
+  .map-node.cur .mn-stars{color:#ffdf9a}
+  .map-node.shake{animation:dotShake .35s}
   @keyframes dotShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+  @media (prefers-reduced-motion:reduce){.map-node.cur .mn-circle{animation:none}}
   @media (prefers-reduced-motion:reduce){.cf-icon,.cf-portrait,.cf-opp,.case-feature::after{animation:none}}
 
   .case-card{
@@ -697,6 +723,7 @@
     <div class="topbar">
       <button class="back-btn" onclick="SND.click();show('scr-home');renderHome()" data-i18n="back">‹ Geri</button>
       <h2 data-i18n="cases">Davalar</h2>
+      <span class="total-stars" id="total-stars"></span>
     </div>
     <button class="daily-strip" id="daily-strip" onclick="playDaily()"></button>
     <div class="case-feature">
@@ -713,7 +740,7 @@
       </div>
     </div>
     <button class="big-btn" style="margin-top:0" onclick="SND.click();openBrief(featuredCase)" data-i18n="examine">🔍 Davayı İncele</button>
-    <div class="case-dots" id="case-dots"></div>
+    <div class="case-map" id="case-map"></div>
   </div>
 
   <!-- AYARLAR -->
@@ -1560,6 +1587,8 @@ const LANG = {
     dailyWinLine: "📅 Günün Davası tamamlandı! +{n} bonus TP · 🔥 {s} gün seri",
     comboLine: "🔥 Kombo bonusu: en yüksek x{n} → +{b} TP",
     comboTag: "x{n} KOMBO",
+    chapter: "BÖLÜM", chapters: ["Mahalle Mahkemesi", "Şehir Mahkemesi", "Yüksek Mahkeme"],
+    gateNeed: "🔒 Bu bölümü açmak için {n} ⭐ gerekli — davaları 3 yıldızla bitirip yıldız topla!",
     achList: [
       { name: "İlk Zafer", desc: "İlk davanı kazan", icon: "🥇" },
       { name: "Mükemmeliyetçi", desc: "Bir davada 3 yıldız al", icon: "⭐" },
@@ -1614,6 +1643,8 @@ const LANG = {
     dailyWinLine: "📅 Case of the Day complete! +{n} bonus XP · 🔥 {s}-day streak",
     comboLine: "🔥 Combo bonus: best x{n} → +{b} XP",
     comboTag: "x{n} COMBO",
+    chapter: "CHAPTER", chapters: ["Neighborhood Court", "City Court", "High Court"],
+    gateNeed: "🔒 Collect {n} ⭐ to unlock this chapter — replay cases for 3 stars!",
     achList: [
       { name: "First Victory", desc: "Win your first case", icon: "🥇" },
       { name: "Perfectionist", desc: "Earn 3 stars on a case", icon: "⭐" },
@@ -2201,15 +2232,38 @@ function dayKeyOf(d) {
 }
 function todayKey() { return dayKeyOf(new Date()); }
 function yesterdayKey() { const d = new Date(); d.setDate(d.getDate() - 1); return dayKeyOf(d); }
-// Günün davası: tarihe göre deterministik; kilitli çıkarsa açık davalardan seçilir
+// Günün davası: tarihe göre deterministik; kilitli çıkarsa oynanabilir davalardan seçilir
 function dailyIndex() {
   const k = todayKey();
   let h = 7;
   for (let i = 0; i < k.length; i++) h = (h * 31 + k.charCodeAt(i)) >>> 0;
+  let open = 0;
+  while (open < CASES.length && caseUnlocked(open)) open++;
   const idx = h % CASES.length;
-  return idx < save.unlocked ? idx : h % save.unlocked;
+  return idx < open ? idx : h % Math.max(1, open);
 }
 function dailyDoneToday() { return save.daily.lastWin === todayKey(); }
+
+/* ================= BÖLÜMLER VE YILDIZ KAPILARI ================= */
+// Her bölüm 4 dava; yeni bölüm hem önceki davayı kazanmayı hem de toplam yıldız gerektirir.
+const CHAPTERS = [
+  { need: 0,  from: 0, to: 3 },
+  { need: 6,  from: 4, to: 7 },
+  { need: 15, from: 8, to: 11 },
+];
+function chapterOf(i) {
+  return CHAPTERS.find(ch => i >= ch.from && i <= ch.to) || CHAPTERS[CHAPTERS.length - 1];
+}
+function chapterName(ci) {
+  const L = LANG[save.lang] || LANG.tr;
+  return (L.chapters && L.chapters[ci]) || LANG.tr.chapters[ci];
+}
+function totalStars() {
+  return Object.values(save.stars).reduce((a, b) => a + b, 0);
+}
+function caseUnlocked(i) {
+  return i < save.unlocked && totalStars() >= chapterOf(i).need;
+}
 // Seri yalnızca dün/bugün kazanılmışsa canlıdır; aksi halde sıfır görünür
 function currentStreak() {
   return (save.daily.lastWin === todayKey() || save.daily.lastWin === yesterdayKey()) ? save.daily.streak : 0;
@@ -2264,15 +2318,26 @@ function renderDailyStrip() {
 }
 function renderCases() {
   renderDailyStrip();
-  // Öne çıkan dava = sıradaki oynanabilir (henüz kazanılmamış) dava; bir öncekini geçince otomatik ilerler.
-  const unlockedTo = Math.min(save.unlocked - 1, CASES.length - 1);
-  featuredCase = unlockedTo;
+  const ts = totalStars();
+  document.getElementById("total-stars").textContent = `⭐ ${ts}`;
+
+  // Öne çıkan dava = ilk oynanabilir ve henüz kazanılmamış dava;
+  // hepsi kazanıldıysa (veya kapı ilerlemeyi kestiyse) son oynanabilir dava.
+  let f = -1;
+  for (let i = 0; i < CASES.length; i++) {
+    if (caseUnlocked(i) && !save.stars[CASES[i].id]) { f = i; break; }
+  }
+  if (f < 0) {
+    for (let i = CASES.length - 1; i >= 0; i--) if (caseUnlocked(i)) { f = i; break; }
+  }
+  featuredCase = Math.max(0, f);
   const c = CASES[featuredCase];
+  const chIdx = CHAPTERS.indexOf(chapterOf(featuredCase));
 
   document.getElementById("cf-scene").innerHTML = courtScene("cf", { realJudge: true });
   const s = document.querySelector("#cf-scene svg");
   if (s) s.setAttribute("preserveAspectRatio", "xMidYMid slice");
-  document.getElementById("cf-badge").textContent = `${t("caseN")} ${featuredCase + 1} / ${CASES.length}`;
+  document.getElementById("cf-badge").textContent = `${chapterName(chIdx)} · ${t("caseN")} ${featuredCase + 1} / ${CASES.length}`;
   document.getElementById("cf-icon").textContent = c.icon;
   document.getElementById("cf-av").innerHTML = charArt(imgCfg(c.av, c.id, "muvekkil"));
   document.getElementById("cf-opp").innerHTML = charArt(imgCfg(c.opp || c.av, c.id, "karsi"));
@@ -2281,27 +2346,45 @@ function renderCases() {
   const st = save.stars[c.id] || 0;
   document.getElementById("cf-stars").textContent = st ? "⭐".repeat(st) + "☆".repeat(3 - st) : "";
 
-  // İlerleme noktaları: çözülen / mevcut / gizemli(kilitli) — ilerleme sınırı save.unlocked'a bağlı, öne çıkan davadan bağımsız.
-  const dots = document.getElementById("case-dots");
-  dots.innerHTML = "";
-  CASES.forEach((cc, i) => {
-    const d = document.createElement("div");
-    if (i < unlockedTo) {
-      d.className = "dot solved";
-      d.textContent = "★";
-      d.onclick = () => { SND.click(); featuredCase = i; openBrief(i); };
-    } else if (i === unlockedTo) {
-      d.className = "dot cur";
-      d.textContent = cc.icon;
-      d.onclick = () => { SND.click(); openBrief(i); };
-    } else {
-      d.className = "dot locked";
-      d.textContent = "❔";
-      d.title = t("mystery");
-      d.onclick = () => { d.classList.remove("shake"); void d.offsetWidth; d.classList.add("shake"); };
-    }
-    dots.appendChild(d);
-  });
+  // Bölüm haritası: her bölüm bir yol, davalar yol üstünde düğümler
+  document.getElementById("case-map").innerHTML = CHAPTERS.map((ch, ci) => {
+    const gateOpen = ts >= ch.need;
+    const chCases = CASES.slice(ch.from, ch.to + 1);
+    const got = chCases.reduce((a, cc) => a + (save.stars[cc.id] || 0), 0);
+    const nodes = chCases.map((cc, k) => {
+      const i = ch.from + k;
+      const cs = save.stars[cc.id] || 0;
+      let cls, inner;
+      if (!caseUnlocked(i)) { cls = "locked"; inner = "❔"; }
+      else if (cs) { cls = "won"; inner = cc.icon; }
+      else { cls = "cur"; inner = cc.icon; }
+      return `<div class="map-node ${cls}" onclick="mapTap(${i}, this)">
+        <div class="mn-circle">${inner}</div>
+        <div class="mn-stars">${"★".repeat(cs)}</div>
+      </div>`;
+    }).join("");
+    return `<div class="chap${gateOpen ? "" : " gated"}">
+      <div class="chap-head">
+        <span class="ch-no">${t("chapter")} ${ci + 1}</span>
+        <span class="ch-name">${chapterName(ci)}</span>
+        <span class="ch-stars">${gateOpen ? `⭐ ${got} / ${chCases.length * 3}` : `🔒 ${ch.need} ⭐`}</span>
+      </div>
+      ${gateOpen ? "" : `<div class="chap-gate">${t("gateNeed").replace("{n}", ch.need)}</div>`}
+      <div class="chap-path">${nodes}</div>
+    </div>`;
+  }).join("");
+}
+
+function mapTap(i, el) {
+  if (caseUnlocked(i)) {
+    SND.click();
+    openBrief(i);
+  } else {
+    SND.mid();
+    el.classList.remove("shake");
+    void el.offsetWidth;
+    el.classList.add("shake");
+  }
 }
 
 /* ================= AYARLAR / NASIL OYNANIR ================= */
