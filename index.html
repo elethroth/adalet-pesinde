@@ -21,6 +21,9 @@
     --muted:#b3a189;
     --green:#5ec97b;
     --red:#e06666;
+    --paper:#f7f2e3;   /* baloncuk/çerçeve zemini: krem-beyaz */
+    --ink:#232b38;     /* çizgi roman konturu: koyu lacivert */
+    --ink-text:#2b2013;
   }
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{height:100%}
@@ -100,10 +103,12 @@
   .stage-portrait img{object-fit:contain;object-position:bottom}
 
   .speech{position:absolute;right:12px;bottom:19%;left:45%;z-index:5;
-    background:#f6f1e4;color:#20242c;border-radius:16px;padding:11px 14px;
+    background:var(--paper);color:#20242c;border:3px solid var(--ink);border-radius:18px;padding:11px 14px;
     box-shadow:0 8px 20px rgba(0,0,0,.45);animation:fadeIn .3s ease}
+  .speech::before{content:"";position:absolute;left:-21px;bottom:13px;
+    border:11px solid transparent;border-right-color:var(--ink)}
   .speech::after{content:"";position:absolute;left:-13px;bottom:16px;
-    border:9px solid transparent;border-right-color:#f6f1e4}
+    border:8px solid transparent;border-right-color:var(--paper)}
   .speech-who{font-size:11px;font-weight:800;letter-spacing:.5px;color:#8a5a2a;margin-bottom:3px}
   .speech p{font-size:14.5px;line-height:1.35;font-weight:600}
 
@@ -360,12 +365,13 @@
   .topbar h2{font-size:19px;flex:1}
 
   .brief-box{
-    background:var(--card2);
-    border:1px solid #4d3823;border-radius:16px;padding:15px;margin-bottom:11px;
+    background:var(--paper);
+    border:3px solid var(--ink);border-radius:18px;padding:15px;margin-bottom:11px;
+    box-shadow:0 6px 16px rgba(0,0,0,.3);
   }
-  .brief-box h3{font-size:13px;color:var(--gold);letter-spacing:1px;margin-bottom:9px;display:flex;align-items:center;gap:8px}
-  .brief-box h3::before{content:"";width:14px;height:2px;background:var(--gold);border-radius:2px;box-shadow:0 0 6px rgba(224,176,79,.5)}
-  .brief-box p{font-size:15px;line-height:1.55}
+  .brief-box h3{font-size:13px;color:#8a5f16;letter-spacing:1px;margin-bottom:9px;display:flex;align-items:center;gap:8px}
+  .brief-box h3::before{content:"";width:14px;height:2px;background:#8a5f16;border-radius:2px}
+  .brief-box p{font-size:15px;line-height:1.55;color:var(--ink-text);font-weight:600}
 
   /* dava dosyası kapağı */
   .case-hero{position:relative;border:1px solid var(--line);border-radius:16px;overflow:hidden;margin-bottom:11px;box-shadow:0 10px 26px rgba(0,0,0,.45)}
@@ -387,13 +393,14 @@
   /* kanıt etiketleri */
   .ev-list{display:flex;flex-direction:column;gap:8px}
   .ev-chip{
-    display:flex;align-items:center;gap:11px;background:var(--card2);
-    border:1px solid var(--line);border-left:3px solid var(--gold);
-    border-radius:10px;padding:9px 12px;font-size:14.5px;line-height:1.35;
+    display:flex;align-items:center;gap:11px;background:#fffdf5;
+    border:2.5px solid var(--ink);
+    border-radius:12px;padding:9px 12px;font-size:14.5px;line-height:1.35;
+    color:var(--ink-text);font-weight:600;
   }
   .ev-chip .ev-ic{
     width:34px;height:34px;flex-shrink:0;display:grid;place-items:center;
-    background:rgba(224,176,79,.12);border:1px solid rgba(224,176,79,.25);
+    background:rgba(224,176,79,.18);border:1px solid rgba(160,110,20,.4);
     border-radius:8px;
   }
   .ev-chip .ev-ic svg{width:22px;height:22px;display:block}
@@ -408,12 +415,12 @@
   /* bilgi şeridi */
   .info-strip{display:flex;gap:10px;margin-bottom:2px}
   .info-cell{
-    flex:1;background:linear-gradient(180deg,var(--card),#20180f);
-    border:1px solid var(--line);border-radius:12px;padding:10px 13px;
+    flex:1;background:var(--paper);
+    border:3px solid var(--ink);border-radius:14px;padding:10px 13px;
     display:flex;flex-direction:column;gap:3px;
   }
-  .info-k{font-size:10.5px;letter-spacing:1.5px;color:var(--muted)}
-  .info-v{font-size:14px;font-weight:800;color:var(--gold)}
+  .info-k{font-size:10.5px;letter-spacing:1.5px;color:#6a5a45;font-weight:800}
+  .info-v{font-size:14px;font-weight:800;color:#8a5f16}
 
   .big-btn{
     margin-top:auto;background:linear-gradient(180deg,var(--gold),var(--gold-dark));
@@ -475,8 +482,8 @@
   @keyframes meterPulse{40%{transform:scale(1.04,1.4)}}
 
   .bubble{
-    background:#f6efe0;border-radius:16px;padding:13px 14px;margin-bottom:13px;
-    border:1px solid var(--gold-dark);display:flex;gap:12px;align-items:flex-start;
+    background:var(--paper);border-radius:18px;padding:13px 14px;margin-bottom:13px;
+    border:3px solid var(--ink);display:flex;gap:12px;align-items:flex-start;
     box-shadow:0 4px 12px rgba(0,0,0,.3);
   }
   .bubble .b-av{width:46px;height:46px;border-color:rgba(224,102,102,.55);transition:border-color .2s}
@@ -502,8 +509,8 @@
   @keyframes rtPulse{0%,100%{opacity:1}50%{opacity:.55}}
   .round-timer .rt-val{font-size:12px;font-weight:800;color:var(--muted);flex-shrink:0;min-width:20px;text-align:right}
   .opt{
-    display:block;width:100%;text-align:left;background:#f6efe0;color:#2b2013;
-    border:1px solid var(--gold-dark);border-radius:16px;padding:13px 15px;font-size:15.5px;
+    display:block;width:100%;text-align:left;background:var(--paper);color:#2b2013;
+    border:3px solid var(--ink);border-radius:18px;padding:13px 15px;font-size:15.5px;
     line-height:1.55;font-weight:700;letter-spacing:.2px;margin-bottom:9px;cursor:pointer;transition:all .15s;
     box-shadow:0 4px 12px rgba(0,0,0,.3);
   }
@@ -522,8 +529,8 @@
     padding:4px 11px;border-radius:99px;margin-bottom:8px;animation:objPop .45s cubic-bezier(.2,1.5,.4,1)}
   @keyframes objPop{0%{transform:scale(.3) rotate(-6deg);opacity:0}60%{transform:scale(1.18) rotate(2deg)}100%{transform:scale(1) rotate(0);opacity:1}}
   .ev-opt{display:flex;align-items:center;gap:11px;width:100%;text-align:left;
-    background:#f6efe0;color:#2b2013;border:1px solid var(--gold-dark);border-left:3px solid var(--gold-dark);
-    border-radius:12px;padding:10px 13px;font-size:15px;line-height:1.5;font-weight:700;letter-spacing:.2px;
+    background:var(--paper);color:#2b2013;border:3px solid var(--ink);border-left:3px solid var(--ink);
+    border-radius:14px;padding:10px 13px;font-size:15px;line-height:1.5;font-weight:700;letter-spacing:.2px;
     margin-bottom:9px;cursor:pointer;transition:all .15s;box-shadow:0 3px 10px rgba(0,0,0,.28);
   }
   .ev-opt:active{transform:scale(.98)}
@@ -539,9 +546,9 @@
   /* ---------- TANIK ÇAPRAZ SORGUSU ---------- */
   .bubble .who.wit{color:var(--gold)}
   .testimony{position:relative;display:block;width:100%;text-align:left;
-    background:#f6efe0;color:#2b2013;
-    border:1px solid var(--gold-dark);border-left:3px solid var(--gold-dark);
-    border-radius:12px;padding:12px 14px 12px 15px;font-size:15.5px;line-height:1.6;font-weight:700;letter-spacing:.2px;
+    background:var(--paper);color:#2b2013;
+    border:3px solid var(--ink);border-left:3px solid var(--ink);
+    border-radius:14px;padding:12px 14px 12px 15px;font-size:15.5px;line-height:1.6;font-weight:700;letter-spacing:.2px;
     font-style:italic;margin-bottom:9px;cursor:pointer;transition:all .15s;
     box-shadow:0 3px 10px rgba(0,0,0,.28);
   }
@@ -553,13 +560,14 @@
   .testimony:disabled{cursor:default}
 
   .feedback{
-    border-radius:14px;padding:12px 15px;font-size:15px;line-height:1.5;
+    border-radius:16px;padding:12px 15px;font-size:15px;line-height:1.5;
     margin-bottom:12px;display:none;animation:fadeIn .3s ease;
+    color:var(--ink-text);font-weight:600;
   }
   .feedback.show{display:block}
-  .feedback.good{background:rgba(94,201,123,.14);border:1px solid var(--green)}
-  .feedback.mid{background:rgba(224,176,79,.12);border:1px solid var(--gold)}
-  .feedback.bad{background:rgba(224,102,102,.14);border:1px solid var(--red)}
+  .feedback.good{background:#e8f7ec;border:3px solid var(--green)}
+  .feedback.mid{background:#faf1d9;border:3px solid var(--gold-dark)}
+  .feedback.bad{background:#fbe9e9;border:3px solid var(--red)}
 
   /* ---------- KARAR ---------- */
   .verdict-box{text-align:center;margin-top:26px}
