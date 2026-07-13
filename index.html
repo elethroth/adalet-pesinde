@@ -513,6 +513,63 @@
   }
   #scr-brief{padding-bottom:calc(94px + env(safe-area-inset-bottom))}
   #scr-trial{padding-bottom:calc(94px + env(safe-area-inset-bottom))}
+  #scr-prep{padding-bottom:calc(94px + env(safe-area-inset-bottom))}
+
+  /* ================= HAZIRLIK AŞAMASI (Case Preparation) ================= */
+  .prep-sub{color:var(--muted);font-size:13px;line-height:1.5;margin:-6px 0 14px}
+  .prep-meter-wrap{margin-bottom:16px}
+  .prep-meter-label{display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px}
+  .prep-meter-label span:last-child{color:var(--gold);font-weight:700}
+  .prep-meter-track{height:11px;border-radius:99px;background:#0d0904;overflow:hidden;
+    border:1px solid rgba(224,176,79,.28);box-shadow:inset 0 1px 3px rgba(0,0,0,.6)}
+  .prep-meter-fill{height:100%;width:0%;border-radius:99px;
+    background:linear-gradient(90deg,#8a5a2a,#e0b04f,#f7e6ab);
+    transition:width .5s cubic-bezier(.25,.8,.3,1);box-shadow:0 0 8px rgba(240,201,120,.35)}
+
+  .prep-cards{display:flex;flex-direction:column;gap:11px;margin-bottom:6px}
+  .prep-card{
+    position:relative;display:flex;gap:12px;align-items:flex-start;text-align:left;
+    width:100%;border:none;cursor:pointer;padding:13px 15px;border-radius:16px;
+    background:linear-gradient(155deg,#2e2013,#1c130b);border:1px solid rgba(224,176,79,.28);
+    box-shadow:0 6px 16px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,230,180,.06);
+    transition:transform .16s cubic-bezier(.22,.85,.35,1),box-shadow .16s ease,filter .16s ease,opacity .2s ease;
+  }
+  .prep-card:active:not(:disabled){transform:translateY(2px) scale(.99)}
+  .prep-card.chosen{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold),0 8px 20px rgba(224,176,79,.18),inset 0 1px 0 rgba(255,230,180,.1)}
+  .prep-card:disabled{opacity:.4;cursor:default;filter:grayscale(.4)}
+  .prep-card .pc-icon{width:34px;height:34px;flex-shrink:0;display:grid;place-items:center;
+    background:rgba(224,176,79,.12);border-radius:50%;padding:6px}
+  .prep-card .pc-icon svg{width:100%;height:100%;display:block}
+  .prep-card .pc-body{flex:1;min-width:0}
+  .prep-card .pc-title{font-size:14.5px;font-weight:600;color:var(--text)}
+  .prep-card .pc-desc{font-size:12px;font-weight:400;color:var(--muted);margin-top:2px;line-height:1.4}
+  .prep-card .pc-meta{display:flex;gap:8px;margin-top:7px}
+  .prep-card .pc-tag{font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:99px}
+  .prep-card .pc-cost{background:rgba(224,176,79,.16);color:var(--gold)}
+  .prep-card .pc-time{background:rgba(255,255,255,.06);color:var(--muted)}
+  .prep-card .pc-check{position:absolute;top:10px;right:12px;width:20px;height:20px;border-radius:50%;
+    background:linear-gradient(180deg,var(--gold),var(--gold-dark));display:grid;place-items:center;
+    font-size:12px;color:#241c08;font-weight:900;opacity:0;transform:scale(.4);
+    transition:opacity .25s cubic-bezier(.2,1.4,.4,1),transform .25s cubic-bezier(.2,1.4,.4,1)}
+  .prep-card.chosen .pc-check{opacity:1;transform:scale(1)}
+  .prep-card.shake{animation:prepShake .35s}
+  @keyframes prepShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+
+  .prep-feed{display:flex;flex-direction:column;gap:9px;margin-top:4px}
+  .prep-feed-card{display:flex;gap:11px;align-items:flex-start;text-align:left;padding:11px 14px;
+    border-radius:14px;background:var(--paper);border:1px solid rgba(139,95,22,.3);
+    opacity:0;transform:translateY(8px);animation:prepFeedIn .35s cubic-bezier(.2,.8,.3,1) forwards}
+  @keyframes prepFeedIn{to{opacity:1;transform:none}}
+  .prep-feed-card .pf-tag{flex-shrink:0;font-size:10px;font-weight:800;letter-spacing:.4px;
+    padding:3px 8px;border-radius:99px;white-space:nowrap;margin-bottom:4px;display:inline-block}
+  .prep-feed-card.good .pf-tag{background:rgba(94,201,123,.18);color:#2f7a45}
+  .prep-feed-card.bad .pf-tag{background:rgba(180,150,90,.18);color:#8a6a2e}
+  .prep-feed-card p{font-size:13px;color:var(--ink-text);line-height:1.45;font-weight:400}
+  @media (prefers-reduced-motion:reduce){.prep-feed-card{animation:none;opacity:1;transform:none}}
+
+  .trial-prep-tag{font-size:10.5px;font-weight:900;letter-spacing:.5px;color:#f7ecd2;
+    background:linear-gradient(180deg,#5a4a30,#3a2e1c);border:1px solid rgba(224,176,79,.4);
+    padding:3px 8px;border-radius:99px;white-space:nowrap}
 
   /* ---------- DURUŞMA ---------- */
   .trial-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding-right:56px}
@@ -627,7 +684,7 @@
     line-height:1.55;font-weight:700;letter-spacing:.2px;margin-bottom:9px;cursor:pointer;transition:all .15s;
     box-shadow:0 4px 12px rgba(0,0,0,.3);
   }
-  .opt,.ev-opt,.testimony{animation:optIn .32s cubic-bezier(.25,.9,.35,1) backwards}
+  .opt,.ev-opt,.testimony,.prep-card{animation:optIn .32s cubic-bezier(.25,.9,.35,1) backwards}
   @keyframes optIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
   .opt:active{transform:scale(.98)}
   .opt.good{border-color:var(--green);background:#e8f7ec}
@@ -1163,7 +1220,25 @@
       <div class="info-cell"><span class="info-k" data-i18n="time">SÜRE</span><span class="info-v" id="brief-time">~2 dk · 3 tur</span></div>
       <div class="info-cell"><span class="info-k" data-i18n="reward">KAZANINCA</span><span class="info-v" id="brief-reward"></span></div>
     </div>
-    <button class="big-btn fixed-cta" onclick="startTrial()" data-i18n="startTrial">🏛️ Duruşmaya Başla</button>
+    <button class="big-btn fixed-cta" onclick="openPrep()" data-i18n="startTrial">🔍 Hazırlığa Başla</button>
+  </div>
+
+  <!-- HAZIRLIK -->
+  <div class="screen" id="scr-prep">
+    <div class="topbar">
+      <h2 data-i18n="prepTitle">HAZIRLIK</h2>
+    </div>
+    <p class="prep-sub" data-i18n="prepSub">Duruşmadan önce sınırlı sayıda araştırma yapabilirsin. Seçimlerin önemli.</p>
+    <div class="prep-meter-wrap">
+      <div class="prep-meter-label">
+        <span data-i18n="prepQuality">Hazırlık Kalitesi</span>
+        <span id="prep-points-left"></span>
+      </div>
+      <div class="prep-meter-track"><div class="prep-meter-fill" id="prep-meter-fill"></div></div>
+    </div>
+    <div class="prep-cards" id="prep-cards"></div>
+    <div class="prep-feed" id="prep-feed"></div>
+    <button class="big-btn fixed-cta" onclick="finishPrep()" data-i18n="prepContinue">🏛️ Duruşmaya Başla</button>
   </div>
 
   <!-- DURUŞMA -->
@@ -1171,6 +1246,7 @@
     <div class="trial-head">
       <strong id="trial-title"></strong>
       <span style="display:flex;align-items:center;gap:6px">
+        <span class="trial-prep-tag" id="trial-prep-tag" style="display:none"></span>
         <span class="trial-media-tag" id="trial-media-tag" style="display:none"></span>
         <span class="round" id="trial-round"></span>
       </span>
@@ -1650,6 +1726,7 @@ const EV_MAP = {
   "🗣":"witness","🐾":"paw","🩺":"vet","🪪":"idcard","💬":"message","🔑":"key","🎟":"ticket",
   "🪧":"sign","📒":"book","📖":"book","👩‍🍳":"chef","🔬":"micro","📟":"phone","📡":"antenna",
   "🗺":"map","📦":"box","📑":"doc","🖋":"pen","✒":"pen",
+  "📞":"message","📍":"map","🏥":"vet","🔍":"micro","👮":"witness","💳":"idcard","🧬":"micro","📱":"phone",
 };
 function evidenceIcon(token) {
   const key = (token || "").replace(/️/g, "");
@@ -2228,7 +2305,13 @@ const LANG = {
     client: "MÜVEKKİLİN", charge: "SUÇLAMA / KONU", evidence: "ELİNDEKİ KANITLAR",
     caseFile: "DAVA DOSYASI", file: "DOSYA",
     time: "SÜRE", timeVal: "~2 dk · {n} tur", reward: "KAZANINCA",
-    startTrial: "🏛️ Duruşmaya Başla",
+    startTrial: "🔍 Hazırlığa Başla",
+    prepTitle: "HAZIRLIK", prepSub: "Duruşmadan önce sınırlı sayıda araştırma yapabilirsin. Seçimlerin önemli.",
+    prepQuality: "Hazırlık Kalitesi", prepPoints: "Hazırlık Puanı", prepPointsLeft: "{n} hak kaldı",
+    prepCost: "{n} puan", prepContinue: "🏛️ Duruşmaya Başla", prepSkip: "Hazırlığı atla",
+    prepNoPoints: "Yeterli hazırlık puanın yok.", prepUsed: "Kullanıldı",
+    prepFeedGood: "Değerli İpucu", prepFeedBad: "Sonuçsuz Çaba",
+    prepReadyTag: "🗂 Hazırlıklı",
     persuade: "Hâkimi İkna Etme", opponent: "KARŞI TARAF", chooseDefense: "👉 Savunmanı seç:",
     objection: "İTİRAZ!", presentEv: "Bu iddia bir kanıtınla çelişiyor. Doğru kanıtı sun:",
     witness: "TANIK", findLie: "🔎 İfadedeki çelişkili cümleye dokun:",
@@ -2292,7 +2375,13 @@ const LANG = {
     client: "YOUR CLIENT", charge: "CHARGE / MATTER", evidence: "YOUR EVIDENCE",
     caseFile: "CASE FILE", file: "FILE",
     time: "TIME", timeVal: "~2 min · {n} rounds", reward: "ON WINNING",
-    startTrial: "🏛️ Start the Trial",
+    startTrial: "🔍 Start Preparation",
+    prepTitle: "PREPARATION", prepSub: "You can run a limited number of investigations before trial. Choices matter.",
+    prepQuality: "Preparation Quality", prepPoints: "Preparation Points", prepPointsLeft: "{n} left",
+    prepCost: "{n} pts", prepContinue: "🏛️ Start the Trial", prepSkip: "Skip preparation",
+    prepNoPoints: "Not enough preparation points.", prepUsed: "Used",
+    prepFeedGood: "Valuable Lead", prepFeedBad: "Dead End",
+    prepReadyTag: "🗂 Prepared",
     persuade: "Convince the Judge", opponent: "OPPOSING SIDE", chooseDefense: "👉 Choose your defense:",
     objection: "OBJECTION!", presentEv: "This claim contradicts one of your pieces of evidence. Present the right one:",
     witness: "WITNESS", findLie: "🔎 Tap the contradictory statement:",
@@ -2400,6 +2489,12 @@ const CASES = [
     client: "Ali, 16 yaşında bir öğrenci. Komşusunun bisikletini çalmakla suçlanıyor ama suçsuz olduğunu söylüyor.",
     charge: "Komşu Hasan Bey, bisikletinin salı günü saat 15.00'te çalındığını ve Ali'yi sokakta gördüğünü iddia ediyor.",
     evidence: ["🧾 Market fişi (salı, saat 15.05)", "📹 Bulanık kamera görüntüsü", "🗣️ Tanık: mahallenin fırıncısı"],
+    prep: { options: [
+      { id: "cam", icon: "📹", title: "Kamera görüntüsünü büyüt", desc: "Bulanık görüntüyü teknik olarak incele.", cost: 1, time: "~10 sn", outcome: "good", story: "Görüntüyü büyütünce montun rengi netleşti — Ali'ninkiyle uyuşmuyor." },
+      { id: "witness", icon: "📞", title: "Fırıncı ile ön görüşme yap", desc: "Osman Usta'yı duruşmadan önce dinle.", cost: 1, time: "~10 sn", outcome: "good", story: "Osman Usta, bisikleti bırakan kişiyi tarif etti: kırmızı montlu biri." },
+      { id: "deep", icon: "📍", title: "Mahalledeki kameraları tara", desc: "Sokaktaki diğer güvenlik kayıtlarını topla.", cost: 2, time: "~20 sn", outcome: "good", story: "Bir dükkânın kamerası gerçek şüpheliyi sokağın ucunda yakalamış." },
+      { id: "misc", icon: "📄", title: "Hasan Bey'in geçmişini araştır", desc: "Önceki şikâyetlerini kontrol et.", cost: 1, time: "~10 sn", outcome: "bad", story: "Hasan Bey'in eski şikâyetleri bu davayla ilgisiz çıktı — vakit kaybı." },
+    ] },
     rounds: [
       {
         claim: "Ali, bisikletin çalındığı saatte tam da o sokaktaydı! Bunu herkes gördü.",
@@ -2436,6 +2531,12 @@ const CASES = [
     client: "Ayşe Teyze'nin kedisi Pamuk, komşunun 10 saksısını kırmakla suçlanıyor. Komşu 5.000 lira istiyor.",
     charge: "Komşu Nuri Bey: \"Pamuk her gece bahçeme giriyor, bütün saksılarımı o kırdı!\" diyor ve tazminat istiyor.",
     evidence: ["📷 Bahçe fotoğrafları", "🐾 Kırıkların yanındaki büyük pati izleri", "🩺 Veteriner raporu: Pamuk 2 haftadır evde tedavide"],
+    prep: { options: [
+      { id: "vet", icon: "🏥", title: "Veteriner ile görüş", desc: "Tedavi sürecinin detaylarını doğrula.", cost: 1, time: "~10 sn", outcome: "good", story: "Veteriner, Pamuk'un o gece ameliyat sonrası sedasyonda olduğunu doğruladı." },
+      { id: "tracks", icon: "🔍", title: "Bahçedeki izleri yakından incele", desc: "Pati izlerinin boyutunu ölç.", cost: 1, time: "~10 sn", outcome: "good", story: "İzleri ölçtük: boyutları büyük bir köpeğe işaret ediyor." },
+      { id: "deep", icon: "👮", title: "Diğer komşulardan şikâyet var mı araştır", desc: "Mahalledeki benzer olayları topla.", cost: 2, time: "~20 sn", outcome: "good", story: "Üç komşu daha aynı başıboş köpekten şikâyetçi olduğunu anlattı." },
+      { id: "misc", icon: "📄", title: "Nuri Bey'in geçmişini araştır", desc: "Önceki anlaşmazlıklarını kontrol et.", cost: 1, time: "~10 sn", outcome: "bad", story: "Nuri Bey'in geçmişi bu davayla ilgisiz çıktı." },
+    ] },
     rounds: [
       {
         claim: "Bu kedi tam bir baş belası! Saksılarımı kıran o, bunu herkes bilir.",
@@ -2481,6 +2582,12 @@ const CASES = [
     client: "Kemal Usta, 6 ay boyunca fazla mesai yaptı ama patronu bu ücreti hiç ödemedi. Hakkını arıyor.",
     charge: "Patron: \"Kemal fazla mesai falan yapmadı, akşamları oturup çay içiyordu\" diyor ve ödeme yapmayı reddediyor.",
     evidence: ["🪪 Giriş-çıkış kart kayıtları", "💬 Patronun 'mesaileri sonra öderim' mesajı", "🗣️ Tanık: iş arkadaşı Hüseyin"],
+    prep: { options: [
+      { id: "cards", icon: "📄", title: "Kart kayıtlarını detaylı incele", desc: "6 aylık giriş-çıkış saatlerini doğrula.", cost: 1, time: "~10 sn", outcome: "good", story: "Kayıtlarda tek bir gün bile eksik yok — hepsi 21.00 çıkış gösteriyor." },
+      { id: "witness", icon: "📞", title: "Hüseyin ile ön görüşme yap", desc: "Aynı vardiyadaki iş arkadaşını dinle.", cost: 1, time: "~10 sn", outcome: "good", story: "Hüseyin, Kemal ile birlikte kaldığı geceleri tek tek hatırlıyor." },
+      { id: "deep", icon: "💳", title: "Patronun banka hareketlerini incele", desc: "Diğer çalışanlara ödeme yapılıp yapılmadığını kontrol et.", cost: 2, time: "~20 sn", outcome: "good", story: "Patronun aynı yöntemi başka çalışanlara da uyguladığı ortaya çıktı." },
+      { id: "misc", icon: "👮", title: "Ofis çalışanlarıyla sohbet et", desc: "Diğer personelden bilgi topla.", cost: 1, time: "~10 sn", outcome: "bad", story: "Çalışanlar patrondan çekindiği için konuşmaktan kaçındı." },
+    ] },
     rounds: [
       {
         claim: "Kemal mesaiye kalmadı ki! Akşam 6'da herkes gibi evine gitti.",
@@ -2533,6 +2640,12 @@ const CASES = [
     client: "Kasiyer Selin, market kasasından 2.000 lira eksik çıkınca işten atıldı ve hırsızlıkla suçlandı.",
     charge: "Market sahibi: \"O gün kasada sadece Selin vardı, parayı o aldı\" diyor.",
     evidence: ["📹 Depo kamerası kaydı", "🧾 Kasa raporu: sayım hatası geçmişi", "🔑 Yedek kasa anahtarının listesi"],
+    prep: { options: [
+      { id: "cam", icon: "📹", title: "Depo kamerasını detaylı incele", desc: "Selin'in mola görüntüsünü kare kare izle.", cost: 1, time: "~10 sn", outcome: "good", story: "Kare kare izlenince çantadan sadece ilaç kutusu çıktığı görüldü." },
+      { id: "report", icon: "🧾", title: "Kasa sayım geçmişini incele", desc: "Geçmiş sayım hatalarını topla.", cost: 1, time: "~10 sn", outcome: "good", story: "Son 1 yılda 5 sayım hatası bulundu, hepsi sonradan düzeltilmiş." },
+      { id: "deep", icon: "👮", title: "Diğer anahtar sahiplerini sorgula", desc: "Kasaya erişimi olan herkesi araştır.", cost: 2, time: "~20 sn", outcome: "good", story: "Anahtarı olan bir çalışanın maddi sıkıntı içinde olduğu ortaya çıktı." },
+      { id: "misc", icon: "📄", title: "Market sahibinin geçmiş çalışanlarını araştır", desc: "Eski personel şikâyetlerini kontrol et.", cost: 1, time: "~10 sn", outcome: "bad", story: "Eski çalışan kayıtları bu davayla ilgisiz çıktı." },
+    ] },
     rounds: [
       {
         claim: "O gün kasada tek görevli Selin'di. Para kaybolduysa alan da odur!",
@@ -2569,6 +2682,12 @@ const CASES = [
     client: "Davulcu Deniz, apartmanı her gece gürültüyle inletmekle suçlanıyor. Oysa artık stüdyoda çalışıyor.",
     charge: "Alt kat komşusu: \"Her gece 23.00'te davul sesi! Uyuyamıyoruz, bu adam cezalandırılsın\" diyor.",
     evidence: ["🎟️ Stüdyo giriş kayıtları", "🔇 Evdeki davulun 3 ay önce satıldığına dair fatura", "🗣️ Tanık: yan komşu Fatma Hanım"],
+    prep: { options: [
+      { id: "records", icon: "📄", title: "Stüdyo kayıtlarını doğrula", desc: "Deniz'in giriş-çıkış saatlerini kontrol et.", cost: 1, time: "~10 sn", outcome: "good", story: "Stüdyo, Deniz'in her gece 20-24 arası orada olduğunu resmen onayladı." },
+      { id: "witness", icon: "📞", title: "Fatma Hanım ile ön görüşme yap", desc: "Üst kat komşusunu duruşmadan önce dinle.", cost: 1, time: "~10 sn", outcome: "good", story: "Fatma Hanım, üst kattaki tadilat seslerini duyduğunu anlattı." },
+      { id: "deep", icon: "📍", title: "Üst kattaki tadilatı araştır", desc: "Boş dairedeki çalışmayı belgele.", cost: 2, time: "~20 sn", outcome: "good", story: "Yönetimden gece tadilatı için verilen izin belgesi bulundu." },
+      { id: "misc", icon: "👮", title: "Diğer komşularla görüş", desc: "Binadaki herkesten bilgi topla.", cost: 1, time: "~10 sn", outcome: "bad", story: "Komşular birbirini suçladı, net bir bilgi çıkmadı." },
+    ] },
     // BASIN BASKISI: kanıtlar müvekkili haklı çıkarıyor ama mahalle halkı suçlu bulunmasını istiyor.
     media: {
       headlines: [
@@ -2620,6 +2739,12 @@ const CASES = [
     client: "Temizlik görevlisi Şerife Hanım, markette bir müşteri düşünce 'uyarı levhası koymadı' diye suçlanıyor. İşinden olmak üzere.",
     charge: "Düşen müşteri: \"Yer sırılsıklamdı, hiçbir uyarı yoktu! Tazminat istiyorum\" diyor.",
     evidence: ["📹 Olay anı market kamerası", "🪧 Uyarı levhası zimmet tutanağı", "🗣️ Tanık: kasiyer"],
+    prep: { options: [
+      { id: "cam", icon: "📹", title: "Kamera kaydını saniye saniye incele", desc: "Saat damgasını doğrula.", cost: 1, time: "~10 sn", outcome: "good", story: "Saat damgası, levhanın düşmeden 20 dakika önce konduğunu gösteriyor." },
+      { id: "witness", icon: "📞", title: "Kasiyer ile ön görüşme yap", desc: "Olayın tanığını duruşmadan önce dinle.", cost: 1, time: "~10 sn", outcome: "good", story: "Kasiyer, müşterinin telefonuna bakarak yürüdüğünü doğruladı." },
+      { id: "deep", icon: "🧾", title: "Levha bakım kayıtlarını iste", desc: "Uyarı prosedürünün düzenli uygulandığını göster.", cost: 2, time: "~20 sn", outcome: "good", story: "Zimmet defteri, prosedürün her zaman eksiksiz uygulandığını gösterdi." },
+      { id: "misc", icon: "📄", title: "Müşterinin geçmiş şikâyetlerini araştır", desc: "Önceki dava geçmişini kontrol et.", cost: 1, time: "~10 sn", outcome: "bad", story: "Müşterinin geçmişi bu davayla ilgisiz çıktı." },
+    ] },
     rounds: [
       {
         claim: "Yerde koca bir su birikintisi vardı ama hiçbir uyarı levhası yoktu!",
@@ -2664,6 +2789,12 @@ const CASES = [
     client: "Kuyumcu çırağı Emre, vitrindeki altın kolye kaybolunca hırsızlıkla suçlanıyor. Daha ilk yılında işini kaybetmek üzere.",
     charge: "Kuyumcu sahibi: \"Vitrinin anahtarı Emre'deydi, kolyeyi o aldı\" diyor.",
     evidence: ["🧾 Tamirci makbuzu", "📹 Dükkân kamerası", "📒 Vitrin sayım defteri"],
+    prep: { options: [
+      { id: "cam", icon: "📹", title: "Dükkân kamerasını incele", desc: "Kolyenin paketlenme anını izle.", cost: 1, time: "~10 sn", outcome: "good", story: "Kayıtta dükkân sahibi kolyeyi bizzat paketleyip kuryeye veriyor." },
+      { id: "witness", icon: "📞", title: "Tamirci Rıza Usta ile görüş", desc: "Kolyenin tamire gidişini doğrula.", cost: 1, time: "~10 sn", outcome: "good", story: "Rıza Usta, kolyeyi bizzat kuryeden teslim aldığını doğruladı." },
+      { id: "deep", icon: "💳", title: "Kuyumcunun sigorta kayıtlarını incele", desc: "Tamir sürecinin resmî izini bul.", cost: 2, time: "~20 sn", outcome: "good", story: "Sigorta kaydı, kolyenin tamirde olduğunu tarihiyle birlikte doğruladı." },
+      { id: "misc", icon: "👮", title: "Diğer çalışanları sorgula", desc: "Dükkândaki personelden bilgi topla.", cost: 1, time: "~10 sn", outcome: "bad", story: "Diğer çalışanlar olay hakkında hiçbir şey bilmiyordu." },
+    ] },
     // BASIN BASKISI: kanıtlar çırağı aklıyor ama halk "anahtar ondaydı" söylemine inanıyor.
     media: {
       headlines: [
@@ -2715,6 +2846,12 @@ const CASES = [
     client: "Aşçı Cemile Hanım, komşu lokantanın 'meşhur köfte tarifini çaldığı' iddiasıyla dava edildi.",
     charge: "Komşu lokantacı: \"Bu tarif dedemin sırrıydı, Cemile çaldı!\" diyor ve lokantanın kapatılmasını istiyor.",
     evidence: ["📖 1985 tarihli el yazması aile defteri", "👩‍🍳 Bilirkişi tadım raporu", "🔬 Kâğıt ve mürekkep incelemesi"],
+    prep: { options: [
+      { id: "forensic", icon: "🧬", title: "Bilirkişiden ek rapor iste", desc: "Kâğıt ve mürekkebin yaşını doğrula.", cost: 1, time: "~10 sn", outcome: "good", story: "Bilirkişi, mürekkebin en az 30 yıllık olduğunu yazılı olarak onayladı." },
+      { id: "witness", icon: "📞", title: "Aile büyükleriyle görüş", desc: "Tarifin kökenini doğrulayacak birini bul.", cost: 1, time: "~10 sn", outcome: "good", story: "Cemile Hanım'ın teyzesi, tarifi çocukluğundan hatırladığını anlattı." },
+      { id: "deep", icon: "📄", title: "Lokantacının geçmiş tariflerini araştır", desc: "Kendi menü geçmişini karşılaştır.", cost: 2, time: "~20 sn", outcome: "good", story: "Lokantacının eski menüsünde bambaşka bir köfte tarifi bulundu." },
+      { id: "misc", icon: "📱", title: "Sosyal medya yorumlarını tara", desc: "Kullanıcı yorumlarından ipucu ara.", cost: 1, time: "~10 sn", outcome: "bad", story: "Yorumlar birbiriyle çelişiyordu, güvenilir bir bilgi çıkmadı." },
+    ] },
     rounds: [
       {
         claim: "Bu köfte birebir bizim köfte! Tarifi mutfağımdan çaldı!",
@@ -2759,6 +2896,12 @@ const CASES = [
     client: "Hüsnü Amca'ya bir ayda 45.000 liralık telefon faturası geldi. Operatör \"kullandın, ödeyeceksin\" diyor.",
     charge: "Operatör şirketi: \"Kayıtlar ortada, bu hattan saatlerce yurt dışı araması yapılmış\" diyor.",
     evidence: ["📟 Hüsnü Amca'nın 20 yıllık tuşlu telefonu", "📡 Baz istasyonu kayıtları", "🧾 Son 5 yılın faturaları (hepsi ~200 TL)"],
+    prep: { options: [
+      { id: "baz", icon: "📍", title: "Baz istasyonu kayıtlarını incele", desc: "Aramaların hangi şehirden yapıldığını doğrula.", cost: 1, time: "~10 sn", outcome: "good", story: "Kayıtlar aramaların İstanbul'dan yapıldığını gösteriyor — Hüsnü Amca köyündeydi." },
+      { id: "complaints", icon: "📄", title: "Operatör şikâyet kayıtlarını iste", desc: "Önceki başvuruları belgele.", cost: 1, time: "~10 sn", outcome: "good", story: "Üç ayrı şikâyet numarası bulundu, hiçbirine dönüş yapılmamış." },
+      { id: "deep", icon: "📱", title: "Telefonun teknik özelliklerini incele", desc: "Cihazın kamerasız olduğunu resmî olarak belgele.", cost: 2, time: "~20 sn", outcome: "good", story: "Üretici belgesi, bu modelde kamera bulunmadığını resmen doğruladı." },
+      { id: "misc", icon: "👮", title: "Komşularla konuş", desc: "Hüsnü Amca hakkında bilgi topla.", cost: 1, time: "~10 sn", outcome: "bad", story: "Komşular sadece Hüsnü Amca'yı övdü, davayla ilgili bilgi çıkmadı." },
+    ] },
     rounds: [
       {
         type: "itiraz",
@@ -2795,6 +2938,12 @@ const CASES = [
     client: "Ratibe Hanım, kendi bahçesindeki ceviz ağacının cevizlerini topladığı için komşusu tarafından 'hırsızlıkla' suçlanıyor.",
     charge: "Komşu: \"Ağacın dalları benim tarafa uzanıyor, cevizler benimdir! Üstelik bahçeme izinsiz girdi\" diyor.",
     evidence: ["🗺️ Tapu ve sınır krokisi", "📷 Toplama günü fotoğrafları", "🗣️ Tanık: mahalle muhtarı"],
+    prep: { options: [
+      { id: "kroki", icon: "🗺️", title: "Tapu ve sınır krokisini incele", desc: "Ağacın gövde konumunu doğrula.", cost: 1, time: "~10 sn", outcome: "good", story: "Kroki, ağacın gövdesinin tamamen Ratibe Hanım'ın arsasında olduğunu gösteriyor." },
+      { id: "witness", icon: "📞", title: "Muhtar ile ön görüşme yap", desc: "Olayın tanığını duruşmadan önce dinle.", cost: 1, time: "~10 sn", outcome: "good", story: "Muhtar, düşen cevizleri komşunun kendisinin topladığını gördüğünü anlattı." },
+      { id: "deep", icon: "📹", title: "Toplama günü fotoğraflarını büyüt", desc: "Sırığın hangi taraftan uzatıldığını incele.", cost: 2, time: "~20 sn", outcome: "good", story: "Fotoğraflarda sırığın Ratibe Hanım'ın kendi bahçesinden uzandığı netleşti." },
+      { id: "misc", icon: "📄", title: "Komşunun geçmiş anlaşmazlıklarını araştır", desc: "Önceki sınır kavgalarını kontrol et.", cost: 1, time: "~10 sn", outcome: "bad", story: "Geçmiş kayıtlar bu davayla doğrudan ilgili çıkmadı." },
+    ] },
     rounds: [
       {
         claim: "Ağaç sınırda! Dallar benim bahçemde, o zaman cevizler de benim!",
@@ -2830,6 +2979,12 @@ const CASES = [
     client: "Fotoğrafçı Baran, \"düğün fotoğraflarımızı teslim etmedi\" diyen bir çift tarafından dava edildi. Oysa albüm çoktan teslim edildi.",
     charge: "Çift: \"Düğünümüzün üzerinden 6 ay geçti, tek fotoğraf alamadık; paramızı ve tazminat istiyoruz\" diyor.",
     evidence: ["📦 Kargo teslim tutanağı", "💬 Gelinle mesajlaşma kayıtları", "📑 Sözleşme ve teslim listesi"],
+    prep: { options: [
+      { id: "kargo", icon: "📦", title: "Kargo teslim tutanağını doğrula", desc: "Teslim alan kişinin imzasını kontrol et.", cost: 1, time: "~10 sn", outcome: "good", story: "Tutanaktaki imza gelinin annesine ait çıktı — teslimat resmî." },
+      { id: "mesaj", icon: "📱", title: "Gelinle mesaj kayıtlarını incele", desc: "Albümün durumu hakkındaki yazışmaları bul.", cost: 1, time: "~10 sn", outcome: "good", story: "Gelin, mesajında albümün annesinde olduğunu bizzat yazmış." },
+      { id: "deep", icon: "📄", title: "Sözleşme ve teslim listesini karşılaştır", desc: "Fotoğraf sayılarını doğrula.", cost: 2, time: "~20 sn", outcome: "good", story: "Sözleşmede 300, teslim listesinde 412 fotoğraf yazıyor — fazlasıyla tamam." },
+      { id: "misc", icon: "🔍", title: "Çiftin sosyal medyasını incele", desc: "Paylaşımlarından ipucu ara.", cost: 1, time: "~10 sn", outcome: "bad", story: "Paylaşımlar davayla ilgili somut bir bilgi vermedi." },
+    ] },
     rounds: [
       {
         claim: "6 aydır bekliyoruz! Fotoğraflarımız ortada yok!",
@@ -2865,6 +3020,12 @@ const CASES = [
     client: "Osman Amca'nın kardeşleri, babalarının vasiyetindeki imzanın sahte olduğunu ve evin Osman Amca'ya kalamayacağını söylüyor.",
     charge: "Kardeşler: \"Babamız bu vasiyeti imzalamadı, imza sahte! Ev hepimizin\" diyerek dava açtı.",
     evidence: ["🖋️ İmza uzmanı raporu", "🎥 Vasiyetin imzalandığı günün noter kamera kaydı", "🗣️ Tanık: baba dostu emekli öğretmen"],
+    prep: { options: [
+      { id: "forensic", icon: "🧬", title: "İmza uzmanından ek analiz iste", desc: "İmzayı son 10 yılın örnekleriyle karşılaştır.", cost: 1, time: "~10 sn", outcome: "good", story: "Uzman, imzanın son 10 yıldaki tüm resmî imzalarla uyumlu olduğunu doğruladı." },
+      { id: "witness", icon: "📞", title: "Emekli öğretmen ile ön görüşme yap", desc: "Babanın niyetini doğrulayacak tanığı dinle.", cost: 1, time: "~10 sn", outcome: "good", story: "Öğretmen, babanın evi Osman'a bırakma niyetini yıllarca anlattığını hatırladı." },
+      { id: "deep", icon: "📹", title: "Noter kamerasını saniye saniye incele", desc: "İmza anındaki sağlık durumunu doğrula.", cost: 2, time: "~20 sn", outcome: "good", story: "Kayıtta baba kendi ayaklarıyla gelip gülümseyerek imza atıyor." },
+      { id: "misc", icon: "📄", title: "Kardeşlerin geçmişini araştır", desc: "Aile içi eski anlaşmazlıkları kontrol et.", cost: 1, time: "~10 sn", outcome: "bad", story: "Geçmiş kayıtlar bu davayla doğrudan ilgili çıkmadı." },
+    ] },
     // BASIN BASKISI: kanıtlar vasiyeti geçerli kılıyor ama halk "tek mirasçı" hikayesine şüpheyle bakıyor.
     media: {
       headlines: [
@@ -3383,12 +3544,101 @@ function openBrief(i) {
   show("scr-brief");
 }
 
+/* ================= HAZIRLIK AŞAMASI (Case Preparation) =================
+   Duruşmadan önceki kısa, stratejik araştırma katmanı. Duruşma sistemine
+   dokunmaz: yalnızca `prepBonus` adında gizli bir puan üretir ve bu puan
+   startTrial() içinde ikna çubuğuna başlangıç avantajı olarak eklenir.
+   Yeni dava eklemek için CASES[i].prep.options dizisine veri eklemek yeterli. */
+// Rütbeye göre hazırlık hakkı: Uzman Avukat'ta 4, Kıdemli Avukat ve üstünde 5.
+function prepPointsForRank() {
+  const ci = rankInfo(save.xp).ci;
+  return ci >= 4 ? 5 : ci === 3 ? 4 : 3;
+}
+// (maliyet, sonuç) -> gizli ikna puanı. Veri odaklı: yeni sonuç tipleri kolayca eklenebilir.
+const PREP_OUTCOME_VALUE = {
+  "1_good": 10, "2_good": 18, "1_neutral": 3, "2_neutral": 5, "1_bad": -5, "2_bad": -9,
+};
+
+let prepPointsLeft = 0, prepPointsTotal = 0, prepBonus = 0, prepGoodCount = 0;
+
+function openPrep() {
+  const c = CASES[currentCase];
+  prepPointsTotal = prepPointsForRank();
+  prepPointsLeft = prepPointsTotal;
+  prepBonus = 0;
+  prepGoodCount = 0;
+  document.getElementById("prep-feed").innerHTML = "";
+  document.getElementById("prep-meter-fill").style.width = "0%";
+  document.getElementById("prep-points-left").textContent = t("prepPointsLeft").replace("{n}", prepPointsLeft);
+
+  const opts = (c.prep && c.prep.options) || [];
+  document.getElementById("prep-cards").innerHTML = opts.map((o, k) => `
+    <button class="prep-card" id="prep-card-${k}" style="animation-delay:${REDUCE_MOTION ? 0 : k * 70}ms" onclick="choosePrepOption(${k})">
+      <span class="pc-icon">${evidenceIcon(o.icon)}</span>
+      <span class="pc-body">
+        <span class="pc-title">${o.title}</span>
+        <span class="pc-desc">${o.desc}</span>
+        <span class="pc-meta">
+          <span class="pc-tag pc-cost">${t("prepCost").replace("{n}", o.cost)}</span>
+          <span class="pc-tag pc-time">${o.time}</span>
+        </span>
+      </span>
+      <span class="pc-check">✓</span>
+    </button>
+  `).join("");
+  SND.click();
+  show("scr-prep");
+}
+
+function choosePrepOption(k) {
+  const c = CASES[currentCase];
+  const o = c.prep.options[k];
+  const card = document.getElementById("prep-card-" + k);
+  if (card.disabled) return;
+  if (o.cost > prepPointsLeft) {
+    card.classList.remove("shake"); void card.offsetWidth; card.classList.add("shake");
+    SND.mid(); buzz(30);
+    return;
+  }
+  prepPointsLeft -= o.cost;
+  const val = PREP_OUTCOME_VALUE[`${o.cost}_${o.outcome}`] || 0;
+  prepBonus += val;
+  if (o.outcome === "good") prepGoodCount++;
+  card.classList.add("chosen");
+  card.disabled = true;
+  document.querySelectorAll(".prep-card").forEach(b => {
+    const idx = +b.id.split("-").pop();
+    const cost = c.prep.options[idx].cost;
+    if (!b.classList.contains("chosen") && cost > prepPointsLeft) b.disabled = true;
+  });
+  document.getElementById("prep-points-left").textContent = t("prepPointsLeft").replace("{n}", prepPointsLeft);
+  const fillPct = Math.round(((prepPointsTotal - prepPointsLeft) / prepPointsTotal) * 100);
+  document.getElementById("prep-meter-fill").style.width = fillPct + "%";
+
+  const feed = document.getElementById("prep-feed");
+  const div = document.createElement("div");
+  div.className = "prep-feed-card " + (o.outcome === "good" ? "good" : "bad");
+  div.innerHTML = `<div><span class="pf-tag">${o.outcome === "good" ? t("prepFeedGood") : t("prepFeedBad")}</span><p>${o.story}</p></div>`;
+  feed.appendChild(div);
+
+  SND[o.outcome === "good" ? "good" : "mid"]();
+  buzz(o.outcome === "good" ? 25 : 20);
+}
+
+function finishPrep() {
+  SND.click();
+  startTrial();
+}
+
 function startTrial() {
-  round = 0; score = 0; meterPct = 0;
+  round = 0; score = prepBonus > 0 ? prepBonus : 0; meterPct = 0;
   combo = 0; maxCombo = 0;
   document.getElementById("combo-badge").className = "combo-badge";
   const tc = CASES[currentCase];
   document.getElementById("trial-title").innerHTML = (caseIcon(tc.id, "ci-inline") || tc.icon + " ") + tc.title;
+  const ptag = document.getElementById("trial-prep-tag");
+  if (prepGoodCount >= 2) { ptag.style.display = "inline-block"; ptag.textContent = t("prepReadyTag"); }
+  else ptag.style.display = "none";
   const mtag = document.getElementById("trial-media-tag");
   if (tc.media) { mtag.style.display = "inline-block"; mtag.textContent = t("mediaTag"); }
   else mtag.style.display = "none";
@@ -3659,7 +3909,7 @@ function resolvePick(p, f, btn) {
 
 function updateMeter() {
   const max = CASES[currentCase].rounds.length * 25;
-  const pct = Math.round(score / max * 100);
+  const pct = Math.min(100, Math.round(score / max * 100));
   document.getElementById("meter-bar").style.width = pct + "%";
   animateNumber(document.getElementById("meter-val"), meterPct, pct, "%");
   meterPct = pct;
