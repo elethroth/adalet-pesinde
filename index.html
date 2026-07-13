@@ -225,25 +225,68 @@
   .rank-row .rk-tag{font-size:10.5px;font-weight:800;color:#241c08;background:var(--gold);
     padding:4px 9px;border-radius:99px;letter-spacing:.3px;flex-shrink:0;text-align:center}
 
-  .menu-btns{margin-top:auto;width:100%;max-width:330px;display:flex;flex-direction:column;gap:15px;padding-top:24px}
+  /* ---------- ANA MENÜ BUTONLARI (premium mühür-madalyon sistemi) ---------- */
+  .menu-btns{margin-top:auto;width:100%;max-width:336px;display:flex;flex-direction:column;gap:13px;padding-top:26px}
   .menu-btn{
-    position:relative;width:100%;border:3px solid #7a4410;cursor:pointer;border-radius:20px;
-    padding:16px 18px;font-size:19px;font-weight:800;letter-spacing:.5px;color:#fff8ee;
-    text-shadow:0 2px 3px rgba(110,50,0,.7);
-    background:linear-gradient(180deg,#ffce59 0%,#f0a92e 46%,#d17d1b 100%);
-    box-shadow:0 6px 0 #97590f,0 12px 20px -5px rgba(0,0,0,.6),inset 0 2px 2px rgba(255,255,255,.55);
-    display:flex;align-items:center;justify-content:center;gap:10px;
-    transition:transform .08s ease,box-shadow .08s ease;
+    position:relative;width:100%;border:none;cursor:pointer;border-radius:19px;
+    padding:15px 20px;text-align:center;
+    background:linear-gradient(178deg,#c7a05e 0%,#b68a49 48%,#9c7038 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255,240,205,.32),
+      inset 0 -1.5px 0 rgba(38,20,6,.4),
+      inset 1px 0 0 rgba(255,240,205,.06),
+      inset -1px 0 0 rgba(38,20,6,.12),
+      0 3px 7px -2px rgba(12,7,3,.42),
+      0 11px 20px -9px rgba(12,7,3,.55);
+    transition:transform .16s cubic-bezier(.22,.85,.35,1),box-shadow .16s ease,filter .16s ease;
+    -webkit-tap-highlight-color:transparent;
   }
-  .menu-btn::before{content:"";position:absolute;left:12px;right:12px;top:6px;height:36%;border-radius:14px;
-    background:linear-gradient(180deg,rgba(255,255,255,.5),rgba(255,255,255,0));pointer-events:none}
-  .menu-btn:active{transform:translateY(4px);
-    box-shadow:0 2px 0 #97590f,0 5px 10px -3px rgba(0,0,0,.5),inset 0 2px 2px rgba(255,255,255,.55)}
-  .menu-btn .ico{font-size:.95em}
-  .menu-btn .ico-img{width:28px;height:auto;display:block;filter:drop-shadow(0 2px 3px rgba(90,40,0,.6))}
-  .menu-btn .ico-img.gear{width:20px;filter:drop-shadow(0 1px 2px rgba(90,40,0,.6))}
-  .menu-btn.primary{font-size:23px;padding:19px 18px;
-    background:linear-gradient(180deg,#ffe07d 0%,#f5b431 46%,#e08a1a 100%)}
+  .menu-btn::before{
+    content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+    background:repeating-linear-gradient(112deg,rgba(255,255,255,.05) 0px,rgba(255,255,255,.05) 1px,transparent 1px,transparent 3px);
+    opacity:.4;mix-blend-mode:overlay;
+  }
+  .menu-btn::after{
+    content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+    box-shadow:inset 0 0 0 1px rgba(255,232,185,.16);
+  }
+  .menu-btn:active{
+    transform:translateY(2px) scale(.986);
+    filter:brightness(.95);
+    box-shadow:
+      inset 0 1px 0 rgba(255,240,205,.16),
+      inset 0 -1.5px 0 rgba(38,20,6,.5),
+      0 2px 5px -2px rgba(12,7,3,.5);
+  }
+  .menu-btn:focus-visible{outline:none}
+  .menu-btn:focus-visible::after{box-shadow:inset 0 0 0 1px rgba(255,232,185,.16),0 0 0 3px rgba(240,201,116,.35)}
+  .menu-btn .btn-row{position:relative;display:flex;align-items:center;width:100%;z-index:1}
+  .menu-btn .btn-badge{
+    position:absolute;left:0;top:50%;transform:translateY(-50%);
+    width:34px;height:34px;border-radius:50%;flex-shrink:0;display:grid;place-items:center;
+    background:radial-gradient(circle at 35% 30%,#3c2911,#22160a);
+    box-shadow:inset 0 2px 4px rgba(0,0,0,.55),inset 0 -1px 1px rgba(255,220,160,.09),0 1px 0 rgba(255,232,185,.16);
+  }
+  .menu-btn .btn-badge svg{width:21px;height:21px;display:block}
+  .menu-btn .btn-label{
+    flex:1;font-size:17.5px;font-weight:650;letter-spacing:.5px;color:#f7ecd2;
+    text-shadow:0 1px 2px rgba(35,18,5,.55),0 0 14px rgba(255,214,140,.10);
+  }
+  .menu-btn.primary{
+    padding:18px 22px;
+    background:linear-gradient(178deg,#eccc7c 0%,#dbab54 46%,#c08c3d 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255,248,220,.4),
+      inset 0 -1.5px 0 rgba(58,32,8,.35),
+      inset 1px 0 0 rgba(255,248,220,.08),
+      inset -1px 0 0 rgba(58,32,8,.12),
+      0 4px 9px -2px rgba(12,7,3,.45),
+      0 13px 24px -9px rgba(12,7,3,.6);
+  }
+  .menu-btn.primary .btn-badge{width:38px;height:38px}
+  .menu-btn.primary .btn-badge svg{width:23px;height:23px}
+  .menu-btn.primary .btn-label{font-size:20.5px;color:#fff6df}
+  @media (prefers-reduced-motion:reduce){.menu-btn{transition:none}}
   .menu-foot{margin-top:18px;color:rgba(224,207,168,.5);font-size:11px;letter-spacing:.5px}
 
   /* ---------- AYARLAR ---------- */
@@ -787,10 +830,77 @@
         <div class="rb-streak" id="rb-streak" style="display:none"></div>
       </div>
       <div class="menu-btns">
-        <button class="menu-btn primary" onclick="goPlay()"><span class="ico">▶</span><span data-i18n="play">OYNA</span></button>
-        <button class="menu-btn" onclick="openSettings()"><img class="ico-img gear" src="assets/gear-icon.png" alt=""><span data-i18n="settings">AYARLAR</span></button>
-        <button class="menu-btn" onclick="openHowto()"><span class="ico">❓</span><span data-i18n="howto">NASIL OYNANIR</span></button>
-        <button class="menu-btn" onclick="openAchievements()"><img class="ico-img" src="assets/trophy-icon.png" alt=""><span data-i18n="achievements">BAŞARIMLAR</span></button>
+        <button class="menu-btn primary" onclick="goPlay()">
+          <span class="btn-row">
+            <span class="btn-badge">
+              <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <defs><linearGradient id="btnGoldPlay" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#f5e4ab"/><stop offset="45%" stop-color="#dcb669"/><stop offset="100%" stop-color="#a97c3e"/>
+                </linearGradient></defs>
+                <path d="M11 8.4 Q10.2 6.7 11.9 6 Q13 5.6 14 6.2 L24.3 14.2 Q26 15.4 26 17 Q26 18.6 24.3 19.8 L14 25.8 Q13 26.4 11.9 26 Q10.2 25.3 11 23.6 Z" fill="url(#btnGoldPlay)" stroke="#6b4a1f" stroke-width="0.6"/>
+                <path d="M12 9 L21.5 15.6 Q22.4 16.2 21.5 16.9 L12 22.3" fill="none" stroke="#fdf3d6" stroke-width="0.9" opacity=".45" stroke-linecap="round"/>
+              </svg>
+            </span>
+            <span class="btn-label" data-i18n="play">OYNA</span>
+          </span>
+        </button>
+        <button class="menu-btn" onclick="openSettings()">
+          <span class="btn-row">
+            <span class="btn-badge">
+              <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <defs><linearGradient id="btnGoldGear" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#f0d99a"/><stop offset="45%" stop-color="#d1a85f"/><stop offset="100%" stop-color="#93692f"/>
+                </linearGradient></defs>
+                <path d="M 13.91 6.94 L 13.92 3.57 Q 16 3.15 18.08 3.57 L 18.09 6.94 A 9.3 9.3 0 0 1 20.93 8.11 L 23.32 5.74 Q 25.09 6.91 26.26 8.68 L 23.89 11.07 A 9.3 9.3 0 0 1 25.06 13.91 L 28.43 13.92 Q 28.85 16 28.43 18.08 L 25.06 18.09 A 9.3 9.3 0 0 1 23.89 20.93 L 26.26 23.32 Q 25.09 25.09 23.32 26.26 L 20.93 23.89 A 9.3 9.3 0 0 1 18.09 25.06 L 18.08 28.43 Q 16 28.85 13.92 28.43 L 13.91 25.06 A 9.3 9.3 0 0 1 11.07 23.89 L 8.68 26.26 Q 6.91 25.09 5.74 23.32 L 8.11 20.93 A 9.3 9.3 0 0 1 6.94 18.09 L 3.57 18.08 Q 3.15 16 3.57 13.92 L 6.94 13.91 A 9.3 9.3 0 0 1 8.11 11.07 L 5.74 8.68 Q 6.91 6.91 8.68 5.74 L 11.07 8.11 A 9.3 9.3 0 0 1 13.91 6.94 Z" fill="url(#btnGoldGear)" stroke="#6b4a1f" stroke-width="0.5"/>
+                <circle cx="16" cy="16" r="4.4" fill="#22160a"/>
+                <circle cx="16" cy="16" r="4.4" fill="none" stroke="#fdf3d6" stroke-width="0.6" opacity=".3"/>
+              </svg>
+            </span>
+            <span class="btn-label" data-i18n="settings">AYARLAR</span>
+          </span>
+        </button>
+        <button class="menu-btn" onclick="openHowto()">
+          <span class="btn-row">
+            <span class="btn-badge">
+              <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <defs><linearGradient id="btnGoldBook" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#f0d99a"/><stop offset="45%" stop-color="#d1a85f"/><stop offset="100%" stop-color="#93692f"/>
+                </linearGradient></defs>
+                <path d="M16 10.5 C13.5 8.8 9.5 8.4 6.7 9.4 V22.6 C9.5 21.6 13.5 22 16 23.7 Z" fill="url(#btnGoldBook)" stroke="#6b4a1f" stroke-width="0.5" stroke-linejoin="round"/>
+                <path d="M16 10.5 C18.5 8.8 22.5 8.4 25.3 9.4 V22.6 C22.5 21.6 18.5 22 16 23.7 Z" fill="url(#btnGoldBook)" stroke="#6b4a1f" stroke-width="0.5" stroke-linejoin="round"/>
+                <line x1="16" y1="10.5" x2="16" y2="23.7" stroke="#6b4a1f" stroke-width="0.7"/>
+                <g stroke="#6b4a1f" stroke-width="0.55" opacity=".65">
+                  <line x1="8.5" y1="12.4" x2="13.7" y2="13.2"/><line x1="8.5" y1="15.3" x2="13.7" y2="16.1"/><line x1="8.5" y1="18.2" x2="13.7" y2="18.9"/>
+                  <line x1="23.5" y1="12.4" x2="18.3" y2="13.2"/><line x1="23.5" y1="15.3" x2="18.3" y2="16.1"/><line x1="23.5" y1="18.2" x2="18.3" y2="18.9"/>
+                </g>
+                <path d="M14 9.6 L14 6.6 L16 7.6 L18 6.6 L18 9.6" fill="#a4543c" stroke="#6b4a1f" stroke-width="0.5" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span class="btn-label" data-i18n="howto">NASIL OYNANIR</span>
+          </span>
+        </button>
+        <button class="menu-btn" onclick="openAchievements()">
+          <span class="btn-row">
+            <span class="btn-badge">
+              <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <defs><linearGradient id="btnGoldMedal" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#f2e2ae"/><stop offset="45%" stop-color="#d9b96b"/><stop offset="100%" stop-color="#9c7a3c"/>
+                </linearGradient></defs>
+                <path d="M12.6 19.6 L9.4 28.8 L13.7 27.1 L16 29.7 L18.3 27.1 L22.6 28.8 L19.4 19.6 Z" fill="url(#btnGoldMedal)" stroke="#6b4a1f" stroke-width="0.5" stroke-linejoin="round"/>
+                <g fill="#c9a85a" opacity=".9">
+                  <ellipse cx="9.7" cy="13.8" rx="1.4" ry="2.8" transform="rotate(-35 9.7 13.8)"/>
+                  <ellipse cx="8.7" cy="17.2" rx="1.3" ry="2.6" transform="rotate(-15 8.7 17.2)"/>
+                  <ellipse cx="22.3" cy="13.8" rx="1.4" ry="2.8" transform="rotate(35 22.3 13.8)"/>
+                  <ellipse cx="23.3" cy="17.2" rx="1.3" ry="2.6" transform="rotate(15 23.3 17.2)"/>
+                </g>
+                <circle cx="16" cy="14.2" r="7.6" fill="url(#btnGoldMedal)" stroke="#6b4a1f" stroke-width="0.7"/>
+                <circle cx="16" cy="14.2" r="5.3" fill="none" stroke="#fdf3d6" stroke-width="0.7" opacity=".4"/>
+                <path d="M16 11 L16.9 13.4 L19.4 13.7 L17.5 15.3 L18.1 17.8 L16 16.5 L13.9 17.8 L14.5 15.3 L12.6 13.7 L15.1 13.4 Z" fill="#6b4a1f"/>
+              </svg>
+            </span>
+            <span class="btn-label" data-i18n="achievements">BAŞARIMLAR</span>
+          </span>
+        </button>
       </div>
       <div class="menu-foot">v1.0 · Adalet Peşinde</div>
     </div>
