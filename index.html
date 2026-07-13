@@ -602,6 +602,8 @@
   .ce-impact{font-size:11px;font-weight:400;color:rgba(224,176,79,.65);margin-top:10px;
     padding-top:10px;border-top:1px solid rgba(224,176,79,.18);font-style:italic;display:none}
   .ce-impact.show{display:block}
+  .ce-hint{margin-top:12px;font-size:10.5px;font-weight:600;letter-spacing:.4px;
+    color:rgba(224,176,79,.5)}
   @media (prefers-reduced-motion:reduce){
     .court-event-overlay,.court-event-card,.ce-seal{transition:none}
   }
@@ -991,6 +993,7 @@
       <div class="ce-title" id="ce-title"></div>
       <div class="ce-desc" id="ce-desc"></div>
       <div class="ce-impact" id="ce-impact"></div>
+      <div class="ce-hint" data-i18n="ceHint">Devam etmek için dokun</div>
     </div>
   </div>
 
@@ -2372,6 +2375,7 @@ const LANG = {
     prepNoPoints: "Yeterli hazırlık puanın yok.", prepUsed: "Kullanıldı",
     prepFeedGood: "Değerli İpucu", prepFeedBad: "Sonuçsuz Çaba",
     prepReadyTag: "🗂 Hazırlıklı",
+    ceHint: "Devam etmek için dokun",
     persuade: "Hâkimi İkna Etme", opponent: "KARŞI TARAF", chooseDefense: "👉 Savunmanı seç:",
     objection: "İTİRAZ!", presentEv: "Bu iddia bir kanıtınla çelişiyor. Doğru kanıtı sun:",
     witness: "TANIK", findLie: "🔎 İfadedeki çelişkili cümleye dokun:",
@@ -2442,6 +2446,7 @@ const LANG = {
     prepNoPoints: "Not enough preparation points.", prepUsed: "Used",
     prepFeedGood: "Valuable Lead", prepFeedBad: "Dead End",
     prepReadyTag: "🗂 Prepared",
+    ceHint: "Tap to continue",
     persuade: "Convince the Judge", opponent: "OPPOSING SIDE", chooseDefense: "👉 Choose your defense:",
     objection: "OBJECTION!", presentEv: "This claim contradicts one of your pieces of evidence. Present the right one:",
     witness: "WITNESS", findLie: "🔎 Tap the contradictory statement:",
@@ -3838,8 +3843,11 @@ function renderRound() {
 
 // Beklenmedik gelişme bildirimi: koyu perde + altın çerçeveli kart + mühür animasyonu.
 // ~1.6sn görünür kalır, sonra küçülerek kaybolur ve devam callback'i çağrılır.
+let courtEventTimers = [];
 function showCourtEvent(evt, done) {
   if (REDUCE_MOTION) { done(); return; }
+  courtEventTimers.forEach(clearTimeout);
+  courtEventTimers = [];
   const overlay = document.getElementById("court-event-overlay");
   const card = document.getElementById("court-event-card");
   document.getElementById("ce-tag").textContent = evt.tag;
@@ -3854,14 +3862,27 @@ function showCourtEvent(evt, done) {
   SND.courtEvent();
   buzz([0, 40, 30, 60]);
   requestAnimationFrame(() => card.classList.add("on"));
-  setTimeout(() => {
+
+  let dismissed = false;
+  const dismiss = () => {
+    if (dismissed) return;
+    dismissed = true;
+    courtEventTimers.forEach(clearTimeout);
+    courtEventTimers = [];
+    overlay.onclick = null;
     card.classList.add("out");
-    setTimeout(() => {
+    courtEventTimers.push(setTimeout(() => {
       overlay.classList.remove("on");
       card.className = "court-event-card";
       done();
-    }, 260);
-  }, 1700);
+    }, 260));
+  };
+  // Metin uzunluğuna göre okuma süresi: kısa okunamayacak kadar erken kapanmasın,
+  // ama kullanıcı isterse hemen dokunup geçebilsin.
+  const readLen = (evt.title + " " + evt.desc + " " + (evt.impactNote || "")).length;
+  const readMs = Math.max(3200, Math.min(5200, readLen * 55));
+  overlay.onclick = dismiss;
+  courtEventTimers.push(setTimeout(dismiss, readMs));
 }
 
 function renderRoundCore(evt) {
