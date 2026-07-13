@@ -342,6 +342,28 @@
   .map-node.shake{animation:dotShake .35s}
   @keyframes dotShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
   @media (prefers-reduced-motion:reduce){.map-node.cur .mn-circle{animation:none}}
+
+  /* ---------- DAVA İKONLARI (SVG) ---------- */
+  .ci{display:block;overflow:visible}
+  .mn-circle .ci{width:74%;height:74%}
+  .map-node.won .mn-circle .ci{filter:drop-shadow(0 1px 3px rgba(58,41,23,.4))}
+  .map-node.cur .mn-circle .ci{filter:drop-shadow(0 2px 4px rgba(58,41,23,.5))}
+  .map-node.locked .mn-circle .ci{opacity:.72;filter:saturate(.5) brightness(.82)}
+  .cf-icon .ci{width:48px;height:48px}
+  .daily-strip .ds-ic{display:grid;place-items:center;width:34px}
+  .daily-strip .ds-ic .ci{width:32px;height:32px}
+  .ci-inline{width:24px;height:24px;display:inline-block;vertical-align:-5px;margin-right:3px}
+  .ci .spin,.ci .blink,.ci .sway,.ci .steam,.ci .steam2{transform-box:view-box}
+  .ci.anim .spin{animation:ciSpin 7s linear infinite}
+  .ci.anim .blink{animation:ciBlink 4.6s ease-in-out infinite}
+  .ci.anim .sway{animation:ciSway 3s ease-in-out infinite}
+  .ci.anim .steam{animation:ciSteam 2.6s ease-in-out infinite}
+  .ci.anim .steam2{animation:ciSteam 2.6s ease-in-out .9s infinite}
+  @keyframes ciSpin{to{transform:rotate(360deg)}}
+  @keyframes ciBlink{0%,90%,100%{transform:scaleY(1)}94%{transform:scaleY(.15)}}
+  @keyframes ciSway{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}
+  @keyframes ciSteam{0%,100%{transform:translateY(0);opacity:.6}50%{transform:translateY(-2.6px);opacity:1}}
+  @media (prefers-reduced-motion:reduce){.ci.anim .spin,.ci.anim .blink,.ci.anim .sway,.ci.anim .steam,.ci.anim .steam2{animation:none}}
   @media (prefers-reduced-motion:reduce){.cf-icon,.cf-portrait,.cf-opp,.case-feature::after{animation:none}}
 
   .case-card{
@@ -1315,6 +1337,250 @@ function evidenceIcon(token) {
   const key = (token || "").replace(/️/g, "");
   const art = EV_ART[EV_MAP[key]] || EV_ART.doc;
   return `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">${art}</svg>`;
+}
+
+/* ================= DAVA İKONLARI (premium semi-flat SVG seti) =================
+   Ortak dil: 64x64, sol üstten yumuşak ışık, mat altın / bronz / sıcak kahve /
+   parşömen paleti, zeminde yumuşak AO gölgesi, kenarlarda rim light.
+   .spin/.blink/.sway/.steam sınıfları yalnızca .anim ikonlarda canlanır. */
+const CASE_ICON_ART = {
+  bisiklet: `
+    <defs>
+      <linearGradient id="cib-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f2cf7a"/><stop offset="1" stop-color="#c9952f"/></linearGradient>
+      <linearGradient id="cib-t" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6b4d30"/><stop offset="1" stop-color="#46311d"/></linearGradient>
+    </defs>
+    <ellipse cx="32" cy="55.5" rx="25" ry="3.8" fill="#3a2917" opacity=".3"/>
+    <circle cx="16" cy="42" r="12.5" fill="none" stroke="url(#cib-t)" stroke-width="5"/>
+    <circle cx="16" cy="42" r="9" fill="none" stroke="#e3b54a" stroke-width="1.6" opacity=".9"/>
+    <g class="spin" style="transform-origin:16px 42px">
+      <line x1="16" y1="33.5" x2="16" y2="50.5" stroke="#d9b060" stroke-width="1.4"/>
+      <line x1="8.6" y1="37.8" x2="23.4" y2="46.2" stroke="#d9b060" stroke-width="1.4"/>
+      <line x1="8.6" y1="46.2" x2="23.4" y2="37.8" stroke="#d9b060" stroke-width="1.4"/>
+    </g>
+    <circle cx="48" cy="42" r="12.5" fill="none" stroke="url(#cib-t)" stroke-width="5"/>
+    <circle cx="48" cy="42" r="9" fill="none" stroke="#e3b54a" stroke-width="1.6" opacity=".9"/>
+    <g class="spin" style="transform-origin:48px 42px">
+      <line x1="48" y1="33.5" x2="48" y2="50.5" stroke="#d9b060" stroke-width="1.4"/>
+      <line x1="40.6" y1="37.8" x2="55.4" y2="46.2" stroke="#d9b060" stroke-width="1.4"/>
+      <line x1="40.6" y1="46.2" x2="55.4" y2="37.8" stroke="#d9b060" stroke-width="1.4"/>
+    </g>
+    <path d="M16 42 L27 26.5 L41.5 26.5 M27 26.5 L34 42 L16 42 M34 42 L44 28.5 M48 42 L44 28.5 L41.5 26.5" fill="none" stroke="url(#cib-g)" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="34" cy="42" r="3" fill="#b98a2e"/>
+    <circle cx="34" cy="42" r="1.3" fill="#f2cf7a"/>
+    <path d="M44 28.5 L43 21.5 M39.4 19.6 Q44 18.2 46.8 21.6" fill="none" stroke="#b98a2e" stroke-width="2.6" stroke-linecap="round"/>
+    <circle cx="39" cy="20" r="1.8" fill="#6b4d30"/>
+    <line x1="27" y1="26.5" x2="25.8" y2="22.6" stroke="#8a5f16" stroke-width="2.4" stroke-linecap="round"/>
+    <path d="M21 22.4 q5 -3.2 10.4 -.4 q-5.2 4.4 -10.4 .4z" fill="#6b4d30"/>
+    <path d="M22.6 21.6 q3.4 -1.6 6.6 -.2" stroke="#a97c3b" stroke-width="1.1" fill="none" stroke-linecap="round"/>
+    <path d="M6.6 36.4 A12.5 12.5 0 0 1 12.4 30" stroke="#f7e7bd" stroke-width="1.5" fill="none" opacity=".55" stroke-linecap="round"/>
+    <path d="M38.6 36.4 A12.5 12.5 0 0 1 44.4 30" stroke="#f7e7bd" stroke-width="1.5" fill="none" opacity=".55" stroke-linecap="round"/>`,
+  kedi: `
+    <defs>
+      <linearGradient id="cik-f" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#eccf9e"/><stop offset="1" stop-color="#b98a54"/></linearGradient>
+      <linearGradient id="cik-e" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8a5f3a"/><stop offset="1" stop-color="#5f3f24"/></linearGradient>
+    </defs>
+    <ellipse cx="32" cy="56.5" rx="20" ry="3.4" fill="#3a2917" opacity=".3"/>
+    <path class="sway" style="transform-origin:46px 52px" d="M45 52 Q58 47 54.5 34" fill="none" stroke="url(#cik-e)" stroke-width="6" stroke-linecap="round"/>
+    <path d="M14.5 23 L18.6 6.5 L29 16.5 Z" fill="url(#cik-e)"/>
+    <path d="M49.5 23 L45.4 6.5 L35 16.5 Z" fill="url(#cik-e)"/>
+    <path d="M18 18.6 L20.4 10.4 L25.8 15.6 Z" fill="#d98a4e"/>
+    <path d="M46 18.6 L43.6 10.4 L38.2 15.6 Z" fill="#d98a4e"/>
+    <ellipse cx="32" cy="34.5" rx="20" ry="18.5" fill="url(#cik-f)"/>
+    <path d="M15 27 Q18.6 17.4 28 15.2" stroke="#f7e7bd" stroke-width="1.7" opacity=".55" fill="none" stroke-linecap="round"/>
+    <ellipse cx="32" cy="42" rx="10.6" ry="7.4" fill="#f2e6c8"/>
+    <g class="blink" style="transform-origin:32px 31.5px">
+      <ellipse cx="24" cy="31.5" rx="4.6" ry="5.4" fill="#46311d"/>
+      <ellipse cx="40" cy="31.5" rx="4.6" ry="5.4" fill="#46311d"/>
+      <circle cx="25.6" cy="29.4" r="1.5" fill="#f2e6c8"/>
+      <circle cx="41.6" cy="29.4" r="1.5" fill="#f2e6c8"/>
+      <circle cx="22.8" cy="33.6" r=".9" fill="#c9952f"/>
+      <circle cx="38.8" cy="33.6" r=".9" fill="#c9952f"/>
+    </g>
+    <path d="M30.3 39.4 L33.7 39.4 L32 41.9 Z" fill="#a4543c"/>
+    <path d="M32 41.9 Q32 44.3 29.3 44.9 M32 41.9 Q32 44.3 34.7 44.9" stroke="#8a5f3a" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+    <path d="M12 36.4 L20 37.4 M12.6 41.4 L20 40.6 M52 36.4 L44 37.4 M51.4 41.4 L44 40.6" stroke="#8a5f3a" stroke-width="1.1" opacity=".65" stroke-linecap="round"/>
+    <path d="M26.6 17.6 q2.7 4.2 5.4 0 q2.7 4.2 5.4 0" stroke="#8a5f3a" stroke-width="1.6" fill="none" opacity=".45" stroke-linecap="round"/>`,
+  mesai: `
+    <defs>
+      <linearGradient id="cim-c" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f2cf7a"/><stop offset="1" stop-color="#b98a2e"/></linearGradient>
+      <radialGradient id="cim-d" cx=".38" cy=".32" r=".9"><stop offset="0" stop-color="#f7ecd2"/><stop offset="1" stop-color="#dfc79a"/></radialGradient>
+    </defs>
+    <ellipse cx="32" cy="57.5" rx="17" ry="3" fill="#3a2917" opacity=".3"/>
+    <circle cx="32" cy="9.5" r="4" fill="none" stroke="url(#cim-c)" stroke-width="2.6"/>
+    <rect x="29.2" y="12.2" width="5.6" height="5.2" rx="1.5" fill="#c9952f"/>
+    <circle cx="32" cy="36" r="19" fill="url(#cim-c)"/>
+    <circle cx="32" cy="36" r="15.6" fill="#8a5f16"/>
+    <circle cx="32" cy="36" r="14" fill="url(#cim-d)"/>
+    <g stroke="#6b4d30" stroke-width="1.7" stroke-linecap="round">
+      <line x1="32" y1="24.4" x2="32" y2="27.2"/><line x1="32" y1="44.8" x2="32" y2="47.6"/>
+      <line x1="20.4" y1="36" x2="23.2" y2="36"/><line x1="40.8" y1="36" x2="43.6" y2="36"/>
+    </g>
+    <line x1="32" y1="36" x2="32" y2="28" stroke="#5a4028" stroke-width="2.4" stroke-linecap="round"/>
+    <line x1="32" y1="36" x2="38.4" y2="38.4" stroke="#5a4028" stroke-width="2.4" stroke-linecap="round"/>
+    <g class="spin" style="transform-origin:32px 36px"><line x1="32" y1="39" x2="32" y2="25.4" stroke="#a4543c" stroke-width="1.2" stroke-linecap="round"/></g>
+    <circle cx="32" cy="36" r="1.9" fill="#c9952f"/>
+    <path d="M17.8 28.4 A19 19 0 0 1 25.6 18.6" stroke="#f7e7bd" stroke-width="1.8" fill="none" opacity=".6" stroke-linecap="round"/>`,
+  kasa: `
+    <defs>
+      <linearGradient id="cic-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f2cf7a"/><stop offset="1" stop-color="#c9952f"/></linearGradient>
+      <linearGradient id="cic-s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c9952f"/><stop offset="1" stop-color="#8a5f16"/></linearGradient>
+    </defs>
+    <ellipse cx="31" cy="55.5" rx="23" ry="3.6" fill="#3a2917" opacity=".3"/>
+    <rect x="14" y="43" width="30" height="8.5" rx="4" fill="url(#cic-s)"/>
+    <ellipse cx="29" cy="43.5" rx="15" ry="5" fill="url(#cic-g)"/>
+    <rect x="16" y="34.5" width="30" height="8.5" rx="4" fill="url(#cic-s)"/>
+    <ellipse cx="31" cy="35" rx="15" ry="5" fill="url(#cic-g)"/>
+    <ellipse cx="31" cy="35" rx="10.4" ry="3.2" fill="none" stroke="#b98a2e" stroke-width="1.2"/>
+    <g transform="rotate(16 46 22)">
+      <circle cx="46" cy="22" r="10.2" fill="url(#cic-g)"/>
+      <circle cx="46" cy="22" r="7.2" fill="none" stroke="#b98a2e" stroke-width="1.5"/>
+      <path d="M46 17.6 l1.3 2.8 3 .3 -2.2 2 .6 3 -2.7 -1.6 -2.7 1.6 .6 -3 -2.2 -2 3 -.3 z" fill="#8a5f16"/>
+    </g>
+    <path d="M18.6 32.2 Q24 30.4 30 30.8" stroke="#f7e7bd" stroke-width="1.5" fill="none" opacity=".6" stroke-linecap="round"/>`,
+  gurultu: `
+    <defs>
+      <linearGradient id="cid-w" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8a5f3a"/><stop offset="1" stop-color="#553c22"/></linearGradient>
+      <radialGradient id="cid-h" cx=".35" cy=".3" r=".95"><stop offset="0" stop-color="#f2e6c8"/><stop offset="1" stop-color="#d6bd8c"/></radialGradient>
+    </defs>
+    <ellipse cx="32" cy="56.5" rx="21" ry="3.4" fill="#3a2917" opacity=".3"/>
+    <g class="sway" style="transform-origin:40px 30px">
+      <line x1="18" y1="12" x2="40" y2="29" stroke="#c9a05f" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="17" cy="11.2" r="2.9" fill="#e3b54a"/>
+    </g>
+    <line x1="46" y1="12" x2="24" y2="29" stroke="#c9a05f" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="47" cy="11.2" r="2.9" fill="#e3b54a"/>
+    <path d="M13 30 v16.5 q0 6 19 6 q19 0 19 -6 V30 Z" fill="url(#cid-w)"/>
+    <path d="M15 34 L22 45.5 L29 34 L36 45.5 L43 34 L49.6 44.6" stroke="#e3b54a" stroke-width="1.7" fill="none" opacity=".9" stroke-linecap="round" stroke-linejoin="round"/>
+    <ellipse cx="32" cy="30" rx="19" ry="6.4" fill="url(#cid-h)"/>
+    <ellipse cx="32" cy="30" rx="19" ry="6.4" fill="none" stroke="#b98a2e" stroke-width="1.7"/>
+    <path d="M13 46.5 q0 6 19 6 q19 0 19 -6" fill="none" stroke="#46311d" stroke-width="1.4" opacity=".55"/>
+    <path d="M15.4 27.2 Q22 23.8 30 23.8" stroke="#f7e7bd" stroke-width="1.4" fill="none" opacity=".6" stroke-linecap="round"/>`,
+  zemin: `
+    <defs>
+      <linearGradient id="ciz-c" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#eab35c"/><stop offset="1" stop-color="#bd7526"/></linearGradient>
+    </defs>
+    <ellipse cx="32" cy="56" rx="22" ry="3.4" fill="#3a2917" opacity=".3"/>
+    <path d="M32 12 Q33.9 12 34.5 14.6 L42.5 45.5 H21.5 L29.5 14.6 Q30.1 12 32 12 Z" fill="url(#ciz-c)"/>
+    <path d="M27.2 26.5 h9.6 l1.8 8 h-13.2 z" fill="#f2e6c8"/>
+    <rect x="13" y="44.5" width="38" height="8" rx="3.6" fill="url(#ciz-c)"/>
+    <rect x="13" y="44.5" width="38" height="3.6" rx="1.8" fill="#eab35c" opacity=".6"/>
+    <path d="M30.4 14.8 L26.6 30" stroke="#f7e7bd" stroke-width="1.5" fill="none" opacity=".55" stroke-linecap="round"/>
+    <path class="steam" style="transform-origin:51px 18px" d="M51 10.5 C55 16 55 20 51 22.5 C47 20 47 16 51 10.5 Z" fill="#8ba3b5"/>
+    <circle cx="49.4" cy="18.4" r="1.2" fill="#dbe6ec" opacity=".85"/>`,
+  kolye: `
+    <defs>
+      <linearGradient id="cij-gem" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e89a5e"/><stop offset="1" stop-color="#a4543c"/></linearGradient>
+    </defs>
+    <ellipse cx="32" cy="55.5" rx="15" ry="3" fill="#3a2917" opacity=".3"/>
+    <path d="M13 12 Q32 30 51 12" fill="none" stroke="#c9952f" stroke-width="2.6" stroke-linecap="round"/>
+    <g fill="none" stroke="#e3b54a" stroke-width="1.6">
+      <circle cx="19" cy="16.4" r="1.7"/><circle cx="26" cy="20.4" r="1.7"/><circle cx="38" cy="20.4" r="1.7"/><circle cx="45" cy="16.4" r="1.7"/>
+    </g>
+    <circle cx="32" cy="25.5" r="3.1" fill="none" stroke="#e3b54a" stroke-width="2.4"/>
+    <path d="M32 28.5 C41.5 36.5 42.5 45 32 51 C21.5 45 22.5 36.5 32 28.5 Z" fill="url(#cij-gem)" stroke="#b98a2e" stroke-width="1.6"/>
+    <path d="M32 31.5 L36.8 39 L32 47 L27.2 39 Z" fill="none" stroke="#f0b083" stroke-width="1.2" opacity=".8"/>
+    <path d="M28 34.4 Q26 38 27 42" stroke="#f7dcc4" stroke-width="1.4" fill="none" opacity=".7" stroke-linecap="round"/>
+    <path d="M40.5 30.5 l1 2.3 2.3 1 -2.3 1 -1 2.3 -1 -2.3 -2.3 -1 2.3 -1 z" fill="#f2e6c8"/>`,
+  tarif: `
+    <defs>
+      <linearGradient id="cit-p" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b3854a"/><stop offset="1" stop-color="#6b4d30"/></linearGradient>
+    </defs>
+    <ellipse cx="32" cy="55.5" rx="21" ry="3.4" fill="#3a2917" opacity=".3"/>
+    <path class="steam" style="transform-origin:26px 16px" d="M26 6.5 q-3.2 4 0 7.2 q3.2 3.2 0 6.3" stroke="#e6d3a8" stroke-width="2" fill="none" opacity=".85" stroke-linecap="round"/>
+    <path class="steam2" style="transform-origin:38px 16px" d="M38 6.5 q3.2 4 0 7.2 q-3.2 3.2 0 6.3" stroke="#e6d3a8" stroke-width="2" fill="none" opacity=".85" stroke-linecap="round"/>
+    <rect x="29" y="19.4" width="6" height="4.4" rx="1.8" fill="#5a4028"/>
+    <ellipse cx="32" cy="26.5" rx="17.5" ry="5.2" fill="#8a5f3a"/>
+    <path d="M14 28.5 h36 v9.5 q0 10.5 -18 10.5 q-18 0 -18 -10.5 z" fill="url(#cit-p)"/>
+    <ellipse cx="32" cy="28.5" rx="18" ry="4.6" fill="none" stroke="#e3b54a" stroke-width="1.7"/>
+    <path d="M10.5 31 q-3.5 2.5 0 5" fill="none" stroke="#e3b54a" stroke-width="2.6" stroke-linecap="round"/>
+    <path d="M53.5 31 q3.5 2.5 0 5" fill="none" stroke="#e3b54a" stroke-width="2.6" stroke-linecap="round"/>
+    <path d="M18.4 32 Q18 38 21.4 43" stroke="#f7e7bd" stroke-width="2.2" fill="none" opacity=".35" stroke-linecap="round"/>`,
+  fatura: `
+    <defs>
+      <linearGradient id="cif-b" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6b4d30"/><stop offset="1" stop-color="#46311d"/></linearGradient>
+      <linearGradient id="cif-s" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f4ead0"/><stop offset="1" stop-color="#dfc79a"/></linearGradient>
+      <linearGradient id="cif-c" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f2cf7a"/><stop offset="1" stop-color="#c9952f"/></linearGradient>
+    </defs>
+    <ellipse cx="32" cy="56" rx="19" ry="3.2" fill="#3a2917" opacity=".3"/>
+    <rect x="18" y="9" width="27" height="44" rx="6" fill="url(#cif-b)"/>
+    <rect x="21.2" y="14.4" width="20.6" height="31" rx="3" fill="url(#cif-s)"/>
+    <g stroke="#b98a2e" stroke-width="1.7" stroke-linecap="round">
+      <line x1="24.6" y1="20.4" x2="38.4" y2="20.4"/>
+      <line x1="24.6" y1="25.6" x2="34.4" y2="25.6"/>
+      <line x1="24.6" y1="30.8" x2="38.4" y2="30.8"/>
+      <line x1="24.6" y1="36" x2="32.4" y2="36"/>
+    </g>
+    <circle cx="31.5" cy="49.2" r="1.9" fill="#c9a05f"/>
+    <circle cx="45.5" cy="45" r="9.5" fill="url(#cif-c)"/>
+    <circle cx="45.5" cy="45" r="6.6" fill="none" stroke="#b98a2e" stroke-width="1.5"/>
+    <path d="M43.6 40.8 v8.4 M43.6 43.6 l4.6 -1.9 M43.6 46.6 l4.6 -1.9" stroke="#8a5f16" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <path d="M19.6 12.4 Q23 9.8 28 10" stroke="#f7e7bd" stroke-width="1.4" fill="none" opacity=".5" stroke-linecap="round"/>`,
+  ceviz: `
+    <defs>
+      <linearGradient id="civ-c" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ada76e"/><stop offset="1" stop-color="#6f6a3c"/></linearGradient>
+      <linearGradient id="civ-t" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8a5f3a"/><stop offset="1" stop-color="#553c22"/></linearGradient>
+    </defs>
+    <ellipse cx="32" cy="56" rx="21" ry="3.4" fill="#3a2917" opacity=".3"/>
+    <path d="M29 54.5 C30.4 46.5 30 42 26.5 35.5 L37.5 35.5 C34 42 33.6 46.5 35 54.5 Z" fill="url(#civ-t)"/>
+    <circle cx="21" cy="26" r="11" fill="url(#civ-c)"/>
+    <circle cx="43" cy="26" r="11" fill="url(#civ-c)"/>
+    <circle cx="32" cy="17.5" r="11.5" fill="url(#civ-c)"/>
+    <circle cx="32" cy="27.5" r="12.5" fill="url(#civ-c)"/>
+    <circle cx="25.6" cy="30" r="2.7" fill="#6b4d30"/>
+    <circle cx="38.4" cy="23.6" r="2.7" fill="#6b4d30"/>
+    <circle cx="33.4" cy="33" r="2.7" fill="#6b4d30"/>
+    <path d="M20 15.4 Q25.6 9.4 33 9.6" stroke="#f7e7bd" stroke-width="1.7" fill="none" opacity=".5" stroke-linecap="round"/>`,
+  album: `
+    <defs>
+      <linearGradient id="cia-b" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b3854a"/><stop offset="1" stop-color="#5f4526"/></linearGradient>
+      <radialGradient id="cia-l" cx=".35" cy=".3" r=".95"><stop offset="0" stop-color="#c9a05f"/><stop offset="1" stop-color="#46311d"/></radialGradient>
+    </defs>
+    <ellipse cx="32" cy="55" rx="23" ry="3.4" fill="#3a2917" opacity=".3"/>
+    <rect x="23.6" y="14.5" width="16.8" height="9" rx="3" fill="#5f4526"/>
+    <rect x="12" y="20.5" width="40" height="30" rx="6.5" fill="url(#cia-b)"/>
+    <rect x="12" y="20.5" width="40" height="8.5" rx="4.2" fill="#c9a05f" opacity=".45"/>
+    <circle cx="32" cy="35.5" r="11" fill="#e3b54a"/>
+    <circle cx="32" cy="35.5" r="8.4" fill="#46311d"/>
+    <circle cx="32" cy="35.5" r="5.6" fill="url(#cia-l)"/>
+    <circle cx="29.8" cy="33" r="1.7" fill="#f2e6c8" opacity=".85"/>
+    <circle cx="45.6" cy="26.5" r="2.3" fill="#d98a4e"/>
+    <rect x="16.5" y="24.4" width="6.5" height="4.4" rx="1.8" fill="#6b4d30"/>
+    <path d="M13.6 23.6 Q18 20.4 24 20.8" stroke="#f7e7bd" stroke-width="1.4" fill="none" opacity=".5" stroke-linecap="round"/>`,
+  miras: `
+    <defs>
+      <linearGradient id="cis-p" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f4ead0"/><stop offset="1" stop-color="#d9bf8e"/></linearGradient>
+    </defs>
+    <ellipse cx="32" cy="56" rx="20" ry="3.2" fill="#3a2917" opacity=".3"/>
+    <rect x="18" y="15" width="28" height="32" fill="url(#cis-p)"/>
+    <rect x="14.5" y="11.5" width="35" height="7.5" rx="3.75" fill="#cbb080"/>
+    <rect x="14.5" y="11.5" width="35" height="3.4" rx="1.7" fill="#e6d3a8"/>
+    <rect x="14.5" y="44" width="35" height="7.5" rx="3.75" fill="#cbb080"/>
+    <rect x="14.5" y="44" width="35" height="3.4" rx="1.7" fill="#e6d3a8"/>
+    <g stroke="#a97c3b" stroke-width="1.7" stroke-linecap="round">
+      <line x1="23" y1="24.5" x2="41" y2="24.5"/>
+      <line x1="23" y1="29.5" x2="38" y2="29.5"/>
+      <line x1="23" y1="34.5" x2="41" y2="34.5"/>
+    </g>
+    <circle cx="41.5" cy="43" r="6.6" fill="#a4543c"/>
+    <circle cx="41.5" cy="43" r="3.9" fill="none" stroke="#dd9271" stroke-width="1.5"/>
+    <circle cx="39.4" cy="40.6" r="1.2" fill="#dd9271" opacity=".8"/>`,
+  kilit: `
+    <defs>
+      <linearGradient id="cil-b" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e8bd60"/><stop offset="1" stop-color="#a97c2e"/></linearGradient>
+      <linearGradient id="cil-s" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9a7845"/><stop offset="1" stop-color="#5f4526"/></linearGradient>
+    </defs>
+    <ellipse cx="32" cy="56" rx="19" ry="3.2" fill="#3a2917" opacity=".3"/>
+    <path d="M22 30 v-8.5 a10 10 0 0 1 20 0 V30" fill="none" stroke="url(#cil-s)" stroke-width="5.6" stroke-linecap="round"/>
+    <rect x="15.5" y="28" width="33" height="25" rx="7" fill="url(#cil-b)"/>
+    <rect x="15.5" y="28" width="33" height="6.5" rx="3.2" fill="#f2cf7a" opacity=".5"/>
+    <circle cx="32" cy="38.8" r="3.8" fill="#5f4526"/>
+    <rect x="30.2" y="40.4" width="3.6" height="7" rx="1.8" fill="#5f4526"/>
+    <path d="M17.6 31 Q17.4 42 19 49.4" stroke="#f7e7bd" stroke-width="1.5" fill="none" opacity=".45" stroke-linecap="round"/>`,
+};
+function caseIcon(id, cls) {
+  const art = CASE_ICON_ART[id];
+  if (!art) return null;
+  return `<svg class="ci${cls ? " " + cls : ""}" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${art}</svg>`;
 }
 
 /* ================= SES EFEKTLERİ ================= */
@@ -2324,7 +2590,7 @@ function renderDailyStrip() {
     ds.innerHTML = `<span class="ds-ic">✅</span><div class="ds-body"><div class="ds-k">📅 ${t("daily")}</div><div class="ds-t">${t("dailyDoneD")}</div></div><span class="ds-bonus">✓</span>`;
   } else {
     ds.className = "daily-strip";
-    ds.innerHTML = `<span class="ds-ic">${dc.icon}</span><div class="ds-body"><div class="ds-k">📅 ${t("daily")}</div><div class="ds-t">${dc.title}</div></div><span class="ds-bonus">${t("dailyBonusTag").replace("{n}", dailyBonusFor(currentStreak() + 1))}</span>`;
+    ds.innerHTML = `<span class="ds-ic">${caseIcon(dc.id, "anim") || dc.icon}</span><div class="ds-body"><div class="ds-k">📅 ${t("daily")}</div><div class="ds-t">${dc.title}</div></div><span class="ds-bonus">${t("dailyBonusTag").replace("{n}", dailyBonusFor(currentStreak() + 1))}</span>`;
   }
 }
 function renderCases() {
@@ -2349,10 +2615,10 @@ function renderCases() {
   const s = document.querySelector("#cf-scene svg");
   if (s) s.setAttribute("preserveAspectRatio", "xMidYMid slice");
   document.getElementById("cf-badge").textContent = `${chapterName(chIdx)} · ${t("caseN")} ${featuredCase + 1} / ${CASES.length}`;
-  document.getElementById("cf-icon").textContent = c.icon;
+  document.getElementById("cf-icon").innerHTML = caseIcon(c.id, "anim") || c.icon;
   document.getElementById("cf-av").innerHTML = charArt(imgCfg(c.av, c.id, "muvekkil"));
   document.getElementById("cf-opp").innerHTML = charArt(imgCfg(c.opp || c.av, c.id, "karsi"));
-  document.getElementById("cf-title").textContent = `${c.icon} ${c.title}`;
+  document.getElementById("cf-title").textContent = c.title;
   document.getElementById("cf-teaser").textContent = c.client;
   const st = save.stars[c.id] || 0;
   document.getElementById("cf-stars").textContent = st ? "⭐".repeat(st) + "☆".repeat(3 - st) : "";
@@ -2366,9 +2632,9 @@ function renderCases() {
       const i = ch.from + k;
       const cs = save.stars[cc.id] || 0;
       let cls, inner;
-      if (!caseUnlocked(i)) { cls = "locked"; inner = "❔"; }
-      else if (cs) { cls = "won"; inner = cc.icon; }
-      else { cls = "cur"; inner = cc.icon; }
+      if (!caseUnlocked(i)) { cls = "locked"; inner = caseIcon("kilit") || "❔"; }
+      else if (cs) { cls = "won"; inner = caseIcon(cc.id) || cc.icon; }
+      else { cls = "cur"; inner = caseIcon(cc.id, "anim") || cc.icon; }
       return `<div class="map-node ${cls}" onclick="mapTap(${i}, this)">
         <div class="mn-circle">${inner}</div>
         <div class="mn-stars">${"★".repeat(cs)}</div>
@@ -2590,7 +2856,7 @@ function comboBreak() {
 function openBrief(i) {
   currentCase = i;
   const c = CASES[i];
-  document.getElementById("brief-title").textContent = c.icon + " " + c.title;
+  document.getElementById("brief-title").innerHTML = (caseIcon(c.id, "ci-inline") || c.icon + " ") + c.title;
   document.getElementById("brief-hero-scene").innerHTML = courtScene("bh", { realJudge: true });
   document.getElementById("brief-hero-opp").innerHTML = charArt(imgCfg(c.opp || c.av, c.id, "karsi"));
   document.getElementById("brief-hero-av").innerHTML = charArt(imgCfg(c.av, c.id, "muvekkil"));
@@ -2615,7 +2881,8 @@ function startTrial() {
   round = 0; score = 0; meterPct = 0;
   combo = 0; maxCombo = 0;
   document.getElementById("combo-badge").className = "combo-badge";
-  document.getElementById("trial-title").textContent = CASES[currentCase].icon + " " + CASES[currentCase].title;
+  const tc = CASES[currentCase];
+  document.getElementById("trial-title").innerHTML = (caseIcon(tc.id, "ci-inline") || tc.icon + " ") + tc.title;
   document.getElementById("trial-scene").innerHTML = courtScene("tj", { realJudge: true });
   document.getElementById("avukat-avatar").innerHTML = charArt(AVUKAT);
   SND.gavel();
