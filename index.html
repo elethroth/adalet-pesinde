@@ -313,7 +313,7 @@
     55%{opacity:.22}
     100%{transform:translateX(130%) translateY(10%) rotate(20deg);opacity:0}
   }
-  @keyframes iconBob{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-1px) rotate(-2deg)}}
+  @keyframes iconPulse{0%,100%{transform:translateY(-50%) scale(1)}50%{transform:translateY(-50%) scale(1.16)}}
 
   .menu-btn{animation:btnLife 4.6s ease-in-out infinite;will-change:transform}
   .menu-btn.primary{animation-duration:4.1s}
@@ -335,8 +335,8 @@
     transform:translate(-50%,-50%) scale(0);opacity:.8;mix-blend-mode:overlay}
   .menu-btn .btn-ripple.run{animation:rippleFade .6s ease-out forwards}
   @keyframes rippleFade{0%{transform:translate(-50%,-50%) scale(0);opacity:.65}100%{transform:translate(-50%,-50%) scale(2.6);opacity:0}}
-  .menu-btn .btn-badge{animation:btnGlowLife 5s ease-in-out infinite}
-  .menu-btn .btn-badge.icon-life{animation:btnGlowLife 5s ease-in-out infinite,iconBob .5s ease-in-out}
+  .menu-btn .btn-badge{animation:btnGlowLife 5s ease-in-out infinite;transform:translateY(-50%)}
+  .menu-btn .btn-badge.icon-life{animation:btnGlowLife 5s ease-in-out infinite,iconPulse .6s ease-in-out}
   @media (prefers-reduced-motion:reduce){
     .menu-btn,.menu-btn.press-in,.menu-btn.press-out,.menu-btn .btn-badge,.menu-btn .btn-badge.icon-life{animation:none}
     .menu-btn .btn-sweep.run,.menu-btn .btn-ripple.run{animation:none;display:none}
@@ -4546,7 +4546,7 @@ if ("serviceWorker" in navigator && location.protocol === "https:") {
         timers.push(setTimeout(() => {
           badge.classList.add("icon-life");
           badge.addEventListener("animationend", function onEnd(ev) {
-            if (ev.animationName === "iconBob") {
+            if (ev.animationName === "iconPulse") {
               badge.classList.remove("icon-life");
               badge.removeEventListener("animationend", onEnd);
             }
