@@ -447,6 +447,21 @@
   @keyframes dotShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
   @media (prefers-reduced-motion:reduce){.map-node.cur .mn-circle{animation:none}}
 
+  /* ---------- GİZLİ DOSYA (Kayıp Dosya bölümü) ---------- */
+  .chap.secret .chap-head .ch-no{background:linear-gradient(180deg,#b98fe0,#7a5a9c);color:#1d1128}
+  .chap.secret .chap-head .ch-name{color:#c9a6ec}
+  .chap.secret .chap-head .ch-stars{color:#c9a6ec}
+  .chap.secret .chap-path{border-color:rgba(185,142,224,.28);background:linear-gradient(180deg,#241a30,#1a1224)}
+  .chap.secret .chap-path::before{border-top-color:#463358}
+  .chap.secret .chap-gate{background:rgba(185,142,224,.07);border-color:rgba(185,142,224,.35);color:#b9a3cf}
+  .chap.secret.gated .chap-head .ch-no{background:var(--card2);color:#8a7a9c}
+  .map-node.mystery .mn-circle{border-color:rgba(185,142,224,.5);color:#c9a6ec;
+    background:radial-gradient(circle at 35% 30%,#33244a,#1d1430);
+    text-shadow:0 0 12px rgba(185,142,224,.6);opacity:1;font-size:24px}
+  .map-node.mystery.cur .mn-circle{animation:mysteryPulse 1.8s ease-in-out infinite}
+  @keyframes mysteryPulse{0%,100%{box-shadow:0 0 0 3px rgba(185,142,224,.28)}50%{box-shadow:0 0 0 9px rgba(185,142,224,.07)}}
+  @media (prefers-reduced-motion:reduce){.map-node.mystery.cur .mn-circle{animation:none}}
+
   /* ---------- DAVA İKONLARI (SVG) ---------- */
   .ci{display:block;overflow:visible}
   .mn-circle .ci{width:74%;height:74%}
@@ -568,6 +583,18 @@
   #scr-brief{padding-bottom:calc(94px + env(safe-area-inset-bottom))}
   #scr-trial{padding-bottom:calc(94px + env(safe-area-inset-bottom))}
   #scr-prep{padding-bottom:calc(94px + env(safe-area-inset-bottom))}
+
+  /* ---------- RAKİP AVUKAT ŞERİDİ (dava özeti) ---------- */
+  .brief-rival{display:none;align-items:center;gap:12px;margin-bottom:12px;
+    background:linear-gradient(180deg,#261418,#1c1013);border:1px solid rgba(214,84,84,.3);
+    border-radius:16px;padding:12px 14px}
+  .brief-rival.show{display:flex}
+  .brief-rival .br-av{width:48px;height:48px;border-radius:50%;overflow:hidden;flex-shrink:0;
+    border:2px solid rgba(214,84,84,.5);background:#20141a}
+  .brief-rival .br-av img,.brief-rival .br-av svg{width:100%;height:100%;display:block}
+  .brief-rival .br-role{font-size:10px;font-weight:800;letter-spacing:.8px;color:#e08a8a}
+  .brief-rival .br-name{font-size:14.5px;font-weight:800;color:#f3dfd2;margin:2px 0 3px}
+  .brief-rival .br-quote{font-size:12px;color:var(--muted);font-style:italic;line-height:1.45}
 
   /* ================= HAZIRLIK AŞAMASI (Case Preparation) ================= */
   .prep-sub{color:var(--muted);font-size:13px;line-height:1.5;margin:-6px 0 14px}
@@ -932,6 +959,8 @@
   .bonus-card.achievement{--bc-accent:rgba(217,185,107,.35);--bc-icon-bg:rgba(217,185,107,.14);--bc-title:var(--gold)}
   .bonus-card.media{--bc-accent:rgba(224,176,79,.3)}
   .bonus-card.media.angry{--bc-accent:rgba(200,140,80,.3);--bc-icon-bg:rgba(200,140,80,.14);--bc-title:#d9a05f}
+  .bonus-card.clue{--bc-accent:rgba(185,142,224,.4);--bc-icon-bg:rgba(185,142,224,.16);--bc-title:#c9a6ec}
+  .bonus-card.rival{--bc-accent:rgba(214,84,84,.38);--bc-icon-bg:rgba(214,84,84,.14);--bc-title:#e08a8a}
 
   /* --- Aksiyon butonları: menü butonlarından ayrışan, kendi hiyerarşisi --- */
   #verdict-actions{pointer-events:none;display:flex;flex-direction:column;gap:11px}
@@ -1313,6 +1342,14 @@
       </div>
       <div class="media-comments" id="media-comments"></div>
     </div>
+    <div class="brief-rival" id="brief-rival">
+      <div class="br-av" id="brief-rival-av"></div>
+      <div>
+        <div class="br-role" id="brief-rival-role"></div>
+        <div class="br-name">AV. FERİDUN KESKİN</div>
+        <div class="br-quote" id="brief-rival-quote"></div>
+      </div>
+    </div>
     <div class="brief-box">
       <h3 data-i18n="client">MÜVEKKİLİN</h3>
       <p id="brief-client"></p>
@@ -1422,6 +1459,18 @@
       <div class="bonus-card media" id="media-reaction-box" style="display:none">
         <div class="bc-icon" id="media-reaction-icon"></div>
         <div><div class="bc-title" id="media-reaction-title"></div><div class="bc-desc" id="media-reaction-desc"></div></div>
+      </div>
+      <div class="bonus-card rival" id="rival-box" style="display:none">
+        <div class="bc-icon" id="rival-box-icon"></div>
+        <div><div class="bc-title" id="rival-box-title"></div><div class="bc-desc" id="rival-box-desc"></div></div>
+      </div>
+      <div class="bonus-card clue" id="clue-box" style="display:none">
+        <div class="bc-icon" id="clue-box-icon"></div>
+        <div><div class="bc-title" id="clue-box-title"></div><div class="bc-desc" id="clue-box-desc"></div></div>
+      </div>
+      <div class="bonus-card clue" id="clue-all-box" style="display:none">
+        <div class="bc-icon" id="clue-all-box-icon"></div>
+        <div><div class="bc-title" id="clue-all-box-title"></div><div class="bc-desc" id="clue-all-box-desc"></div></div>
       </div>
       <div class="bonus-card levelup" id="levelup-box" style="display:none">
         <div class="bc-icon" id="levelup-box-icon"></div>
@@ -2478,6 +2527,14 @@ const LANG = {
     mediaPleasedDesc: "Kararınız kamuoyunun beklentisiyle örtüştü. İtibarınız arttı.",
     mediaAngryTitle: "Basın Tepkili — Protestolar Başladı",
     mediaAngryDesc: "Kararınız kamuoyunu kızdırdı ama kanıtlara sadık kaldınız. İtibarınız azaldı.",
+    clueBoxTitle: "Gizemli İpucu — Parça {n} / {m}",
+    clueAllTitle: "KAYIP DOSYA AÇILDI",
+    clueAllDesc: "Tüm parçalar birleşti — gizli dava haritada seni bekliyor…",
+    secretChapNo: "GİZLİ", secretChapName: "Kayıp Dosya", secretStars: "🧩 {n} / {m}",
+    secretGate: "Bazı davalar sır saklıyor… Davaları kazandıkça ipucu parçaları ortaya çıkabilir.",
+    secretBadge: "GİZLİ DOSYA",
+    rivalRole: "KARŞI TARAF VEKİLİ",
+    rivalWinTitle: "Rakibin Yenildi", rivalLoseTitle: "Rakibin Kazandı",
     achList: [
       { name: "İlk Zafer", desc: "İlk davanı kazan", icon: "🥇" },
       { name: "Mükemmeliyetçi", desc: "Bir davada 3 yıldız al", icon: "⭐" },
@@ -2490,6 +2547,7 @@ const LANG = {
       { name: "Seri Savunucu", desc: "Bir duruşmada 3 kombo yap", icon: "🔥" },
       { name: "Sadık Avukat", desc: "Günün davasını 3 gün üst üste kazan", icon: "📅" },
       { name: "Bağımsız Yargı", desc: "Kamuoyu baskısına rağmen kanıtlara dayanarak 3 kez karar ver", icon: "⚖️" },
+      { name: "1998/47", desc: "Kayıp Dosya'yı çöz ve gizli davayı kazan", icon: "🗂️" },
     ],
   },
   en: {
@@ -2549,6 +2607,14 @@ const LANG = {
     mediaPleasedDesc: "Your verdict matched public expectation. Your reputation rose.",
     mediaAngryTitle: "Press Furious — Protests Erupt",
     mediaAngryDesc: "Your verdict angered the public, but you stayed true to the evidence. Reputation dropped.",
+    clueBoxTitle: "Mysterious Clue — Piece {n} / {m}",
+    clueAllTitle: "THE LOST FILE UNLOCKED",
+    clueAllDesc: "All pieces united — a secret case awaits you on the map…",
+    secretChapNo: "SECRET", secretChapName: "The Lost File", secretStars: "🧩 {n} / {m}",
+    secretGate: "Some cases hold secrets… Win cases and clue pieces may surface.",
+    secretBadge: "SECRET FILE",
+    rivalRole: "OPPOSING COUNSEL",
+    rivalWinTitle: "Your Rival Defeated", rivalLoseTitle: "Your Rival Won",
     achList: [
       { name: "First Victory", desc: "Win your first case", icon: "🥇" },
       { name: "Perfectionist", desc: "Earn 3 stars on a case", icon: "⭐" },
@@ -2561,6 +2627,7 @@ const LANG = {
       { name: "Chain Defender", desc: "Hit a 3x combo in one trial", icon: "🔥" },
       { name: "Loyal Counsel", desc: "Win the Case of the Day 3 days in a row", icon: "📅" },
       { name: "Independent Judiciary", desc: "Rule by the evidence against public pressure 3 times", icon: "⚖️" },
+      { name: "1998/47", desc: "Solve the Lost File and win the secret case", icon: "🗂️" },
     ],
   },
 };
@@ -2588,6 +2655,7 @@ const ACH_DEFS = [
   { id: "seri_savunucu", check: s => (s.bestCombo || 0) >= 3 },
   { id: "sadik_avukat", check: s => ((s.daily && s.daily.best) || 0) >= 3 },
   { id: "bagimsiz_yargi", check: s => (s.independentVerdicts || 0) >= 3 },
+  { id: "kayip_dosya", check: s => (s.stars["kayip"] || 0) >= 1 },
 ];
 function achText(i) {
   const L = LANG[save.lang] || LANG.tr;
@@ -2943,6 +3011,11 @@ const CASES = [
     av: { skin: "#eab887", hair: "short", hc: "#1f150c", top: "polo", shirt: "#4a6a5a" },
     opp: { skin: "#dcae82", hair: "short", hc: "#26221e", facial: "beard", fc: "#1e1a16", top: "suit", shirt: "#2c2c30", tie: "#c9a23b", bg: "#2b2b30" },
     oppName: "KUYUMCU SAHİBİ",
+    rival: {
+      intro: "Kuyumcuyu ben temsil ediyorum: Av. Feridun Keskin. Adını duydum — mahalle davalarının yıldızıymışsın. Burası mahalle değil, evlat.",
+      win: "Bir kez… sadece bir kez oldu bu. Adını aklımda tutacağım.",
+      lose: "Gördün mü evlat? Şöhret delil değildir.",
+    },
     client: "Kuyumcu çırağı Emre, vitrindeki altın kolye kaybolunca hırsızlıkla suçlanıyor. Daha ilk yılında işini kaybetmek üzere.",
     charge: "Kuyumcu sahibi: \"Vitrinin anahtarı Emre'deydi, kolyeyi o aldı\" diyor.",
     evidence: ["🧾 Tamirci makbuzu", "📹 Dükkân kamerası", "📒 Vitrin sayım defteri"],
@@ -3050,6 +3123,11 @@ const CASES = [
     av: { skin: "#dcb28a", hair: "short", hc: "#cfc8bf", facial: "mustache", fc: "#b6ada2", glasses: true, top: "vest", vest: "#5a5a66", inner: "#e6e2da", shirt: "#4a4a55" },
     opp: { skin: "#e8bd93", hair: "long", hc: "#2a2a2a", top: "suit", shirt: "#37415a", tie: "#6a3a7a", bg: "#333a52" },
     oppName: "OPERATÖR TEMSİLCİSİ",
+    rival: {
+      intro: "Yine mi sen? Operatörün vekili benim. Geçen sefer şanslıydın — şans, ikinci duruşmaya girmez.",
+      win: "İki oldu… İKİ! Kim bu adam?!",
+      lose: "Denge yerine oturdu. Bir dahakine hazırlıklı gel, evlat.",
+    },
     client: "Hüsnü Amca'ya bir ayda 45.000 liralık telefon faturası geldi. Operatör \"kullandın, ödeyeceksin\" diyor.",
     charge: "Operatör şirketi: \"Kayıtlar ortada, bu hattan saatlerce yurt dışı araması yapılmış\" diyor.",
     evidence: ["📟 Hüsnü Amca'nın 20 yıllık tuşlu telefonu", "📡 Baz istasyonu kayıtları", "🧾 Son 5 yılın faturaları (hepsi ~200 TL)"],
@@ -3189,6 +3267,11 @@ const CASES = [
     av: { skin: "#dcb28a", hair: "bald", hc: "#b6ada2", facial: "mustache", fc: "#9a9088", glasses: true, top: "vest", vest: "#4a5560", inner: "#e6e2da", shirt: "#55606e" },
     opp: { skin: "#dcae82", hair: "short", hc: "#6a5a4a", facial: "mustache", fc: "#5a4a3a", glasses: "round", top: "suit", shirt: "#3a4250", tie: "#5a3a2a", bg: "#333a44" },
     oppName: "DAVACI KARDEŞ",
+    rival: {
+      intro: "Kardeşlerin vekili: Keskin. Sana bir tavsiye — bazı eski dosyaları kurcalamayı bırak. Senin iyiliğin için söylüyorum.",
+      win: "Dosyaları kurcalamayı bırak demiştim… Bunu duymamış ol.",
+      lose: "Tecrübe, evlat. Tecrübe.",
+    },
     client: "Osman Amca'nın kardeşleri, babalarının vasiyetindeki imzanın sahte olduğunu ve evin Osman Amca'ya kalamayacağını söylüyor.",
     charge: "Kardeşler: \"Babamız bu vasiyeti imzalamadı, imza sahte! Ev hepimizin\" diyerek dava açtı.",
     evidence: ["🖋️ İmza uzmanı raporu", "🎥 Vasiyetin imzalandığı günün noter kamera kaydı", "🗣️ Tanık: baba dostu emekli öğretmen"],
@@ -3258,16 +3341,96 @@ const CASES = [
       },
     ],
   },
+  // ===== GİZLİ DAVA: KAYIP DOSYA (1998/47) =====
+  // 5 ipucu parçası toplanınca açılır (bkz. CLUE_DROPS). Rakip avukat Keskin'e
+  // karşı oynanan finaldir: 25 yıl önceki haksız mahkûmiyet yeniden görülür.
+  {
+    id: "kayip", icon: "🗂️", title: "Kayıp Dosya — 1998/47", secret: true,
+    av: { skin: "#e3bd92", hair: "bald", hc: "#b8b0a4", facial: "mustache", fc: "#9a9288", glasses: true, top: "vest", vest: "#4a4438", inner: "#e6e2d4", shirt: "#3c3830", bg: "#2c2a24" },
+    opp: { skin: "#e6c09a", hair: "short", hc: "#23232a", glasses: true, facial: "beard", fc: "#2e2e34", top: "suit", shirt: "#232838", tie: "#6a2430", bg: "#33202c" },
+    oppName: "AV. FERİDUN KESKİN",
+    rival: {
+      intro: "1998/47… Demek oraya kadar gittin. O dosyayı ben kapattım, ben gömdüm — ve gömülü şeyler gömülü kalır, evlat.",
+      win: "Ben… sadece kazanmak istemiştim. Her seferinde, sadece kazanmak…",
+      lose: "Söylemiştim: gömülü şeyler gömülü kalır. Dosyayı unut.",
+    },
+    client: "Sabri Bey, 25 yıl önce kütüphanedeki değerli el yazmasını çalmakla suçlanıp haksız yere mahkûm oldu. Topladığın 5 ipucu parçası onun masum olduğunu gösteriyor.",
+    charge: "1998'deki davada kilit belge EK-7 (iade tutanağı) dosyadan 'kaybolmuştu'. Karşı tarafın genç avukatı, bugünün ünlü ismi Feridun Keskin'di. Dava yeniden görülüyor.",
+    evidence: ["📜 EK-7: İade tutanağının sureti", "🗂️ 1998/47 dosya kapağı ('EK-7 kayıp' notu)", "🗣️ Tanık: dönemin zabıt kâtibi"],
+    prep: { options: [
+      { id: "katip", icon: "📞", title: "Zabıt kâtibiyle ön görüşme yap", desc: "Dönemin kâtibini duruşmadan önce dinle.", cost: 1, time: "~10 sn", outcome: "good", story: "Kâtip, tutanağın dosyadan bilerek çıkarıldığını anlatmaya hazır." },
+      { id: "belge", icon: "🔍", title: "EK-7 suretini uzmana doğrulat", desc: "İmza ve mühür incelemesi yaptır.", cost: 1, time: "~10 sn", outcome: "good", story: "Uzman raporu: suret gerçek; mühür ve imza 1998 tarihli asıl deftere uyuyor." },
+      { id: "deep", icon: "🗂️", title: "Baro arşivinde Keskin'in eski davalarını tara", desc: "1998 civarındaki dosyalarını incele.", cost: 2, time: "~20 sn", outcome: "good", story: "Keskin'in iki eski davasında daha 'kayıp belge' tutanağı bulundu — bir örüntü var." },
+      { id: "misc", icon: "📰", title: "1998 gazete arşivlerini tara", desc: "Dönemin haberlerini incele.", cost: 1, time: "~10 sn", outcome: "bad", story: "Gazeteler olayı sansasyonel yazmış; işe yarar tek detay bile yok." },
+    ] },
+    events: [
+      { round: 3, category: "belge", tag: "BARO KAYITLARI", icon: "🗂️",
+        title: "Baro Arşiv Raporu Kürsüye Ulaştı",
+        desc: "Baro, 1998 dönemine ait dosya hareket kayıtlarını mahkemeye gönderdi.",
+        requiresPrep: "deep",
+        addOption: {
+          t: "Baro kayıtları kürsüde: EK-7, karardan üç gün önce dosyadan 'Av. F. Keskin' imzasıyla teslim alınmış ve bir daha iade edilmemiş.",
+          pGood: 25, fGood: "Kayıt defterindeki imza salonda yankılandı. Keskin başını öne eğdi. 🎯",
+          pWeak: 14, fWeak: "Kayıtlar geldi ama hangi sayfaya bakılacağını bilemedik; etki sınırlı kaldı. 😐",
+        },
+        impactNote: "Salondaki gazeteciler aynı anda telefonlarına sarıldı." },
+    ],
+    rounds: [
+      {
+        claim: "Bu dava 25 yıl önce kesin hükümle kapandı. Mahkemenin vakti, tozlu raflardan çıkma hikâyelerle harcanamaz.",
+        opts: [
+          { t: "Yargılamanın yenilenmesi için yeni delil gerekir — işte: EK-7, yani 1998'de 'kaybolan' iade tutanağının sureti.", p: 25, f: "Hâkim sureti uzun uzun inceledi ve davayı yeniden açtı. Keskin'in gülümsemesi soldu. 🎯" },
+          { t: "Sabri Bey 25 yıldır masum olduğunu söylüyor; artık dinlenmeyi hak ediyor.", p: 12, f: "Duygusal ama hukuken zayıf; hâkim 'yeni delil' istiyor. 😐" },
+          { t: "O dönem herkes hata yapmış olabilir, dava baştan görülsün işte!", p: 0, f: "Gerekçesiz talep. Keskin alaycı bir kahkaha attı. 😠" },
+        ],
+      },
+      {
+        type: "itiraz",
+        claim: "Bu sözde tutanak bir FOTOKOPİ! Aslı olmayan kâğıt parçası delil sayılamaz. Sayın Hâkim, bu oyunu bitirelim.",
+        present: [
+          { t: "🗂️ 1998/47 dosya kapağı ('EK-7 kayıp' notu)", p: 25, f: "Kapaktaki kâtip parafı EK-7'nin dosyada VAR OLDUĞUNU, sonradan çıkarıldığını kanıtlıyor. Suret ve kapak birbirini doğruladı! 🎯" },
+          { t: "📜 EK-7: İade tutanağının sureti", p: 6, f: "Sureti tekrar göstermek itirazı çürütmedi; aslının akıbetini kanıtlamak gerekiyordu. 😐" },
+          { t: "🗣️ Tanık: dönemin zabıt kâtibi", p: 6, f: "Tanığın sırası henüz gelmedi; belge itirazı belgeyle çürütülmeliydi. 😐" },
+        ],
+      },
+      {
+        type: "sorgu",
+        witness: "TANIK — Keskin'in Eski Stajyeri",
+        wav: { skin: "#dfb28a", hair: "short", hc: "#5a4a3a", top: "shirt", shirt: "#6a6250", bg: "#302a22" },
+        intro: "Keskin'in 1998'deki stajyeri kürsüde. Ezberletilmiş ifadedeki yalanı yakala!",
+        lines: [
+          { s: "O yılın arşivi büyük selde tamamen yok oldu; EK-7 de o zaman kaybolmuştur.", lie: true,
+            pressF: "Durun! Bu 'sel hikâyesi' elimizdeki belgelerle çelişiyor. 🎯",
+            ask: "Bu yalanı çürütecek kanıtı sun:",
+            present: [
+              { t: "🗂️ 1998/47 dosya kapağı ('EK-7 kayıp' notu)", p: 25, f: "Dosya kapağı sapasağlam ortada — 'selde yok olan' arşivden çıkma! Üstelik 'kayıp' notu selden ÖNCE düşülmüş. İfade çöktü. 🎯" },
+              { t: "📜 EK-7: İade tutanağının sureti", p: 6, f: "Suret önemli ama 'arşiv yok oldu' yalanını çürüten, sapasağlam duran dosyanın kendisiydi. 😐" },
+              { t: "🗣️ Tanık: dönemin zabıt kâtibi", p: 6, f: "Kâtibi sonra dinleteceğiz; bu yalan belgeyle çürütülmeliydi. 😐" },
+            ] },
+          { s: "Feridun Bey o dönem gece gündüz çalışırdı; dosyalar hep onun masasından geçerdi.", lie: false },
+          { s: "Ben o davada yalnızca evrak taşıdım, karar süreçlerinde yer almadım.", lie: false },
+        ],
+      },
+      {
+        claim: "Peki bu tutanak 25 yıl boyunca neredeydi?! Şimdi ortaya çıkması bunun bir KUMPAS olduğunu gösterir!",
+        opts: [
+          { t: "Tanığımız dönemin zabıt kâtibi: tutanağın 'düşürülmesini' bizzat sizin istediğinizi anlatacak. Kendisini kürsüye davet ediyorum.", p: 25, f: "Kâtip her şeyi anlattı. Salon buz kesti; Sabri Bey 25 yıl sonra sessizce ağladı. Adalet yerini buldu. 🎯" },
+          { t: "Belgeler kumpas kurmaz Sayın Keskin; insanlar kurar.", p: 12, f: "Etkili bir cümleydi ama kâtibi dinletmek davayı kesin bitirirdi. 😐" },
+          { t: "Kumpası asıl siz kurdunuz, itiraf edin!", p: 0, f: "Suçlama kanıtsız kaldı; hâkim son turda sertçe uyardı. 😠" },
+        ],
+      },
+    ],
+  },
 ];
 
 /* ================= KAYIT ================= */
 const SAVE_KEY = "adalet_pesinde_save";
 // Tüm davaları baştan açık tut (sıralı kilit istersen false yap)
 const UNLOCK_ALL = false;
-let save = { xp: 0, unlocked: 1, stars: {}, muted: false, music: true, lang: "tr", achUnlocked: {}, fastWins: 0, bestCombo: 0, daily: { streak: 0, lastWin: "", best: 0 }, reputation: 50, mediaLog: [], independentVerdicts: 0 };
+let save = { xp: 0, unlocked: 1, stars: {}, muted: false, music: true, lang: "tr", achUnlocked: {}, fastWins: 0, bestCombo: 0, daily: { streak: 0, lastWin: "", best: 0 }, reputation: 50, mediaLog: [], independentVerdicts: 0, clues: [] };
 try {
   const s = JSON.parse(localStorage.getItem(SAVE_KEY));
-  if (s && typeof s.xp === "number") save = Object.assign({ muted: false, music: true, lang: "tr", achUnlocked: {}, fastWins: 0, bestCombo: 0, daily: { streak: 0, lastWin: "", best: 0 }, reputation: 50, mediaLog: [], independentVerdicts: 0 }, s);
+  if (s && typeof s.xp === "number") save = Object.assign({ muted: false, music: true, lang: "tr", achUnlocked: {}, fastWins: 0, bestCombo: 0, daily: { streak: 0, lastWin: "", best: 0 }, reputation: 50, mediaLog: [], independentVerdicts: 0, clues: [] }, s);
 } catch (e) {}
 if (typeof save.music !== "boolean") save.music = true;
 if (save.lang !== "tr" && save.lang !== "en") save.lang = "tr";
@@ -3277,6 +3440,13 @@ if (typeof save.bestCombo !== "number") save.bestCombo = 0;
 if (!save.daily || typeof save.daily !== "object") save.daily = { streak: 0, lastWin: "", best: 0 };
 if (typeof save.reputation !== "number") save.reputation = 50;
 if (!Array.isArray(save.mediaLog)) save.mediaLog = [];
+if (!Array.isArray(save.clues)) save.clues = [];
+// Geliştirici testi: ?dbg=<urlencoded JSON> kaydı bu oturum için geçici olarak
+// değiştirir (ör. ?dbg={"xp":500}). Normal oyuncuyu etkilemez.
+try {
+  const dbgRaw = new URLSearchParams(location.search).get("dbg");
+  if (dbgRaw) Object.assign(save, JSON.parse(dbgRaw));
+} catch (e) {}
 if (typeof save.independentVerdicts !== "number") save.independentVerdicts = 0;
 if (UNLOCK_ALL) save.unlocked = CASES.length;
 function persist() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch (e) {} }
@@ -3335,7 +3505,22 @@ function chapterName(ci) {
 function totalStars() {
   return Object.values(save.stars).reduce((a, b) => a + b, 0);
 }
+
+/* ---- KAYIP DOSYA (1998/47): ipucu parçaları ve gizli dava kilidi ----
+   Aşağıdaki davalar İLK kez kazanıldığında bir ipucu parçası düşürür.
+   5 parça toplanınca haritadaki gizli dava (id: "kayip") oynanabilir olur. */
+const CLUE_TOTAL = 5;
+const CLUE_DROPS = {
+  kedi:  "Nuri Bey'in şikâyet evrakları arasından yanlışlıkla eski bir mahkeme tutanağı sayfası çıktı. Üst köşesinde: 'Dosya No: 1998/47'.",
+  zemin: "Market arşivindeki eski koliden sararmış bir dosya kapağı düştü: '1998/47 — EK-7: KAYIP'. Kapakta bir kâtip parafı var.",
+  kolye: "Keskin'in çantasından bir not düştü; yerden aldın: 'EK-7 asla ortaya çıkmamalı. — F.K.'",
+  fatura: "Operatör arşivinden 1998 tarihli bir fatura çıktı: Keskin'in bürosuna kesilmiş 'arşiv nakli' hizmeti. Nakledilen tek koli: 1998/47.",
+  miras: "Noterin eski kayıt defterinin arasından EK-7'nin bir sureti çıktı: bir İADE TUTANAĞI — 'Eser kütüphaneye eksiksiz iade edilmiştir. İmza: Sabri.'",
+};
+function cluesDone() { return (save.clues || []).length >= CLUE_TOTAL; }
+
 function caseUnlocked(i) {
+  if (CASES[i] && CASES[i].secret) return cluesDone();
   return i < save.unlocked && totalStars() >= chapterOf(i).need;
 }
 // Seri yalnızca dün/bugün kazanılmışsa canlıdır; aksi halde sıfır görünür
@@ -3416,7 +3601,9 @@ function renderCases() {
   document.getElementById("cf-scene").innerHTML = courtScene("cf", { realJudge: true });
   const s = document.querySelector("#cf-scene svg");
   if (s) s.setAttribute("preserveAspectRatio", "xMidYMid slice");
-  document.getElementById("cf-badge").textContent = `${chapterName(chIdx)} · ${t("caseN")} ${featuredCase + 1} / ${CASES.length}`;
+  document.getElementById("cf-badge").textContent = c.secret
+    ? `${t("secretBadge")} · 1998/47`
+    : `${chapterName(chIdx)} · ${t("caseN")} ${featuredCase + 1} / ${CASES.length}`;
   document.getElementById("cf-icon").innerHTML = caseIcon(c.id, "anim") || c.icon;
   document.getElementById("cf-av").innerHTML = charArt(imgCfg(c.av, c.id, "muvekkil"));
   document.getElementById("cf-opp").innerHTML = charArt(imgCfg(c.opp || c.av, c.id, "karsi"));
@@ -3426,7 +3613,7 @@ function renderCases() {
   document.getElementById("cf-stars").textContent = st ? "⭐".repeat(st) + "☆".repeat(3 - st) : "";
 
   // Bölüm haritası: her bölüm bir yol, davalar yol üstünde düğümler
-  document.getElementById("case-map").innerHTML = CHAPTERS.map((ch, ci) => {
+  let mapHtml = CHAPTERS.map((ch, ci) => {
     const gateOpen = ts >= ch.need;
     const chCases = CASES.slice(ch.from, ch.to + 1);
     const got = chCases.reduce((a, cc) => a + (save.stars[cc.id] || 0), 0);
@@ -3452,6 +3639,34 @@ function renderCases() {
       <div class="chap-path">${nodes}</div>
     </div>`;
   }).join("");
+
+  // Gizli dosya bölümü: ipucu parçaları toplandıkça açılır
+  const sIdx = CASES.findIndex(cc => cc.secret);
+  if (sIdx >= 0) {
+    const sc = CASES[sIdx];
+    const un = cluesDone();
+    const cs = save.stars[sc.id] || 0;
+    const nClues = Math.min((save.clues || []).length, CLUE_TOTAL);
+    let cls, inner;
+    if (!un) { cls = "locked mystery"; inner = "❓"; }
+    else if (cs) { cls = "won"; inner = sc.icon; }
+    else { cls = "cur mystery"; inner = sc.icon; }
+    mapHtml += `<div class="chap secret${un ? "" : " gated"}">
+      <div class="chap-head">
+        <span class="ch-no">${t("secretChapNo")}</span>
+        <span class="ch-name">${t("secretChapName")}</span>
+        <span class="ch-stars">${t("secretStars").replace("{n}", nClues).replace("{m}", CLUE_TOTAL)}</span>
+      </div>
+      ${un ? "" : `<div class="chap-gate">${t("secretGate")}</div>`}
+      <div class="chap-path">
+        <div class="map-node ${cls}" onclick="mapTap(${sIdx}, this)">
+          <div class="mn-circle">${inner}</div>
+          <div class="mn-stars">${"★".repeat(cs)}</div>
+        </div>
+      </div>
+    </div>`;
+  }
+  document.getElementById("case-map").innerHTML = mapHtml;
 }
 
 function mapTap(i, el) {
@@ -3699,7 +3914,14 @@ function openBrief(i) {
   document.getElementById("brief-hero-scene").innerHTML = courtScene("bh", { realJudge: true });
   document.getElementById("brief-hero-opp").innerHTML = charArt(imgCfg(c.opp || c.av, c.id, "karsi"));
   document.getElementById("brief-hero-av").innerHTML = charArt(imgCfg(c.av, c.id, "muvekkil"));
-  document.getElementById("brief-no").textContent = t("file") + " #" + String(i + 1).padStart(3, "0");
+  document.getElementById("brief-no").textContent = t("file") + (c.secret ? " #1998/47" : " #" + String(i + 1).padStart(3, "0"));
+  const rvEl = document.getElementById("brief-rival");
+  if (c.rival) {
+    document.getElementById("brief-rival-av").innerHTML = charArt(RIVAL_AV);
+    document.getElementById("brief-rival-role").textContent = t("rivalRole");
+    document.getElementById("brief-rival-quote").textContent = "“" + c.rival.intro + "”";
+    rvEl.classList.add("show");
+  } else rvEl.classList.remove("show");
   document.getElementById("brief-client").textContent = c.client;
   document.getElementById("brief-charge").textContent = c.charge;
   document.getElementById("brief-reward").textContent = "+" + (80 + c.rounds.length * 20) + " " + t("tp");
@@ -3839,6 +4061,8 @@ function splitEv(str) {
 const AVUKAT = { skin: "#e8c9a4", hair: "quiff", hc: "#2b2018", top: "robe", shirt: "#242b3e", glasses: true, bg: "#2c3552", img: "assets/chars/avukat.png" };
 // Hâkim
 const JUDGE = { skin: "#e2c29c", hair: "short", hc: "#d8d8d8", top: "robe", shirt: "#14161c", bg: "#2a2622", img: "assets/chars/hakim.png" };
+// Rakip avukat: Av. Feridun Keskin — şehrin "hiç kaybetmeyen" ünlü avukatı
+const RIVAL_AV = { skin: "#e6c09a", hair: "short", hc: "#23232a", glasses: true, facial: "beard", fc: "#2e2e34", top: "suit", shirt: "#232838", tie: "#6a2430", bg: "#33202c", img: "assets/chars/keskin.png" };
 
 // Karakter görseli: resim dosyası varsa onu, yoksa SVG portresini üret.
 // Resim yüklenemezse otomatik SVG'ye düşer (charFallback).
@@ -3894,7 +4118,11 @@ let shownEvents = null;
 
 function renderRound() {
   const c = CASES[currentCase];
-  const evt = (c.events || []).find(e => e.round === round && !shownEvents.has(e.id || e.round));
+  let evt = (c.events || []).find(e => e.round === round && !shownEvents.has(e.id || e.round));
+  // Rakip avukat: ilk turda kibirli giriş kartı (dava verisindeki rival.intro'dan)
+  if (!evt && c.rival && round === 0 && !shownEvents.has("rival-intro")) {
+    evt = { id: "rival-intro", tag: t("rivalRole"), title: "Av. Feridun Keskin Kürsüde", desc: c.rival.intro };
+  }
   if (evt) {
     shownEvents.add(evt.id || evt.round);
     showCourtEvent(evt, () => renderRoundCore(evt));
@@ -4225,6 +4453,13 @@ function verdict() {
     if (idx + 1 > save.unlocked - 1) save.unlocked = Math.min(CASES.length, idx + 2);
     save.stars[c.id] = Math.max(save.stars[c.id] || 0, stars);
   }
+  // --- kayıp dosya ipucu: bu dava ilk kez kazanıldıysa parça düşür ---
+  let clueDropped = false, clueAll = false;
+  if (win && CLUE_DROPS[c.id] && !save.clues.includes(c.id)) {
+    save.clues.push(c.id);
+    clueDropped = true;
+    clueAll = save.clues.length >= CLUE_TOTAL;
+  }
   persist();
   const newRankI = rankInfo(save.xp).ci;
   const rankUp = newRankI !== oldRankI;
@@ -4259,6 +4494,12 @@ function verdict() {
   const mediaBox = document.getElementById("media-reaction-box");
   mediaBox.style.display = "none";
   mediaBox.className = "bonus-card media";
+  const rivalBox = document.getElementById("rival-box");
+  rivalBox.style.display = "none"; rivalBox.classList.remove("on");
+  const clueBox = document.getElementById("clue-box");
+  clueBox.style.display = "none"; clueBox.classList.remove("on");
+  const clueAllBox = document.getElementById("clue-all-box");
+  clueAllBox.style.display = "none"; clueAllBox.classList.remove("on");
   const lu = document.getElementById("levelup-box");
   lu.style.display = "none"; lu.classList.remove("on");
   const achBox = document.getElementById("ach-toast-box");
@@ -4377,6 +4618,51 @@ function verdict() {
     tNow += 450;
   }
 
+  // 4d) rakip avukatın tepkisi
+  if (c.rival) {
+    vStep(tNow, () => {
+      document.getElementById("rival-box-icon").textContent = "⚖️";
+      document.getElementById("rival-box-title").textContent = win ? t("rivalWinTitle") : t("rivalLoseTitle");
+      document.getElementById("rival-box-desc").textContent = "“" + (win ? c.rival.win : c.rival.lose) + "”";
+      rivalBox.style.display = "flex";
+      void rivalBox.offsetWidth;
+      rivalBox.classList.add("on");
+      SND[win ? "good" : "mid"]();
+      buzz(25);
+    });
+    tNow += 450;
+  }
+
+  // 4e) gizemli ipucu parçası + (5/5 ise) kayıp dosyanın açılışı
+  if (clueDropped) {
+    vStep(tNow, () => {
+      document.getElementById("clue-box-icon").textContent = "🧩";
+      document.getElementById("clue-box-title").textContent =
+        t("clueBoxTitle").replace("{n}", save.clues.length).replace("{m}", CLUE_TOTAL);
+      document.getElementById("clue-box-desc").textContent = CLUE_DROPS[c.id];
+      clueBox.style.display = "flex";
+      void clueBox.offsetWidth;
+      clueBox.classList.add("on");
+      SND.good();
+      buzz([0, 30, 40, 30]);
+    });
+    tNow += 500;
+    if (clueAll) {
+      vStep(tNow, () => {
+        document.getElementById("clue-all-box-icon").textContent = "🗂️";
+        document.getElementById("clue-all-box-title").textContent = t("clueAllTitle");
+        document.getElementById("clue-all-box-desc").textContent = t("clueAllDesc");
+        clueAllBox.style.display = "flex";
+        void clueAllBox.offsetWidth;
+        clueAllBox.classList.add("on");
+        SND.fanfare();
+        shakeScreen(true);
+        buzz([0, 40, 40, 40, 40, 80]);
+      });
+      tNow += 550;
+    }
+  }
+
   // 5) rütbe çubuğu gözle görülür dolar
   vStep(tNow, () => {
     vRank.classList.add("v-on");
@@ -4476,6 +4762,20 @@ document.addEventListener("pointerdown", function startMusicOnce() {
 if ("serviceWorker" in navigator && location.protocol === "https:") {
   navigator.serviceWorker.register("sw.js").catch(() => {});
 }
+
+// Geliştirici testi: ?dbggo=cases | brief:N | trial:N doğrudan ekran açar.
+try {
+  const dbgGo = new URLSearchParams(location.search).get("dbggo");
+  if (dbgGo) setTimeout(() => {
+    const [scr, arg] = dbgGo.split(":");
+    if (scr === "cases") {
+      renderCases(); show("scr-cases");
+      if (arg === "bottom") setTimeout(() => window.scrollTo(0, document.body.scrollHeight), 300);
+    }
+    else if (scr === "brief") openBrief(+arg || 0);
+    else if (scr === "trial") { currentCase = +arg || 0; renderMediaPanel(CASES[currentCase]); startTrial(); }
+  }, 350);
+} catch (e) {}
 
 /* ================= ANA MENÜ BUTON MİKRO-ETKİLEŞİMLERİ ================= */
 (function initMenuButtonFX() {
