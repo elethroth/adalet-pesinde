@@ -10,7 +10,10 @@
     "primaryColor": "#e0b04f",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.elethroth.adaletpesinde"
+      "bundleIdentifier": "com.elethroth.adaletpesinde",
+      "infoPlist": {
+        "NSUserTrackingUsageDescription": "Bu izin, sana daha alakalı ödüllü reklamlar göstermek için kullanılır."
+      }
     },
     "android": {
       "package": "com.elethroth.adaletpesinde",
@@ -21,6 +24,16 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      [
+        "react-native-google-mobile-ads",
+        {
+          "androidAppId": "ca-app-pub-8476994167728980~7425555250",
+          "iosAppId": "ca-app-pub-8476994167728980~7425555250"
+        }
+      ],
+      "expo-build-properties"
+    ]
   }
 }
