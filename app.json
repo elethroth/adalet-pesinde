@@ -11,12 +11,14 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.elethroth.adaletpesinde",
+      "buildNumber": "1",
       "infoPlist": {
         "NSUserTrackingUsageDescription": "Bu izin, sana daha alakalı ödüllü reklamlar göstermek için kullanılır."
       }
     },
     "android": {
       "package": "com.elethroth.adaletpesinde",
+      "versionCode": 1,
       "adaptiveIcon": {
         "backgroundColor": "#171110",
         "foregroundImage": "./assets/icon.png"
@@ -34,6 +36,12 @@
         }
       ],
       "expo-build-properties"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "d2877ec3-20d5-4be6-a20d-8e7b67e78a72"
+      }
+    },
+    "owner": "elethroth"
   }
 }
